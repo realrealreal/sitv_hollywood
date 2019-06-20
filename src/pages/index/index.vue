@@ -18,8 +18,12 @@
           
         </div>
         <YaoFeng :json='yao_feng'/>
-
-        <Poster v-for="todo in yao_feng"/>
+        <div id="bottomRecommand">
+          <div v-for="(value, key, index) in bottom_recommand">
+            <Poster  :_width='264' :_bottom='20'/>
+          </div>
+          
+        </div>
     </div>
 </template>
 <script>
@@ -31,6 +35,7 @@ export default {
     return {
       biz_logo: require('../../assets/images/hollywoodLogo.png'),
       copyright_logo: require('../../assets/images/besTVLogo.png'),
+      bottom_recommand:[1,2,3,4],
       yao_feng: [
         {
           id: 12345,
@@ -111,10 +116,18 @@ export default {
   width: 100%;
   height: 340px;
 }
+#bottomRecommand{
+  width: 1128px;
+  margin: 0 auto;
+  white-space: nowrap;
+}
+#bottomRecommand > div{
+  display: inline-block;
+  margin-right: 24px;
+}
 ul {
   display: flex;
   -webkit-align-items: center;
-  list-style-type: none;
   float: right;
   margin-top: 80px;
   margin-right: 80px;

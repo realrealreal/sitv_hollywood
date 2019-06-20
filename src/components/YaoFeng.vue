@@ -24,20 +24,19 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-div {
-  width: 88.125%;
-  margin: 0 auto;
-  margin-top: 10px;
-}
-div > ul {
-  width: 100%;
-  list-style: none;
-  overflow: hidden;
-  white-space: nowrap;
-}
-div > ul > li{
-  display: inline-block;
-  margin-right: 24px;
-}
+<style scoped lang='stylus'>
+  div
+    width 1128px
+    margin 0 auto
+    margin-top 10px
+    padding 5px
+    overflow hidden
+    white-space nowrap
+    & > ul
+      display inline-block
+      & > li
+        display inline-block
+        margin-right 24px
+        & img
+          width 120px
 </style>
