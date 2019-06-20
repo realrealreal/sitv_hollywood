@@ -14,8 +14,11 @@
         <div id="carousel">
           
         </div>
+        <div>
+          
+        </div>
         <YaoFeng :json='yao_feng'/>
-        
+
         <Poster v-for="todo in yao_feng"/>
     </div>
 </template>
