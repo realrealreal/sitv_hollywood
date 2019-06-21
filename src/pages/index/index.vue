@@ -6,23 +6,36 @@
               <img :src="biz_logo" alt="">
             </div>
             <ul>
-              <li>搜索</li>
-              <li>我的</li>
-              <li>退出</li>
+              <li><a href="">搜索</a></li>
+              <li><a href="">我的</a></li>
+              <li><a href="">退出</a></li>
             </ul>
         </div>
         <div id="carousel">
-          
-        </div>
-        <div>
-          
         </div>
         <YaoFeng :json='yao_feng'/>
-        <div id="bottomRecommand">
+        <div id="recommand-1">
           <div v-for="(value, key, index) in bottom_recommand">
-            <Poster  :_width='264' :_bottom='20'/>
-          </div>
-          
+            <Poster width=264 is-img-in/>
+          </div> 
+        </div>
+        <div id="recommand-2">
+          <h3>{{little1}}</h3>
+          <div v-for="(value, key, index) in second_recommand">
+            <Poster width='168' />
+          </div> 
+        </div>
+        <div id="recommand-3">
+          <h3>{{little2}}</h3>
+          <div v-for="(value, key, index) in second_recommand">
+            <Poster width='168' is-icon-show :index='key+1' />
+          </div> 
+        </div>
+        <div id="recommand-4">
+          <h3>{{little3}}</h3>
+          <div v-for="(value, key, index) in second_recommand">
+            <Poster width="168" />
+          </div> 
         </div>
     </div>
 </template>
@@ -36,6 +49,10 @@ export default {
       biz_logo: require('../../assets/images/hollywoodLogo.png'),
       copyright_logo: require('../../assets/images/besTVLogo.png'),
       bottom_recommand:[1,2,3,4],
+      second_recommand:[1,2,3,4,5,6],
+      little1: '观看历史',
+      little2: '人气排行',
+      little3: '蜘蛛侠系列一次看爽',
       yao_feng: [
         {
           id: 12345,
@@ -114,14 +131,41 @@ export default {
 }
 #carousel{
   width: 100%;
-  height: 340px;
+  height: 300px;
 }
-#bottomRecommand{
+#recommand-1{
   width: 1128px;
   margin: 0 auto;
   white-space: nowrap;
 }
-#bottomRecommand > div{
+#recommand-1 > div{
+  display: inline-block;
+  margin-right: 24px;
+}
+#recommand-2{
+  width: 1128px;
+  margin: 0 auto;
+  white-space: nowrap;
+}
+#recommand-2 > div{
+  display: inline-block;
+  margin-right: 24px;
+}
+#recommand-3{
+  width: 1128px;
+  margin: 0 auto;
+  white-space: nowrap;
+}
+#recommand-3 > div{
+  display: inline-block;
+  margin-right: 24px;
+}
+#recommand-4{
+  width: 1128px;
+  margin: 0 auto;
+  white-space: nowrap;
+}
+#recommand-4 > div{
   display: inline-block;
   margin-right: 24px;
 }

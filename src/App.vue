@@ -12,7 +12,7 @@ export default {
 </script>
 
 <style lang='stylus'>
-@import "assets/css/index.styl";
+//@import "assets/css/index.styl";
 #app
   font-family $defaultFontFamily;
   color $defaultFontColor;

@@ -5,6 +5,7 @@ import App from './App'
 import router from './router'
 import './assets/js/rem.js'
 import './assets/css/reset.css'
+//import '!style-loader!css-loader!stylus-loader!./assets/css/index.styl'
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */

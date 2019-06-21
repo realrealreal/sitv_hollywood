@@ -53,7 +53,12 @@ exports.cssLoaders = function (options) {
       return ['vue-style-loader'].concat(loaders)
     }
   }
-
+  //引入css全局变量
+   var stylusOptions = {
+        import: [
+            path.join(__dirname, "../src/assets/css/index.styl"), // 全局变量文件 文件后缀名为.styl
+        ]
+    }
   // https://vue-loader.vuejs.org/en/configurations/extract-css.html
   return {
     css: generateLoaders(),
@@ -61,8 +66,8 @@ exports.cssLoaders = function (options) {
     less: generateLoaders('less'),
     sass: generateLoaders('sass', { indentedSyntax: true }),
     scss: generateLoaders('sass'),
-    stylus: generateLoaders('stylus'),
-    styl: generateLoaders('stylus')
+    stylus: generateLoaders('stylus', stylusOptions),
+    styl: generateLoaders('stylus', stylusOptions)
   }
 }
 

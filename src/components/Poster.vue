@@ -1,7 +1,8 @@
 <template>
-	<a :href="json.href" :style="{width: toRem(_width)+'rem'}" @focus="test('hi')">              
+	<a :href="json.href" :style="{width: toRem(width)+'rem'}" @focus="test('hi')">              
 	  <img :src="json.src" alt="" >
-	  <div :style="{bottom: toRem(_bottom)+'rem'}"><span :class="marguee == 0 ? '':'marquee'+marguee">{{json.name}}</span></div>
+	  <div :class="{ shadow: isImgIn }"><span :class="marguee == 0 ? '':'marquee'+marguee">{{json.name}}</span></div>
+    <div v-show="isIconShow">{{index}}</div>
 	</a>
 </template>
 
@@ -11,7 +12,8 @@ export default {
   name: 'Poster',
   data () {
     return {
-    	marguee: 0
+    	marguee: 0,
+      leftTopIcon: require('../assets/images/rankings.png')
     }
   },
   mounted() {
@@ -28,16 +30,28 @@ export default {
       	}
       }
     },
-    _width: {
-      type: Number,
+    width: {
+      type: String,
       default: function () {
-        return 168
+        return "168"
       }
     },
-    _bottom: {
+    isImgIn: { //控制文字在不在图片上
+      type: Boolean,
+      default: function () {
+        return false
+      }
+    },
+    isIconShow: {
+      type: Boolean,
+      default: function () {
+        return false
+      }
+    },
+    index: {
       type: Number,
       default: function () {
-        return 0
+        return 1
       }
     }
   },
@@ -87,30 +101,40 @@ export default {
 a
   animation scale-down 0.1s ease-in-out 1 forwards
   & > img
-      width: 100%
+    width 100%
   & > div
-    position relative
-    overflow hidden
-    & > span
-      position relative
+    &:nth-child(2)
+      width 100%
+      overflow hidden
+      bottom 0
+      & > span
+        position relative
+    &:last-child
+      position absolute
+      left -2px
+      top -6px
+      width 27px
+      height 33px
+      text-align center
+      text-indent -6px
+      font-size 16px
+      line-height 33px
+      background url(../assets/images/rankings.png) no-repeat
   &:focus
     outline 2px solid $linkColor
     animation scale-up 0.5s ease-in-out 1 forwards
     & > div
-      background-color $linkColor
-      & > span
-        &.marquee30
+      &:nth-child(2)
+        background-color $linkColor
+        & > span
           animation marquee30 4.5s ease-in-out infinite
-        &.marquee60
           animation marquee60 6s ease-in-out infinite
-        &.marquee90
           animation marquee90 8s ease-in-out infinite
-        &.marquee120
           animation marquee120 8s ease-in-out infinite
-        &.marquee150
           animation marquee150 10s ease-in-out infinite
-        &.marquee180
           animation marquee180 10s ease-in-out infinite
-        &.marquee210
           animation marquee210 10s ease-in-out infinite
+.shadow
+  position absolute
+  background-color rgba(0,0,0,0.3)
 </style>

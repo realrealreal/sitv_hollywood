@@ -2,7 +2,7 @@
 <template>
     <div id="index">
         <Poster />
-        <Poster :_bottom='20'/>
+        <Poster />
     </div>
 </template>
 <script>
