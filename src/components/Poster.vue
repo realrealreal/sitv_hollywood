@@ -1,5 +1,5 @@
 <template>
-	<a :href="json.href" :style="{width: toRem(width)+'rem'}" @focus="test('hi')">              
+	<a :href="json.href" :style="{width: toRem(width)+'rem'}" @focus="onFocus(index)">              
 	  <img :src="json.src" alt="" >
 	  <div :class="{ shadow: isImgIn }"><span :class="marguee == 0 ? '':'marquee'+marguee">{{json.name}}</span></div>
     <div v-show="isIconShow">{{index}}</div>
@@ -36,13 +36,19 @@ export default {
         return "168"
       }
     },
-    isImgIn: { //控制文字在不在图片上
+    isImgIn: { //控制文字在图片上，还是图片下方
       type: Boolean,
       default: function () {
         return false
       }
     },
-    isIconShow: {
+    isIconShow: { // 是否显示左上角图标的开关
+      type: Boolean,
+      default: function () {
+        return false
+      }
+    },
+    isCheck: { //是否检查focus的index值的开关(服务于滚动效果)
       type: Boolean,
       default: function () {
         return false
@@ -62,10 +68,10 @@ export default {
      	if (childWidth <= parentWidth) return;
       this.marguee = Math.ceil((childWidth - parentWidth) / 30) * 30;
      },
-     test(a) {
-
-        console.info(this.marguee);
-        console.info(this.$el.innerHTML)
+     onFocus(index) {
+        if(this.isCheck){
+          this.$emit("checkIndex",{index: index})
+        }
      },
      toRem(a) {
         return a/21
