@@ -20,6 +20,7 @@ export default {
   -moz-osx-font-smoothing grayscale
   width 100%
   height 100%
+  min-height 720px
   overflow hidden
   background url($bgImg) no-repeat fixed 100% 100%
   background-size 100% 100%

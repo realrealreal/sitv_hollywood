@@ -16,7 +16,7 @@
         <YaoFeng :json='yao_feng'/>
         <div id="recommand-1">
           <div v-for="(value, key, index) in bottom_recommand">
-            <Poster width=264 is-img-in/>
+            <Poster width='264' is-img-in/>
           </div> 
         </div>
         <div id="recommand-2">

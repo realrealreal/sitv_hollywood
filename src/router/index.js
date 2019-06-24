@@ -20,6 +20,11 @@ export default new Router({
       path: '/test',
       name: 'Test',
       component: () => import('@/pages/test') // 懒加载引入方式
+    },
+    {
+      path: '/list',
+      name: 'List',
+      component: () => import('@/pages/list/list') // 懒加载引入方式
     }
   ]
 })
