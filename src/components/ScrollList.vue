@@ -1,6 +1,6 @@
 <template>
   <ul>
-    <li v-for="(value, key, index) in loadedData"><Poster :width='config.width' :index='key' :is-img-in="config.isImgIn" isCheck v-on:checkIndex='check'/><!-- <a href="" @focus="check(key)"><img :src="rootImage+'P_'+value+'.jpg'" alt="" onerror="this.src='1.JPG'"></a> --></li>
+    <li v-for="(value, index) in loadedData"><Poster :width='config.width' :index='index' :is-img-in="config.isImgIn" isCheck v-on:checkIndex='check'/><!-- <a href="" @focus="check(key)"><img :src="rootImage+'P_'+value+'.jpg'" alt="" onerror="this.src='1.JPG'"></a> --></li>
   </ul>
 </template>
 
