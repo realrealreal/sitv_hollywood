@@ -4,15 +4,7 @@
       <div><a href="">搜索</a></div>
       <img :src="biz_logo" alt="">
       <ul>
-        <li><a class='current' href="">院线</a></li>
-        <li><a href="">全部</a></li>
-        <li><a href="">动作</a></li>
-        <li><a href="">动画</a></li>
-        <li><a href="">喜剧</a></li>
-        <li><a href="">科幻</a></li>
-        <li><a href="">惊悚</a></li>
-        <li><a href="">情感</a></li>
-        <li><a href="">IN迷</a></li>
+        <li v-for='(value, index) in leftColumn'><a :class="index == $route.params.type ? 'current' : ''" :href="'#/list/'+index">{{value.name}}</a></li>
       </ul>
     </div>
     <div :class="config.lineNumber == 3 ? 'line-3' : ''">
@@ -27,13 +19,51 @@ const config264 = {
   lineNumber: 3, //每行数量
   width: '264',
   isImgIn: true
-}
+};
 const config168 = {
   initNumber: 15,
   lineNumber: 5,
   width: '168',
   isImgIn: false
-}
+};
+const column = [
+  {
+    index:0,
+    name:'院线',
+  },
+  {
+    index:1,
+    name:'全部',
+  },
+    {
+    index:2,
+    name:'动作',
+  },
+  {
+    index:3,
+    name:'动画',
+  },
+  {
+    index:4,
+    name:'喜剧',
+  },
+  {
+    index:5,
+    name:'科幻',
+  },
+  {
+    index:6,
+    name:'惊悚',
+  },
+  {
+    index:7,
+    name:'情感',
+  },
+  {
+    index:8,
+    name:'影迷',
+  }
+];
 import ScrollList from '@/components/ScrollList'
 import Animations from '@/assets/css/animations.css'
 export default {
@@ -42,7 +72,8 @@ export default {
     return {
       biz_logo: require('../../assets/images/hollywoodLogo.png'),
       config:{},
-      data: []
+      data: [],
+      leftColumn: []
     }
   },
   created() {
@@ -56,6 +87,7 @@ export default {
   },
   methods: {
     init(){
+      console.info(this.$route.params.type);
       this.config = config168;
       this.data = (function(){
         let array = [];
@@ -63,7 +95,8 @@ export default {
           array.push(i);
         }
         return array;
-      })()
+      })();
+      this.leftColumn = column;
     }
   },
   computed: {

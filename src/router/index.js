@@ -22,7 +22,7 @@ export default new Router({
       component: () => import('@/pages/test') // 懒加载引入方式
     },
     {
-      path: '/list',
+      path: '/list/:type',
       name: 'List',
       component: () => import('@/pages/list/list') // 懒加载引入方式
     }
