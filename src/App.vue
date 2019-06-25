@@ -1,11 +1,15 @@
 <template>
   <div id="app">
     <!-- <img src="./assets/logo.png"> -->
-    <router-view/>
+    <transition mode="out-in" enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
+        <router-view/>
+    </transition>
   </div>
 </template>
 
 <script>
+import animate from 'animate.css'
+import Animations from '@/assets/css/animations.css'
 export default {
   name: 'App'
 }

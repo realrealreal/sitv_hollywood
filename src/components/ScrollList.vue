@@ -77,10 +77,10 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang='stylus'>
-ul > li {
-  display:inline-block;
-  vertical-align: middle;
-  margin-left: 24px;
-  margin-bottom: 30px;
-}
+ul
+  & > li
+    display inline-block
+    vertical-align middle
+    margin-left 24px
+    margin-bottom 30px
 </style>

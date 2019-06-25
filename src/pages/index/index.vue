@@ -115,70 +115,65 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-#index {
-  width: 100%;
-  height: 100%;
-  margin: 0 auto;
-}
-#header{
-  height: 100px;
-}
-#logo{
-  position: absolute;
-  left: 70px;
-  top: 40px;
-}
-#carousel{
-  width: 100%;
-  height: 300px;
-}
-#recommand-1{
-  width: 1128px;
-  margin: 0 auto;
-  white-space: nowrap;
-}
-#recommand-1 > div{
-  display: inline-block;
-  margin-right: 24px;
-}
-#recommand-2{
-  width: 1128px;
-  margin: 0 auto;
-  white-space: nowrap;
-}
-#recommand-2 > div{
-  display: inline-block;
-  margin-right: 24px;
-}
-#recommand-3{
-  width: 1128px;
-  margin: 0 auto;
-  white-space: nowrap;
-}
-#recommand-3 > div{
-  display: inline-block;
-  margin-right: 24px;
-}
-#recommand-4{
-  width: 1128px;
-  margin: 0 auto;
-  white-space: nowrap;
-}
-#recommand-4 > div{
-  display: inline-block;
-  margin-right: 24px;
-}
-ul {
-  display: flex;
-  -webkit-align-items: center;
-  float: right;
-  margin-top: 80px;
-  margin-right: 80px;
-  font-size: 25px;
-  color: rgba(137,137,137,1);
-}
-li{
-  padding: 0 13px; 
-}
+<style scoped lang='stylus'>
+#index
+  width 100%
+  height 100%
+  margin 0 auto
+
+#header
+  height 100px
+
+#logo
+  position absolute
+  left 70px
+  top 40px
+
+#carousel
+  width 100%
+  height 300px
+
+#recommand-1
+  width 1128px
+  margin 0 auto
+  white-space nowrap
+  & > div
+    display inline-block
+    margin-right 24px
+
+#recommand-2
+  width 1128px
+  margin 0 auto
+  white-space nowrap
+  & > div
+    display inline-block
+    margin-right 24px
+
+#recommand-3
+  width 1128px
+  margin 0 auto
+  white-space nowrap
+  & > div
+    display inline-block
+    margin-right 24px
+
+#recommand-4
+  width 1128px
+  margin 0 auto
+  white-space nowrap
+  & > div
+    display inline-block
+    margin-right 24px
+
+ul
+  display flex
+  -webkit-align-items center
+  float right
+  margin-top 80px
+  margin-right 80px
+  font-size 25px
+  color rgba(137,137,137,1)
+
+li
+  padding 0 13px
 </style>

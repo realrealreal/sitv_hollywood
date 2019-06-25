@@ -61,7 +61,7 @@ const column = [
   },
   {
     index:8,
-    name:'影迷',
+    name:'IN迷',
   }
 ];
 import ScrollList from '@/components/ScrollList'
@@ -88,7 +88,12 @@ export default {
   methods: {
     init(){
       console.info(this.$route.params.type);
-      this.config = config168;
+      if(this.$route.params.type == 8){
+        this.config = config264;
+      }else{
+        this.config = config168;
+      }
+      
       this.data = (function(){
         let array = [];
         for (var i = 0; i < 46; i++) {
@@ -112,69 +117,60 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang='stylus'>
-#index {
-  width: 100%;
-  height: 100%;
-  margin: 0 auto;
-  vertical-align: top;
-}
-#index > div {
-  display: inline-block;
-}
-#index > div:first-child {
-  margin-left: 50px;
-  margin-right: 36px;
-  width: 160px;
-  text-align: center;
-  height: 720px;
-  position: fixed;
-  top: 0;
-  left: 0;
-}
-#index > div:first-child > img {
-  width: 100%;
-  margin-top: 20px;
-}
-#index > div:first-child > div {
-  margin-top: 30px;
-  font-size: 20px;
-}
-#index > div:first-child > ul {
-  margin-top: 46px;
-}
-#index > div:first-child > ul > li {
-  font-size: 26px;
-  margin-bottom: 7px;
-}
-#index > div:first-child > div > a, #index > div:first-child > ul > li > a {
-  width:100%;
-  padding: 7px 0;
-}
-#index > div:first-child > div > a:focus, #index > div:first-child > ul > li > a:focus {
-  outline: none;
-  background-color: $linkColor;
-  color: $defaultFontColor;
-  border-radius: 25px; 
-}
-#index > div:last-child {
-  margin-left: 264px;
-  margin-top: 100px;
-  width: 960px;
-}
-.line-3 {
-  margin-left: 314px !important;
-}
-.current{
-  color: $linkColor
-}
-.current::after{
-  content: '';
-  display: block;
-  border-bottom: 2px solid $linkColor;
-  width: 24px;
-  position: relative;
-  top: 4px;
-  left: 50%;
-  margin-left: -12px;
-}
+#index
+  width 100%
+  height 100%
+  margin 0 auto
+  vertical-align top
+  & > div
+    display inline-block
+    &:first-child
+      margin-left 50px
+      margin-right 36px
+      width 160px
+      text-align center
+      height 720px
+      position fixed
+      top 0
+      left 0
+      & > img
+        width 100%
+        margin-top 20px
+      & > div
+        margin-top 30px
+        font-size 20px
+      & > ul
+        margin-top 46px
+        & > li
+          font-size 26px
+          margin-bottom 7px
+    &:last-child
+      margin-left 264px
+      margin-top 100px
+      width 960px
+
+#index > div:first-child > div > a, #index > div:first-child > ul > li > a
+  width 100%
+  padding 7px 0
+
+#index > div:first-child > div > a:focus, #index > div:first-child > ul > li > a:focus
+  outline none
+  background-color $linkColor
+  color $defaultFontColor
+  border-radius 25px
+
+.line-3
+  margin-left 314px !important
+
+.current
+  color $linkColor
+  &::after
+    content ''
+    display block
+    border-bottom 2px solid $linkColor
+    width 24px
+    position relative
+    top 4px
+    left 50%
+    margin-left -12px
 </style>

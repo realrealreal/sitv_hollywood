@@ -25,6 +25,16 @@ export default new Router({
       path: '/list/:type',
       name: 'List',
       component: () => import('@/pages/list/list') // 懒加载引入方式
+    },
+    {
+      path: '/vod/:programcode',
+      name: 'Vod',
+      component: () => import('@/pages/detail/vod') // 懒加载引入方式
+    },
+    {
+      path: '/personal',
+      name: 'Personal',
+      component: () => import('@/pages/index/personal') // 懒加载引入方式
     }
   ]
 })
