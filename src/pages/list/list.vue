@@ -1,8 +1,14 @@
 <template>
 	<div id="index">
     <div>
-      <div><a href="">搜索</a></div>
-      <img :src="biz_logo" alt="">
+      <div v-if="$route.name == 'VodList'">
+        <div><a href="">搜索</a></div>
+        <img :src="biz_logo" alt="">  
+      </div>
+      <div v-if="$route.name == 'RepoList'">
+        <h2>{{title[$route.params.name]}}</h2>
+        <a href="">编辑</a>
+      </div>
       <ul>
         <li v-for='(value, index) in leftColumn'><a :class="index == $route.params.type ? 'current' : ''" :href="'#/list/'+index">{{value.name}}</a></li>
       </ul>
@@ -10,7 +16,7 @@
     <div :class="config.lineNumber == 3 ? 'line-3' : ''">
       <ScrollList :data='data' :config='config'/>
     </div>
-  </div>
+  </div> 
 </template>
 
 <script>
@@ -26,6 +32,16 @@ const config168 = {
   width: '168',
   isImgIn: false
 };
+const configText = {
+  initNumber: 28,
+  lineNumber: 2,
+  width: '168',
+  isImgIn: false
+};
+const title = {
+  'history': '观看历史',
+  'collection': '我的收藏'
+}
 const column = [
   {
     index:0,
@@ -73,7 +89,9 @@ export default {
       biz_logo: require('../../assets/images/hollywoodLogo.png'),
       config:{},
       data: [],
-      leftColumn: []
+      leftColumn: [],
+      title:title,
+      current: 1
     }
   },
   created() {
@@ -87,13 +105,20 @@ export default {
   },
   methods: {
     init(){
+
+      console.info(this.$route.name);
       console.info(this.$route.params.type);
-      if(this.$route.params.type == 8){
+      if(this.$route.name == 'VodList'){
+        
+      }else{
+
+      }
+      this.config = configText;
+      /*if(this.$route.params.type == 8){
         this.config = config264;
       }else{
         this.config = config168;
-      }
-      
+      }*/
       this.data = (function(){
         let array = [];
         for (var i = 0; i < 46; i++) {
@@ -125,20 +150,25 @@ export default {
   & > div
     display inline-block
     &:first-child
-      margin-left 50px
-      margin-right 36px
+      padding-left 50px
+      padding-right 36px
       width 160px
       text-align center
       height 720px
       position fixed
       top 0
       left 0
-      & > img
-        width 100%
-        margin-top 20px
+      background url(../../assets/images/leftShadow.png)
       & > div
+        height 92px
         margin-top 30px
         font-size 20px
+        & > img
+          width 100%
+          margin-top 20px
+        & > a
+          width 100%
+          margin-top 20px
       & > ul
         margin-top 46px
         & > li
@@ -173,4 +203,9 @@ export default {
     top 4px
     left 50%
     margin-left -12px
+
+.leftshadow
+  position fixed
+  left 0
+  top 0
 </style>

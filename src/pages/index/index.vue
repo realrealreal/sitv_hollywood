@@ -7,7 +7,7 @@
             </div>
             <ul>
               <li><a href="">搜索</a></li>
-              <li><a href="">我的</a></li>
+              <li><a :href="repo_href">我的</a></li>
               <li><a href="">退出</a></li>
             </ul>
         </div>
@@ -42,10 +42,12 @@
 <script>
 import YaoFeng from '@/components/YaoFeng'
 import Poster from '@/components/Poster'
+console.info();
 export default {
   name: 'Index',
   data () {
     return {
+      repo_href: this.GLOBAL.config.href.repo,
       biz_logo: require('../../assets/images/hollywoodLogo.png'),
       copyright_logo: require('../../assets/images/besTVLogo.png'),
       bottom_recommand:[1,2,3,4],

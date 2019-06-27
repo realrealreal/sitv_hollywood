@@ -1,5 +1,5 @@
 <template>
-	<a :href="json.href" :style="{width: toRem(width)+'rem'}" @focus="onFocus(index)">              
+	<a :href="json.href" :style="{width: toRem(width)+'rem'}" @focus="onFocus(index,$event)">              
 	  <img :src="json.src" alt="" >
 	  <div :class="{ shadow: isImgIn }"><span :class="marguee == 0 ? '':'marquee'+marguee">{{json.name}}</span></div>
     <div v-show="isIconShow">{{index}}</div>
@@ -68,9 +68,15 @@ export default {
      	if (childWidth <= parentWidth) return;
       this.marguee = Math.ceil((childWidth - parentWidth) / 30) * 30;
      },
-     onFocus(index) {
+     onFocus(index,e) {
+        //e.preventDefault(); 會抖動
+        console.info(e.target);
         if(this.isCheck){
-          this.$emit("checkIndex",{index: index})
+          let data = {
+            index: index,
+            el: e.target
+          };
+          this.$emit("checkIndex",data)
         }
      },
      toRem(a) {

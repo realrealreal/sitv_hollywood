@@ -22,8 +22,18 @@ export default new Router({
       component: () => import('@/pages/test') // 懒加载引入方式
     },
     {
+      path: '/repo',
+      name: 'Repo',
+      component: () => import('@/pages/index/personal') // 懒加载引入方式
+    },
+    {
+      path: '/repo/:name/:type',
+      name: 'RepoList',
+      component: () => import('@/pages/list/list') // 懒加载引入方式
+    },
+    {
       path: '/list/:type',
-      name: 'List',
+      name: 'VodList',
       component: () => import('@/pages/list/list') // 懒加载引入方式
     },
     {
@@ -31,10 +41,5 @@ export default new Router({
       name: 'Vod',
       component: () => import('@/pages/detail/vod') // 懒加载引入方式
     },
-    {
-      path: '/personal',
-      name: 'Personal',
-      component: () => import('@/pages/index/personal') // 懒加载引入方式
-    }
   ]
 })

@@ -1,6 +1,7 @@
 <template>
   <ul>
-    <li v-for="(value, index) in loadedData"><Poster :width='config.width' :index='index' :is-img-in="config.isImgIn" isCheck v-on:checkIndex='check'/><!-- <a href="" @focus="check(key)"><img :src="rootImage+'P_'+value+'.jpg'" alt="" onerror="this.src='1.JPG'"></a> --></li>
+    <li v-if='config.lineNumber != 2' v-for="(value, index) in loadedData"><Poster :width='config.width' :index='index' :is-img-in="config.isImgIn" isCheck v-on:checkIndex='check'/><!-- <a href="" @focus="check(key)"><img :src="rootImage+'P_'+value+'.jpg'" alt="" onerror="this.src='1.JPG'"></a> --></li>
+    <li v-if='config.lineNumber == 2' v-for="(value, index) in loadedData"><a v-if='config.lineNumber == 2' href="" @focus="check({index: index})">test</a></li>
   </ul>
 </template>
 
@@ -22,14 +23,6 @@ export default {
     config: { //配置
       type: Object,
       required: true
-      /*default: function () {
-        return {
-          initNumber: 15, //初始值总数量
-          lineNumber: 5, //每行数量
-          width: '168',
-          isImgIn: false
-        }
-      }*/
     },
     data: {  // 所有数据
       type: Array,
@@ -82,5 +75,14 @@ ul
     display inline-block
     vertical-align middle
     margin-left 24px
-    margin-bottom 30px
+    & > a
+      padding 10px
+      width 397px
+    &:nth-child(4n+3) > a
+        background rgba(27, 33, 44, 0.5)
+    &:nth-child(4n+4) > a
+        background rgba(27, 33, 44, 0.5)
+.poster-li{
+  margin-bottom 30px
+}
 </style>

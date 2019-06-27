@@ -5,7 +5,9 @@ import App from './App'
 import router from './router'
 import './assets/js/rem.js'
 import './assets/css/reset.css'
+import globalVariable from '@/api/config.js'
 //import '!style-loader!css-loader!stylus-loader!./assets/css/index.styl'
+Vue.prototype.GLOBAL = globalVariable
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
