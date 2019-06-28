@@ -55,3 +55,63 @@
     50%{ left: -210px; }
     100%{ left: 0; }
 }
+
+@keyframes image-right-in {
+    0%{
+        left: 800px;
+        opacity: 0
+    }
+    75%{
+        opacity: 0.25;
+    }
+    100%{
+        left: 0;
+        opacity: 1
+    }
+}
+
+@keyframes image-right-out {
+    0%{
+        left: 0 ;
+        opacity: 1
+    }
+    100%{
+        left: 0;
+        opacity: 0
+    }
+}
+
+@keyframes image-left-in {
+    0%{
+        left: -1280px;
+        opacity: 0
+    }
+    50%{
+        opacity: 0.25
+    }
+    100%{
+        left: -76px ;
+        opacity: 1
+    }
+}
+
+@keyframes image-left-out {
+    0%{
+        left: -76px;
+        opacity: 1
+    }
+    100%{
+        left: -76px ;
+        opacity: 0
+    }
+}
+
+@keyframes fade-out {
+    0%{ opacity: 1 }
+    100%{ opacity: 0}
+}
+
+@keyframes image-fade-in {
+    0%{ opacity: 0 }
+    100%{ opacity: 1}
+}

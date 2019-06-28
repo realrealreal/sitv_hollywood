@@ -2,7 +2,7 @@
 	<a :href="json.href" :style="{width: toRem(width)+'rem'}" @focus="onFocus(index,$event)">              
 	  <img :src="json.src" alt="" >
 	  <div :class="{ shadow: isImgIn }"><span :class="marguee == 0 ? '':'marquee'+marguee">{{json.name}}</span></div>
-    <div v-show="isIconShow">{{index}}</div>
+    <div v-show="isIconShow" style="color: white">{{index}}</div>
 	</a>
 </template>
 
@@ -131,8 +131,9 @@ a
       text-indent -6px
       font-size 16px
       line-height 33px
-      background url(../assets/images/rankings.png) no-repeat
+      background url($leftTopIcon) no-repeat
   &:focus
+    color $blackColor
     outline 2px solid $linkColor
     animation scale-up 0.5s ease-in-out 1 forwards
     & > div

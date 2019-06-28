@@ -1,7 +1,7 @@
 /*全局变量*/
 const config = {
 	href: {
-		repo:'#/repo'
+		repo:'repo'
 	}
 }
 export default {

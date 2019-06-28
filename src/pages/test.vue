@@ -1,8 +1,9 @@
 <!-- 测试页面 -->
 <template>
     <div id="index">
-        <Poster />
-        <Poster />
+        <router-link to='index' replace>首页</router-link>
+        <router-link to='repo' replace>个人中心</router-link>
+        <router-link to='repo/histroy/1' replace>list</router-link>
     </div>
 </template>
 <script>

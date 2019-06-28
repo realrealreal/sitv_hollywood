@@ -1,9 +1,9 @@
 <template>
   <div id="app">
     <!-- <img src="./assets/logo.png"> -->
-    <transition mode="out-in" enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
+    <!-- <transition mode="out-in" enter-active-class="animated fadeIn" leave-active-class="animated fadeOut"> -->
         <router-view/>
-    </transition>
+    <!-- </transition> -->
   </div>
 </template>
 

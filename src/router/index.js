@@ -12,7 +12,7 @@ export default new Router({
       component: HelloWorld
     },
     {
-      path: '/index',
+      path: '/hollywood/index',
       name: 'HollyWood',
       component: () => import('@/pages/index/index') // 懒加载引入方式
     },
@@ -22,17 +22,17 @@ export default new Router({
       component: () => import('@/pages/test') // 懒加载引入方式
     },
     {
-      path: '/repo',
+      path: '/hollywood/repo',
       name: 'Repo',
       component: () => import('@/pages/index/personal') // 懒加载引入方式
     },
     {
-      path: '/repo/:name/:type',
+      path: '/hollywood/repo/:name/:type',
       name: 'RepoList',
       component: () => import('@/pages/list/list') // 懒加载引入方式
     },
     {
-      path: '/list/:type',
+      path: '/hollywood/list/:type',
       name: 'VodList',
       component: () => import('@/pages/list/list') // 懒加载引入方式
     },
@@ -41,5 +41,9 @@ export default new Router({
       name: 'Vod',
       component: () => import('@/pages/detail/vod') // 懒加载引入方式
     },
+    {
+      path: '/hollywood',
+      redirect:'/hollywood/index'
+    }
   ]
 })
