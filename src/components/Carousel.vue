@@ -1,38 +1,24 @@
 <template>
-  <div class="carousel">  
-    <transition name="fade" enter-active-class="animated fadeIn"
+  <div class="carousel">
+
+    <transition v-for="(value, index) in items" name="fade" enter-active-class="animated fadeIn"
    leave-active-class="animated fadeOut"
-   :duration="{ enter: 2000, leave: 800 }">
-      <img v-show='showIndex == 0' :src="imgData[0].img1" alt="">
+   :duration="{ enter: 2000, leave: 800 }" :key="value.key">
+      <img v-show='showIndex == index' :src="`${GLOBAL.config.base + '/epg/resource/picture' + value.icon1}`" alt="">
     </transition> 
-    <transition name="fade" enter-active-class="animated fadeIn"
-   leave-active-class="animated fadeOut"
-   :duration="{ enter: 2000, leave: 800 }">
-      <img v-show='showIndex == 1' :src="imgData[1].img1" alt="">
-    </transition>
     <a href="">
-       <transition name="left" enter-active-class="animated fadeInLeft"
+       <transition v-for="(value, index) in items" name="left" enter-active-class="animated fadeInLeft"
      leave-active-class="animated fadeOut"
-     :duration="{ enter: 2000, leave: 800 }">
-          <img v-show='showIndex == 0' :src="imgData[0].img2" alt="">
+     :duration="{ enter: 2000, leave: 800 }" :key="value.key">
+          <img v-show='showIndex == index' :src="`${GLOBAL.config.base + '/epg/resource/picture' + value.icon2}`" alt="">
       </transition>
-     <transition name="right" enter-active-class="animated fadeInRight"
+     <transition v-for="(value, index) in items" name="right" enter-active-class="animated fadeInRight"
      leave-active-class="animated fadeOut"
-     :duration="{ enter: 2000, leave: 800 }">
-          <img v-show='showIndex == 0' :src="imgData[0].img3" alt="">
-      </transition>
-    <transition name="left" enter-active-class="animated fadeInLeft"
-     leave-active-class="animated fadeOut"
-     :duration="{ enter: 2000, leave: 800 }">
-          <img v-show='showIndex == 1' :src="imgData[1].img2" alt="">
-      </transition>
-      <transition name="right" enter-active-class="animated fadeInRight"
-     leave-active-class="animated fadeOut"
-     :duration="{ enter: 2000, leave: 800 }">
-          <img v-show='showIndex == 1' :src="imgData[1].img3" alt="">
+     :duration="{ enter: 2000, leave: 800 }" :key="value.key">
+          <img v-show='showIndex == index' :src="`${GLOBAL.config.base + '/epg/resource/picture' + value.icon3}`" alt="">
       </transition>
       <div v-show="showIndex >= 0">
-        <div v-for="(value, index) in imgData" class="outer-indicator" :class="showIndex == index ? 'indicator-selected': ''"></div>
+        <div v-for="(value, index) in items" class="outer-indicator" :class="showIndex == index ? 'indicator-selected': ''"></div>
       </div>
     </a>
   </div>
@@ -60,6 +46,12 @@ export default {
           img3: require('../assets/images/test/15598112133213404680_3.png')
         }
       ]
+    }
+  },
+  props: {
+    items: {
+      type: Array,
+      required: true
     }
   },
   mounted() {

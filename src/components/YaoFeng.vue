@@ -1,9 +1,9 @@
 <template>
   <div>
     <ul>
-      <li class="iconfont" :class='item.icon' v-for='item in json' :key='item.id'>
-        <a :href="item.href" :style="{color: item.color}">              
-          <img :src="item.src" alt="" >
+      <li class="iconfont" v-for='item in items' :key='item.code'>
+        <a :href="item.code">              
+          <img :src="`${GLOBAL.config.base + item.image}`" alt="" >
         </a>
       </li>
     </ul>
@@ -14,7 +14,7 @@
 export default {
   name: 'YaoFeng',
   props: {
-    json: {
+    items: {
       type: Array,
       default: () => [],
       required: true

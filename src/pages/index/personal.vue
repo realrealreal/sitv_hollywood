@@ -26,11 +26,11 @@
                 <img :src="config.groups[1].src" alt="" />
               </a>
             </li>
-            <li v-for="(value, index) in second_recommand.slice(0,10)">
+            <li v-for="(value, index) in collectionList.slice(0,10)">
               <Poster :width='config.width' isCheck v-on:checkIndex='check' :index='index+1'/>
             </li>
             <li>
-               <a :href="config.groups[1].href" v-if='second_recommand.length>10' @focus='onfocus($event,2)'>              
+               <a :href="config.groups[1].href" v-if='collectionList.length>10' @focus='onfocus($event,2)'>              
                 <img src="../../assets/images/more.png" alt="" />
               </a>
             </li>
@@ -84,6 +84,8 @@ export default {
     return {
       config: {
       },
+      historyList: [],
+      collectionList: [],
       bottom_recommand:[1,2,3,4,5,6,7,8,9,10,11],
       second_recommand:[1,2,3,4,5,6],
     }
@@ -93,7 +95,16 @@ export default {
   },
   methods: {
     init(){
-      this.config = config;
+      let vm = this;
+      vm.config = config;
+      vm.dataService.queryHistory(function(res){
+        console.info(res);      
+        vm.historyList = res.data.historyList;
+      });
+      vm.dataService.queryCollection(function(res){
+        console.info(res);      
+        vm.collectionList = res.data.collectionList;
+      });
     },
     test(){
       console.info(this.$el)

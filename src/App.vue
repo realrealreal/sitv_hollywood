@@ -9,9 +9,30 @@
 
 <script>
 import animate from 'animate.css'
+import url from '@/api/url-config.js'
 import Animations from '@/assets/css/animations.css'
 export default {
-  name: 'App'
+  name: 'App',
+  mounted() {
+    this.init()
+  },
+  methods: {
+    /**
+     * [init 初始化]
+     * @Author   shanjing
+     * @DateTime 2019-07-02T17:18:43+0800
+     * @return   {[type]}                 [null]
+     */
+    init(){ //初始化数据
+      let vm = this;
+      // console.info('old'+vm.GLOBAL.store.getItem('page'))
+      // console.info('set'+vm.GLOBAL.store.setItem('page','test'))
+      // console.info('new'+vm.GLOBAL.store.getItem('page'))
+      vm.authService.login(function(res){
+        console.info(res.data);
+      });
+    }
+  }
 }
 </script>
 

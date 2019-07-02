@@ -1,7 +1,7 @@
 <template>
     <div id="index">
         <div id="carousel">
-          <Carousel />
+          <Carousel :items="middleItems.slice(0,2)"/>
         </div>
         <div id="header">
             <div id="logo">
@@ -15,29 +15,29 @@
             </ul>
         </div>
         <div id="YaoFeng">
-          <YaoFeng :json='yao_feng'/>
+          <YaoFeng :items='beltItems'/>
         </div>
         <div id="recommand-1">
-          <div v-for="(value, key, index) in bottom_recommand">
-            <Poster width='264' is-img-in/>
+          <div v-for="(value, key, index) in bottomItems.slice(0,4)">
+            <Poster width='264' is-img-in :item='value'/>
           </div> 
         </div>
         <div id="recommand-2">
           <h3>{{little1}}</h3>
-          <div v-for="(value, key, index) in second_recommand">
-            <Poster width='168' />
+          <div v-for="(value, key, index) in waterfallItems.slice(0,6)">
+            <Poster width='168' :item='value'/>
           </div> 
         </div>
         <div id="recommand-3">
           <h3>{{little2}}</h3>
-          <div v-for="(value, key, index) in second_recommand">
-            <Poster width='168' is-icon-show :index='key+1' />
+          <div v-for="(value, key, index) in waterfallItems.slice(0,6)">
+            <Poster width='168' :item='value' is-icon-show :index='key+1' />
           </div> 
         </div>
         <div id="recommand-4">
           <h3>{{little3}}</h3>
-          <div v-for="(value, key, index) in second_recommand">
-            <Poster width="168" />
+          <div v-for="(value, key, index) in albumItems.slice(0,6)">
+            <Poster width="168" :item='value'/>
           </div> 
         </div>
     </div>
@@ -46,7 +46,6 @@
 import Carousel from '@/components/Carousel'
 import YaoFeng from '@/components/YaoFeng'
 import Poster from '@/components/Poster'
-console.info();
 export default {
   name: 'Index',
   data () {
@@ -59,58 +58,27 @@ export default {
       little1: '观看历史',
       little2: '人气排行',
       little3: '蜘蛛侠系列一次看爽',
-      yao_feng: [
-        {
-          id: 12345,
-          src: require('../../assets/images/test/15604926190803147203.jpg'),
-          href: '/'
-        },
-        {
-          id: 12346,
-          src: require('../../assets/images/test/15604926318192850104.jpg'),
-          href: 'https://www.baidu.com'
-        },
-        {
-          id: 12347,
-          src: require('../../assets/images/test/15604926318192850104.jpg'),
-          href: '/#/discovery'
-        },
-        {
-          id: 12348,
-          src: require('../../assets/images/test/15604926318192850104.jpg'),
-          href: '/#/me'
-        },
-        {
-          id: 12349,
-          src: require('../../assets/images/test/15604926318192850104.jpg'),
-          href: '/'
-        },
-        {
-          id: 12350,
-          src: require('../../assets/images/test/15604926318192850104.jpg'),
-          href: 'https://www.baidu.com'
-        },
-        {
-          id: 12351,
-          src: require('../../assets/images/test/15604926318192850104.jpg'),
-          href: '/#/discovery'
-        },
-        {
-          id: 12352,
-          src: require('../../assets/images/test/15604926318192850104.jpg'),
-          href: '/#/me'
-        },
-        {
-          id: 12353,
-          src: require('../../assets/images/test/15604926318192850104.jpg'),
-          href: '/#/me'
-        },
-        {
-          id: 12354,
-          src: require('../../assets/images/test/15604926318192850104.jpg'),
-          href: '/#/me'
-        },
-      ]
+      middleItems: [],
+      beltItems: [],
+      bottomItems: [],
+      waterfallItems: [],
+      albumItems: []
+    }
+  },
+  created() {
+    this.init()
+  },
+  methods: {
+    init(){ //初始化数据
+      let vm = this;
+      vm.dataService.getMovieIndex(function(res){
+        console.info(res.data);      
+        vm.middleItems = res.data.positions[1].middleItems ? res.data.positions[1].middleItems : [];
+        vm.beltItems = res.data.positions[2].beltItems ? res.data.positions[2].beltItems : [];
+        vm.bottomItems = res.data.positions[3].bottomItems ? res.data.positions[3].bottomItems : [];
+        vm.waterfallItems = res.data.positions[4].waterfallItems ? res.data.positions[4].waterfallItems : [];
+        vm.albumItems = res.data.positions[5].albumItems ? res.data.positions[5].albumItems : [];
+      });
     }
   },
   components: {

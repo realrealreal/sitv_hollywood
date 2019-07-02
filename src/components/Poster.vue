@@ -1,7 +1,7 @@
 <template>
-	<a :href="json.href" :style="{width: toRem(width)+'rem'}" @focus="onFocus(index,$event)">              
-	  <img :src="json.src" alt="" >
-	  <div :class="{ shadow: isImgIn }"><span :class="marguee == 0 ? '':'marquee'+marguee">{{json.name}}</span></div>
+	<a :href="item.code" :style="{width: toRem(width)+'rem'}" @focus="onFocus(index,$event)">              
+	  <img :src="`${GLOBAL.config.base + item.image}`" alt="">
+	  <div :class="{ shadow: isImgIn }"><span :class="marguee == 0 ? '':'marquee'+marguee">{{item.title}}</span></div>
     <div v-show="isIconShow" style="color: white">{{index}}</div>
 	</a>
 </template>
@@ -12,43 +12,70 @@ export default {
   name: 'Poster',
   data () {
     return {
+      /**
+       * [marguee 滚动距离 初始值为0]
+       * @type {Number}
+       */
     	marguee: 0,
-      leftTopIcon: require('../assets/images/rankings.png')
+      /**
+       * [leftTopIcon 左上角 角标]
+       * @type {[type]}
+       */
+      leftTopIcon: require('../assets/images/rankings.png'),
+      /**
+       * [default 默认图（暂时未用到）]
+       * @type {[type]}
+       */
+      default: require('../assets/images/test/default1.jpg')
     }
   },
   mounted() {
     this.init()
   },
   props: {
-    json: {
+    /**
+     * [item 数据]
+     * @type {Object}
+     */
+    item: { 
       type: Object,
-      default: function () {
-        return {
-        	href: '#',
-      		src: require('../assets/images/test/default1.jpg'),
-      	 	name: 'test111111111111111111111111111111' 
-      	}
-      }
+      required: true
     },
+    /**
+     * [width 宽度]
+     * @type {String}
+     */
     width: {
       type: String,
       default: function () {
         return "168"
       }
     },
-    isImgIn: { //控制文字在图片上，还是图片下方
+    /**
+     * [isImgIn 控制文字在图片上，还是图片下方]
+     * @type {Boolean}
+     */
+    isImgIn: {
       type: Boolean,
       default: function () {
         return false
       }
     },
-    isIconShow: { // 是否显示左上角图标的开关
+    /**
+     * [isIconShow 是否显示左上角图标的开关]
+     * @type {Boolean}
+     */
+    isIconShow: {
       type: Boolean,
       default: function () {
         return false
       }
     },
-    isCheck: { //是否检查focus的index值的开关(服务于滚动效果)
+    /**
+     * [isCheck 是否检查focus的index值的开关(服务于滚动效果)]
+     * @type {Object}
+     */
+    isCheck: {
       type: Boolean,
       default: function () {
         return false
@@ -62,12 +89,26 @@ export default {
     }
   },
   methods: {
-     init() {//初始化 获取滚动距离 margguee-xxx
+     /**
+      * [init 初始化 获取滚动距离 margguee-xxx]
+      * @Author   shanjing
+      * @DateTime 2019-07-02T17:21:44+0800
+      * @return   {[type]}                 [description]
+      */
+     init() {
      	let parentWidth = this.$el.children[1].offsetWidth;
      	let childWidth = this.$el.children[1].children[0].offsetWidth;
      	if (childWidth <= parentWidth) return;
       this.marguee = Math.ceil((childWidth - parentWidth) / 30) * 30;
      },
+     /**
+      * [onFocus 海报组件获得焦点事件处理]
+      * @Author   shanjing
+      * @DateTime 2019-07-02T17:22:17+0800
+      * @param    {[type]}                 index [下标]
+      * @param    {[type]}                 e     [event]
+      * @return   {[type]}                       [null]
+      */
      onFocus(index,e) {
         //e.preventDefault(); 會抖動
         console.info(e.target);
@@ -79,6 +120,13 @@ export default {
           this.$emit("checkIndex",data)
         }
      },
+     /**
+      * [toRem 换算rem root font-size 21]
+      * @Author   shanjing
+      * @DateTime 2019-07-02T17:23:24+0800
+      * @param    {[type]}                 a [width]
+      * @return   {[type]}                   [null]
+      */
      toRem(a) {
         return a/21
      }
