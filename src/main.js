@@ -5,15 +5,21 @@ import App from './App'
 import router from './router'
 import './assets/js/rem.js'
 import './assets/css/reset.css'
-import globalVariable from '@/api/global-config.js' //引入全局配置
+import globalVariable from '@/api/global-config.js'
 import authService from '@/api/auth/auth.service.js'
 import dataService from '@/api/data/data.service.js'
+import utils from '@/api/utils.js'
 import store from './vuex/store' // 引入store
 
-//import '!style-loader!css-loader!stylus-loader!./assets/css/index.styl'
+/**
+ * [GLOBAL]
+ * @type {[type]}
+ */
 Vue.prototype.GLOBAL = globalVariable
 Vue.prototype.authService = authService
 Vue.prototype.dataService = dataService
+Vue.prototype.utils = utils
+
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */

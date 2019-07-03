@@ -1,13 +1,14 @@
 <template>
-	<a :href="item.code" :style="{width: toRem(width)+'rem'}" @focus="onFocus(index,$event)">              
-	  <img :src="`${GLOBAL.config.base + item.image}`" alt="">
-	  <div :class="{ shadow: isImgIn }"><span :class="marguee == 0 ? '':'marquee'+marguee">{{item.title}}</span></div>
+	<a href="javascript:void(0)" :style="{width: toRem(width)+'rem'}" @focus="onFocus(index,$event)" @click="goToDetail">              
+	  <img :src="`${GLOBAL.config.base + (item.image || item.contentPoster || '/epg/resource/picture' + item.icon)}`" alt="">
+	  <div :class="{ shadow: isImgIn }"><span :class="marguee == 0 ? '':'marquee'+marguee">{{item.title || item.contentName}}</span></div>
     <div v-show="isIconShow" style="color: white">{{index}}</div>
 	</a>
 </template>
 
 <script>
 import Animations from '@/assets/css/animations.css'
+import {mapActions, mapState,mapGetters} from 'vuex' //注册 action 和 state
 export default {
   name: 'Poster',
   data () {
@@ -129,7 +130,27 @@ export default {
       */
      toRem(a) {
         return a/21
-     }
+     },
+     /**
+      * [goToDetail description]
+      * @Author   shanjing
+      * @DateTime 2019-07-03T17:04:20+0800
+      * @return   {[type]}                 [description]
+      */
+     goToDetail() {
+        let vm = this;
+        vm.GLOBAL.store.setItem('programCode',(vm.item.code || vm.item.contentId));
+        console.info(vm.GLOBAL.store.getItem('programCode'));
+        console.info('dispatch****1'+vm.$store.state.programCode);
+        console.info((vm.item.code || vm.item.contentId));
+        vm.$store.dispatch('setProgramCode',(vm.item.code || vm.item.contentId))
+        console.info('dispatch****2'+vm.$store.state.programCode);
+        vm.$router.push({path: '/hollywood/vod'});
+     },
+     //在这里引入 action 里的方法，使用方法和 methods 里的其他方法一样
+      ...mapActions([
+          'incrementStep'
+      ])
   },
   computed: {
     
@@ -187,15 +208,22 @@ a
     & > div
       &:nth-child(2)
         background-color $linkColor
-        & > span
+        & > span.marquee30
           animation marquee30 4.5s ease-in-out infinite
+        & > span.marquee60
           animation marquee60 6s ease-in-out infinite
+        & > span.marquee90
           animation marquee90 8s ease-in-out infinite
+        & > span.marquee120
           animation marquee120 8s ease-in-out infinite
+        & > span.marquee150
           animation marquee150 10s ease-in-out infinite
+        & > span.marquee180
           animation marquee180 10s ease-in-out infinite
+        & > span.marquee210
           animation marquee210 10s ease-in-out infinite
 .shadow
   position absolute
-  background-color rgba(0,0,0,0.3)
+  background: linear-gradient(to top, rgba(0,0,0,1), rgba(0,0,0,0.3));
+  // background-color rgba(0,0,0,0.3)
 </style>

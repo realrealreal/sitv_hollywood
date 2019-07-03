@@ -1,24 +1,21 @@
 <template>
 	<div id="index">
-    <div>
-      <h1>人类消减计划</h1>
-      <div>美国2016 136分钟 科幻
+    <div v-if="data.title">
+      <h1 class="white">{{data.title}}{{programCode}}</h1>
+      <div>{{data.country+' • '+data.year+' • '+data.displayRunTime+'分钟 • '+data.mainFolder}}
         <div>
-          <span>导演</span>
+          <span class="white">导演</span>
           <ul>
-            <li>1121212121212121212112</li>
-            <li>2</li>
-            <li>3</li>
+            <li v-for='(value, index) in data.directors'>{{value}}</li>
           </ul>
-          <span>演职员</span>
+          <br>
+          <span class="white">演职员</span>
           <ul>
-            <li>1</li>
-            <li>2</li>
-            <li>3</li>
+            <li v-for='(value, index) in data.actors[0].split(",")'>{{value}}</li>
           </ul>
         </div>
       </div>
-      <p v-test>{{miaoshu1}}</p>
+      <p>{{description}}</p>
       <div>
         <ul>
           <li><a href=""><img src="../../assets/images/china_blur.jpg" alt=""></a></li>
@@ -27,13 +24,13 @@
         </ul>
         <span class='blue'>*该节目付费后可观看</span>
       </div>
-      <img src="../../assets/images/test/544459_icon.jpg" alt="">
+      <img :src="GLOBAL.config.base+data.icon" alt="">
     </div>
     <div>
       <div class='blue'>猜你喜欢</div>
       <ul>
-        <li v-for="(value, index) in bottom_recommand">
-            <Poster width='120' />
+        <li v-for="(value, index) in like">
+            <Poster width='120' :item='value'/>
         </li> 
       </ul>
     </div>
@@ -42,14 +39,21 @@
 
 <script>
 import Poster from '@/components/Poster'
+import {mapState} from 'vuex'
 export default {
   name: 'Vod',
   data () {
     return {
       config:{},
-      data: [],
-      bottom_recommand: [1,2,3,4,5,6],
-      miaoshu: '未来世界，为了解决人口过度膨胀的危机未来世界，为了解决人口过度膨胀的危机未来世界，为了解决人口过度膨胀的危机未来世界，为了解决人口过度膨胀的危机未来世界，为了解决人口过度'
+      data: {},
+      like: []
+    }
+  },
+  watch: {
+    programCode(newValue, oldValue) {
+      console.info('newValue*********'+ newValue);
+      console.info('oldValue*********'+ oldValue);
+      this.getVodDetail(newValue);
     }
   },
   created() {
@@ -63,12 +67,61 @@ export default {
   },
   methods: {
     init(){
+      this.getVodDetail(this.programCode)
+    },
+    getVodDetail(code){
+      let vm = this;
+      console.info(code);
+      vm.dataService.queryVodDetail(code,function(res){
+        console.info(res.data);
+        vm.data = res.data.vod;
+        if(!vm.utils.empty(vm.data)){
+          vm.getYourLike(code);
+        }
+      });
+    },
+    getYourLike(code){
+      console.info('your like***********************'+code);
+      let vm = this;
+      vm.dataService.search({
+        action: 'byTag',
+        condition: vm.data.courty+','+vm.data.subFolder+','+vm.data.tags,
+        curPage: 1,
+        pageSize: 50,
+        mainFolder: vm.data.mainFolder,
+        hdType: 1
+      },function(res){
+        console.info('your like***********************');
+        vm.like = [];
+        while (vm.like.length <  6)
+        {
+           let randomIndex = Math.floor(Math.random()*50);
+           let status = false;
+           if(res.data.JSONArray[randomIndex].code == code){
+              continue;
+           }
+           for (var i = 0; i < vm.like.length; i++) {
+             if(vm.like[i].code == res.data.JSONArray[randomIndex].code){
+                status = true;
+                break;
+              }
+           }
+           if(status){
+              continue;
+           }
+           vm.like.push(res.data.JSONArray[randomIndex]);
+        }
+        console.info(vm.like);
+      })
     }
   },
   computed: {
-    miaoshu1: function () {
-      return this.miaoshu.length > 78 ? this.miaoshu.substring(0,78-3)+'...' : this.miaoshu
-    }
+    description: function () {
+      return this.data.desc.length > 78 ? this.data.desc.substring(0,78-3)+'...' : this.data.desc
+    },
+    ...mapState([
+      'programCode'
+    ])
   },
   directives: {
   },
@@ -141,7 +194,14 @@ export default {
   bottom: 15px;
   transform: translate(-50%); 
 }
+h1{
+  font-size: 36px;
+  font-weight: normal;
+}
 .blue{
-  color: #3B6BA5;
+  color: $blueFontColor;
+}
+.white{
+  color: $whiteFontColor
 }
 </style>

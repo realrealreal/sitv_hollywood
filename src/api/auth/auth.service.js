@@ -10,8 +10,8 @@ import user from "../user/user.service.js"
  * @return   {[type]}                    [null]
  */
 function login(cb){
-	console.info(url.login);
-	http.getRequest(url.login,{
+	console.info(url.loginApi);
+	http.getRequest(url.loginApi,{
 		'uid': user.uid(),
 		'mac': user.mac()
 	}, cb);

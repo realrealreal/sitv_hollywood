@@ -8,11 +8,11 @@
                 <img :src="config.groups[0].src" alt="" />
               </a>
             </li>
-            <li v-for="(value, index) in bottom_recommand.slice(0,10)">
-              <Poster :width='config.width' isCheck v-on:checkIndex='check' :index='index+1'/>
+            <li v-for="(value, index) in historyList.slice(0,10)">
+              <Poster :width='config.width' :item='value' isCheck v-on:checkIndex='check' :index='index+1'/>
             </li>
             <li>
-              <a :href="config.groups[0].href" v-if='bottom_recommand.length>10' @focus='onfocus($event,2)'>              
+              <a :href="config.groups[0].href" v-if='historyList.length>10' @focus='onfocus($event,2)'>              
                 <img src="../../assets/images/more.png" alt="" />
               </a>
             </li>
@@ -27,7 +27,7 @@
               </a>
             </li>
             <li v-for="(value, index) in collectionList.slice(0,10)">
-              <Poster :width='config.width' isCheck v-on:checkIndex='check' :index='index+1'/>
+              <Poster :width='config.width' :item='value' isCheck v-on:checkIndex='check' :index='index+1'/>
             </li>
             <li>
                <a :href="config.groups[1].href" v-if='collectionList.length>10' @focus='onfocus($event,2)'>              
@@ -36,7 +36,7 @@
             </li>
           </ul>
         </div>
-        <h3>{{config.groups[2].name}}</h3>
+        <!-- <h3>{{config.groups[2].name}}</h3>
         <div>
           <ul style="left: 0">
             <li>
@@ -45,7 +45,7 @@
               </a>
             </li>
             <li v-for="(value, index) in second_recommand.slice(0,10)">
-              <Poster :width='config.width' isCheck v-on:checkIndex='check' :index='index+1'/>
+              <Poster :width='config.width' :item='value' isCheck v-on:checkIndex='check' :index='index+1'/>
             </li>
             <li>
               <a :href="config.groups[2].href" v-if='second_recommand.length>10' @focus='onfocus($event,2)'>              
@@ -53,7 +53,7 @@
               </a>
             </li>
           </ul>
-        </div>
+        </div> -->
     </div>
 </template>
 <script>
@@ -82,8 +82,7 @@ export default {
   name: 'Personal',
   data () {
     return {
-      config: {
-      },
+      config: config,
       historyList: [],
       collectionList: [],
       bottom_recommand:[1,2,3,4,5,6,7,8,9,10,11],
@@ -96,7 +95,8 @@ export default {
   methods: {
     init(){
       let vm = this;
-      vm.config = config;
+      //console.info(this.config);
+      //vm.config = config;
       vm.dataService.queryHistory(function(res){
         console.info(res);      
         vm.historyList = res.data.historyList;

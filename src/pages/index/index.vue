@@ -53,8 +53,6 @@ export default {
       repo_href: this.GLOBAL.config.href.repo,
       biz_logo: require('../../assets/images/hollywoodLogo.png'),
       copyright_logo: require('../../assets/images/besTVLogo.png'),
-      bottom_recommand:[1,2,3,4],
-      second_recommand:[1,2,3,4,5,6],
       little1: '观看历史',
       little2: '人气排行',
       little3: '蜘蛛侠系列一次看爽',
