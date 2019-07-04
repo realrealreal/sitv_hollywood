@@ -1,41 +1,54 @@
 <template>
     <div id="index">
-        <h3>{{config.groups[0].name}}</h3>
-        <div> 
-          <ul style="left: 0">
-            <li>
-              <a :href="config.groups[0].href" @focus="onfocus($event,1)">              
-                <img :src="config.groups[0].src" alt="" />
-              </a>
-            </li>
-            <li v-for="(value, index) in historyList.slice(0,10)">
-              <Poster :width='config.width' :item='value' isCheck v-on:checkIndex='check' :index='index+1'/>
-            </li>
-            <li>
-              <a :href="config.groups[0].href" v-if='historyList.length>10' @focus='onfocus($event,2)'>              
-                <img src="../../assets/images/more.png" alt="" />
-              </a>
-            </li>
-          </ul>
-        </div>
-        <h3>{{config.groups[1].name}}</h3>
+      <div v-for='(value, index) in config.groups'>
+        <h3>{{value.name}}</h3>
         <div>
-          <ul style="left: 0">
-            <li>
-               <a :href="config.groups[1].href" @focus="onfocus($event,1)">              
-                <img :src="config.groups[1].src" alt="" />
-              </a>
-            </li>
-            <li v-for="(value, index) in collectionList.slice(0,10)">
-              <Poster :width='config.width' :item='value' isCheck v-on:checkIndex='check' :index='index+1'/>
-            </li>
-            <li>
-               <a :href="config.groups[1].href" v-if='collectionList.length>10' @focus='onfocus($event,2)'>              
-                <img src="../../assets/images/more.png" alt="" />
-              </a>
-            </li>
-          </ul>
+          <div> 
+            <ul v-bind:data-index="index" :style="{left: scrollLeft[index]+'px'}">
+              <li>
+                <a :href="value.href" @focus="onfocus($event,1)">              
+                  <img :src="value.src" alt="" />
+                </a>
+              </li>
+              <li v-if="index == 0" v-for="(item, key) in historyList.slice(0,10)">
+                <Poster :width='config.width' :item='item' isCheck v-on:checkIndex='check' :index='key+1'/>
+              </li>
+              <li v-if="index == 1" v-for="(item, key) in collectionList.slice(0,10)">
+                <Poster :width='config.width' :item='item' isCheck v-on:checkIndex='check' :index='key+1'/>
+              </li>
+              <li>
+                <a :href="value.href" v-if='(index == 0 && historyList.length>10) || (index == 1 && collectionList.length>10) ' @focus='onfocus($event,2,index)'>
+                  <img src="../../assets/images/more.png" alt="" />
+                </a>
+              </li>
+            </ul>
+          </div>
+          <span class='prev' v-if='scrollTimes > 0'><</span>
+          <span class='next' v-if='(index == 0 && historyList.length>6) || (index == 1 && collectionList.length>6)'>></span>
         </div>
+     </div>
+  <!--       <h3>{{config.groups[1].name}}</h3>
+  <div>
+    <div>
+      <ul :style="{left: left2}">
+        <li>
+           <a :href="config.groups[1].href" @focus="onfocus($event,1)">              
+            <img :src="config.groups[1].src" alt="" />
+          </a>
+        </li>
+        <li v-for="(value, index) in collectionList.slice(0,10)">
+          <Poster :width='config.width' :item='value' isCheck v-on:checkIndex='check' :index='index+1'/>
+        </li>
+        <li>
+           <a :href="config.groups[1].href" v-if='collectionList.length>10' @focus='onfocus($event,2)'>              
+            <img src="../../assets/images/more.png" alt="" />
+          </a>
+        </li>
+      </ul>
+    </div>
+    <span class='prev' v-if='left2 > 0'><</span>
+    <span class='next' v-if='collectionList.length > 6 || left2'>></span>
+  </div> -->
         <!-- <h3>{{config.groups[2].name}}</h3>
         <div>
           <ul style="left: 0">
@@ -69,12 +82,12 @@ const config = {
       name: '我的收藏',
       href: '#/repo/collection/1',
       src: require('../../assets/images/all_coll.png')
-    },
+    }/*,
     {
       name: '我的订购',
       href: '#/repo/ordered',
       src: require('../../assets/images/all_order.png')
-    }
+    }*/
   ]
 }
 import Poster from '@/components/Poster'
@@ -85,8 +98,8 @@ export default {
       config: config,
       historyList: [],
       collectionList: [],
-      bottom_recommand:[1,2,3,4,5,6,7,8,9,10,11],
-      second_recommand:[1,2,3,4,5,6],
+      scrollLeft: [0,0,0],
+      scrollTimes: [0,0,0]
     }
   },
   mounted() {
@@ -109,32 +122,45 @@ export default {
     test(){
       console.info(this.$el)
     },
-    clear(a) {  //清除當前行之外的left
-      for (var i = 0; i < this.$el.children.length; i++) {
+    clear(index) {  //清除當前行之外的left
+      /*for (var i = 0; i < this.$el.children.length; i++) {
         if(this.$el.children[i].tagName != 'DIV'){
           continue;
         }else{
           if(this.$el.children[i] != a.parentElement.parentElement.parentElement){
-            this.$el.children[i].children[0].style.left = "0";
+            //this.$el.children[i].children[0].style.left = "0";
+            this.scrollLeft[index] = "0";
           }
+        }
+      }*/
+      let vm = this;
+      for (var i = 0; i < vm.scrollLeft.length; i++) {
+        if(i != index){
+          vm.scrollTimes.splice(i, 1, 0);
+          vm.scrollLeft.splice(i, 1, 0);
         }
       }
     },
-    onfocus(event,type){
+    onfocus(event, type, index){
       //e.preventDefault(); 會抖動
+      let vm = this;
       event.target.parentElement.parentElement.parentElement.scrollLeft = 0;
-      this.clear(event.target);
+      vm.clear(index);
       if(type == 2){
-        event.target.parentElement.parentElement.style.left ="-"+event.target.parentElement.offsetWidth*6+"px";
+        vm.scrollTimes.splice(index, 1, 6);
+        vm.scrollLeft.splice(index, 1, 0 - event.target.parentElement.offsetWidth*6);
+        //event.target.parentElement.parentElement.style.left ="-"+event.target.parentElement.offsetWidth*6+"px";
       }
     },
     check(data){
+      let vm = this;
       console.info("index:-------"+data.index)
-      this.clear(data.el);
       let container = data.el.parentElement.parentElement.parentElement;//container
       container.scrollLeft = 0;
       let ul = data.el.parentElement.parentElement;
+      vm.clear(ul.dataset.index);
       console.info("left:"+ul.style.left);
+      console.info("index:"+ul.dataset.index);
       if(data.index >= 6){   
           let li = data.el.parentElement;//li
           console.info(container);
@@ -148,9 +174,11 @@ export default {
           //console.info('maxScroll:-----'+ maxScroll);
           //console.info('scrollLeft:-----'+ scrollLeft);
           //container.scrollLeft = scrollLeft;
-          ul.style.left="-"+onceLeft*(data.index-5)+"px";
+          vm.scrollTimes.splice(ul.dataset.index, 1, data.index-5);
+          vm.scrollLeft.splice(ul.dataset.index, 1, 0 - onceLeft*(data.index-5));//vm.scrollLeft[ul.dataset.index] 不更新视图  vm.items.splice(indexOfItem, 1, newValue)  Vue.set(vm.items, indexOfItem, newValue)  更新视图
       }else{
-          ul.style.left="0";
+          vm.scrollTimes.splice(ul.dataset.index, 1, 0);
+          vm.scrollLeft.splice(ul.dataset.index, 1, 0);
       }
     }
   },
@@ -166,30 +194,41 @@ export default {
   width 1160px
   height 100%
   margin 44px auto
-  & > h3
-    margin 8px
-    font-size 21px 
   & > div
-    height 280px
-    position relative
-    overflow-x hidden
-    overflow-y hidden
-    white-space nowrap 
-    &::-webkit-scrollbar
-      display none
-    & > ul
+    & > h3
       margin 8px
-      position absolute
-      transition: left 1.5s
-      font-size 0px
-      letter-spacing -4px
-      // display inline
-      & > li
-        padding-right 24px
-        display inline-block
-        font-size 21px
-        & > a
-          vertical-align top
-          & > img
-            width 170px
+      font-size 21px
+    & > div
+      position relative
+      & > div
+        height 280px
+        position relative
+        overflow-x hidden
+        overflow-y hidden
+        white-space nowrap 
+        &::-webkit-scrollbar
+          display none
+        & > ul
+          margin 8px
+          position absolute
+          transition: left 1.5s
+          font-size 0px
+          letter-spacing -4px
+          // display inline
+          & > li
+            padding-right 24px
+            display inline-block
+            font-size 21px
+            & > a
+              vertical-align top
+              & > img
+                width 170px
+.prev,.next
+  position  absolute
+  top 50%
+  transform translateY(-50%)
+.prev
+  left -10px
+.next
+  right -10px
 </style>

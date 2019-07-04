@@ -1,12 +1,12 @@
 <template>
 	<div id="index">
     <div v-if="data.title">
-      <h1 class="white">{{data.title}}{{programCode}}</h1>
-      <div>{{data.country+' • '+data.year+' • '+data.displayRunTime+'分钟 • '+data.mainFolder}}
+      <h1 class="white">{{data.title}}</h1>
+      <div>{{programInfo}}
         <div>
           <span class="white">导演</span>
           <ul>
-            <li v-for='(value, index) in data.directors'>{{value}}</li>
+            <li v-for='(value, index) in data.directors[0].split(",")'>{{value}}</li>
           </ul>
           <br>
           <span class="white">演职员</span>
@@ -119,6 +119,23 @@ export default {
     description: function () {
       return this.data.desc.length > 78 ? this.data.desc.substring(0,78-3)+'...' : this.data.desc
     },
+    programInfo: function(){
+      let arr = [];
+      let vm = this;
+      if(vm.data.country){
+        arr.push(vm.data.country);
+      }
+      if(vm.data.year){
+        arr.push(vm.data.year);
+      }
+      if(vm.data.displayRunTime){
+        arr.push(vm.data.displayRunTime+'分钟');
+      }
+      if(vm.data.mainFolder){
+        arr.push(vm.data.mainFolder)
+      }
+      return arr.join(' • ');
+    },
     ...mapState([
       'programCode'
     ])
@@ -178,7 +195,8 @@ export default {
 #index > div:last-child{
   padding: 20px 220px 0;
   height: 255px;
-  background: url(../../assets/images/bottomBg.png);
+  background: url(../../assets/images/bottomBg.png) no-repeat;
+  background-size: cover;
 }
 #index > div:last-child > ul {
   margin-top: 10px;
