@@ -10,21 +10,18 @@
                   <img :src="value.src" alt="" />
                 </a>
               </li>
-              <li v-if="index == 0" v-for="(item, key) in historyList.slice(0,10)">
-                <Poster :width='config.width' :item='item' isCheck v-on:checkIndex='check' :index='key+1'/>
-              </li>
-              <li v-if="index == 1" v-for="(item, key) in collectionList.slice(0,10)">
+              <li v-for="(item, key) in list[index].slice(0,10)">
                 <Poster :width='config.width' :item='item' isCheck v-on:checkIndex='check' :index='key+1'/>
               </li>
               <li>
-                <a :href="value.href" v-if='(index == 0 && historyList.length>10) || (index == 1 && collectionList.length>10) ' @focus='onfocus($event,2,index)'>
+                <a :href="value.href" v-if='list[index].length>10' @focus='onfocus($event,2,index)'>
                   <img src="../../assets/images/more.png" alt="" />
                 </a>
               </li>
             </ul>
           </div>
-          <span class='prev' v-if='scrollTimes > 0'><</span>
-          <span class='next' v-if='(index == 0 && historyList.length>6) || (index == 1 && collectionList.length>6)'>></span>
+          <span class='prev' v-if='scrollTimes[index] > 0'><</span>
+          <span class='next' v-if='list[index].length >= 6 && ((list[index].length > 10  && scrollTimes[index] < 6) || (list[index].length <= 10  && scrollTimes[index] < list[index].length-5))'>></span>
         </div>
      </div>
   <!--       <h3>{{config.groups[1].name}}</h3>
@@ -82,12 +79,12 @@ const config = {
       name: '我的收藏',
       href: '#/repo/collection/1',
       src: require('../../assets/images/all_coll.png')
-    }/*,
+    },
     {
       name: '我的订购',
       href: '#/repo/ordered',
       src: require('../../assets/images/all_order.png')
-    }*/
+    }
   ]
 }
 import Poster from '@/components/Poster'
@@ -96,10 +93,16 @@ export default {
   data () {
     return {
       config: config,
+      list:[[],[],[]],
       historyList: [],
       collectionList: [],
       scrollLeft: [0,0,0],
       scrollTimes: [0,0,0]
+    }
+  },
+  watch: {
+    scrollTimes(oldValue, newValue) {
+      console.info('new:'+ newValue[1]);
     }
   },
   mounted() {
@@ -111,12 +114,12 @@ export default {
       //console.info(this.config);
       //vm.config = config;
       vm.dataService.queryHistory(function(res){
-        console.info(res);      
-        vm.historyList = res.data.historyList;
+        console.info(res);
+        vm.list.splice(0, 1,  res.data.historyList)
       });
       vm.dataService.queryCollection(function(res){
-        console.info(res);      
-        vm.collectionList = res.data.collectionList;
+        console.info(res);
+        vm.list.splice(1, 1,  res.data.collectionList)
       });
     },
     test(){

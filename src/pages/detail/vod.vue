@@ -210,7 +210,8 @@ export default {
   position: absolute;
   left: 50%;
   bottom: 15px;
-  transform: translate(-50%); 
+  transform: translate(-50%);
+  white-space: nowrap;
 }
 h1{
   font-size: 36px;

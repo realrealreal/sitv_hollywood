@@ -27,6 +27,11 @@ export default new Router({
       component: () => import('@/pages/index/personal') // 懒加载引入方式
     },
     {
+      path: '/hollywood/orderlist',
+      name: 'OrderList',
+      component: () => import('@/pages/index/orderList') // 懒加载引入方式
+    },
+    {
       path: '/hollywood/repo/:name/:type',
       name: 'RepoList',
       component: () => import('@/pages/list/list') // 懒加载引入方式
