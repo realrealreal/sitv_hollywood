@@ -27,18 +27,18 @@ export default new Router({
       component: () => import('@/pages/index/personal') // 懒加载引入方式
     },
     {
-      path: '/hollywood/orderlist',
+      path: '/hollywood/repo/orderlist',
       name: 'OrderList',
       component: () => import('@/pages/index/orderList') // 懒加载引入方式
     },
     {
-      path: '/hollywood/repo/:name/:type',
+      path: '/hollywood/repo/:name',
       name: 'RepoList',
       component: () => import('@/pages/list/list') // 懒加载引入方式
     },
     {
-      path: '/hollywood/list/:type',
-      name: 'VodList',
+      path: '/hollywood/movielist',
+      name: 'Movielist',
       component: () => import('@/pages/list/list') // 懒加载引入方式
     },
     {

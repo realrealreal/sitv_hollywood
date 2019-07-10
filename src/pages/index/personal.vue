@@ -6,12 +6,18 @@
           <div> 
             <ul v-bind:data-index="index" :style="{left: scrollLeft[index]+'px'}">
               <li>
-                <a :href="value.href" @focus="onfocus($event,1)">              
+                <a :href="value.href" @focus="onfocus($event,1,index)">              
                   <img :src="value.src" alt="" />
                 </a>
               </li>
-              <li v-for="(item, key) in list[index].slice(0,10)">
+              <li v-if="index != 2" v-for="(item, key) in list[index].slice(0,10)">
                 <Poster :width='config.width' :item='item' isCheck v-on:checkIndex='check' :index='key+1'/>
+              </li>
+              <li v-if="index == 2" v-for="(item, key) in list[index].slice(0,10)">
+                  <a class='text-center' href="javascript:void(0)" @focus='orderFocus($event, key+1, index)'>           
+                    <img :src="orderDefaultImg" alt="">
+                    <div><span>{{item.contentName}}</span><br><span>{{item.expireTime | formatDate}}有效</span></div>
+                  </a>
               </li>
               <li>
                 <a :href="value.href" v-if='list[index].length>10' @focus='onfocus($event,2,index)'>
@@ -23,47 +29,7 @@
           <span class='prev' v-if='scrollTimes[index] > 0'><</span>
           <span class='next' v-if='list[index].length >= 6 && ((list[index].length > 10  && scrollTimes[index] < 6) || (list[index].length <= 10  && scrollTimes[index] < list[index].length-5))'>></span>
         </div>
-     </div>
-  <!--       <h3>{{config.groups[1].name}}</h3>
-  <div>
-    <div>
-      <ul :style="{left: left2}">
-        <li>
-           <a :href="config.groups[1].href" @focus="onfocus($event,1)">              
-            <img :src="config.groups[1].src" alt="" />
-          </a>
-        </li>
-        <li v-for="(value, index) in collectionList.slice(0,10)">
-          <Poster :width='config.width' :item='value' isCheck v-on:checkIndex='check' :index='index+1'/>
-        </li>
-        <li>
-           <a :href="config.groups[1].href" v-if='collectionList.length>10' @focus='onfocus($event,2)'>              
-            <img src="../../assets/images/more.png" alt="" />
-          </a>
-        </li>
-      </ul>
-    </div>
-    <span class='prev' v-if='left2 > 0'><</span>
-    <span class='next' v-if='collectionList.length > 6 || left2'>></span>
-  </div> -->
-        <!-- <h3>{{config.groups[2].name}}</h3>
-        <div>
-          <ul style="left: 0">
-            <li>
-              <a :href="config.groups[2].href" @focus="onfocus($event,1)">              
-                <img :src="config.groups[2].src" :width='config.width' alt="" />
-              </a>
-            </li>
-            <li v-for="(value, index) in second_recommand.slice(0,10)">
-              <Poster :width='config.width' :item='value' isCheck v-on:checkIndex='check' :index='index+1'/>
-            </li>
-            <li>
-              <a :href="config.groups[2].href" v-if='second_recommand.length>10' @focus='onfocus($event,2)'>              
-                <img src="../../assets/images/more.png" alt="" />
-              </a>
-            </li>
-          </ul>
-        </div> -->
+      </div>
     </div>
 </template>
 <script>
@@ -72,17 +38,17 @@ const config = {
   groups: [
     {
       name: '观看历史',
-      href: '#/repo/history/1',
+      href: '#/repo/history',
       src: require('../../assets/images/all_history.png')
     },
     {
       name: '我的收藏',
-      href: '#/repo/collection/1',
+      href: '#/repo/collection',
       src: require('../../assets/images/all_coll.png')
     },
     {
       name: '我的订购',
-      href: '#/repo/ordered',
+      href: '#/hollywood/repo/orderlist',
       src: require('../../assets/images/all_order.png')
     }
   ]
@@ -97,7 +63,8 @@ export default {
       historyList: [],
       collectionList: [],
       scrollLeft: [0,0,0],
-      scrollTimes: [0,0,0]
+      scrollTimes: [0,0,0],
+      orderDefaultImg: require('../../assets/images/order.png'),
     }
   },
   watch: {
@@ -107,6 +74,12 @@ export default {
   },
   mounted() {
     this.init()
+  },
+  filters: {
+    formatDate(value) {
+      let time = value.substring(0,8);
+      return time.substring(0,4)+'.'+time.substring(4,6)+'.'+time.substring(6,8)
+    }
   },
   methods: {
     init(){
@@ -121,21 +94,42 @@ export default {
         console.info(res);
         vm.list.splice(1, 1,  res.data.collectionList)
       });
+      vm.list.splice(2, 1, (function(){
+        let array = [];
+        var obj = {
+          "userId": "00264c50fb0f",
+          "category": null,
+          "categoryCode": "ccms_category_57032916",
+          "contentId": "program_ccms_843420",
+          "contentType": null,
+          "contentName": "惊奇队长",
+          "contentPoster": "/content/201907/01/549529_poster.jpg",
+          "bizCode": "ccms_biz_56470301",
+          "offeringId": null,
+          "serviceName": null,
+          "serviceCode": null,
+          "serviceType": null,
+          "price": "500",
+          "protocolType": null,
+          "fileName": null,
+          "param1": null,
+          "param2": null,
+          "param3": null,
+          "orderTime": null,
+          "validTime": "20190704105306",
+          "expireTime": "20190714105306",
+          "updateTime": "20200223082700"
+        };
+        for (var i = 0; i < 46; i++) {
+          array.push(obj);
+        }
+        return array;
+      })())
     },
     test(){
       console.info(this.$el)
     },
     clear(index) {  //清除當前行之外的left
-      /*for (var i = 0; i < this.$el.children.length; i++) {
-        if(this.$el.children[i].tagName != 'DIV'){
-          continue;
-        }else{
-          if(this.$el.children[i] != a.parentElement.parentElement.parentElement){
-            //this.$el.children[i].children[0].style.left = "0";
-            this.scrollLeft[index] = "0";
-          }
-        }
-      }*/
       let vm = this;
       for (var i = 0; i < vm.scrollLeft.length; i++) {
         if(i != index){
@@ -153,6 +147,15 @@ export default {
         vm.scrollTimes.splice(index, 1, 6);
         vm.scrollLeft.splice(index, 1, 0 - event.target.parentElement.offsetWidth*6);
         //event.target.parentElement.parentElement.style.left ="-"+event.target.parentElement.offsetWidth*6+"px";
+      }
+    },
+    orderFocus(event, key, index){
+      let vm = this;
+      event.target.parentElement.parentElement.parentElement.scrollLeft = 0;
+      vm.clear(index);
+      if(key >= 6){   
+        vm.scrollTimes.splice(index, 1, key-5);
+        vm.scrollLeft.splice(index, 1, 0 - event.target.parentElement.offsetWidth*(key-5))
       }
     },
     check(data){
@@ -226,12 +229,19 @@ export default {
               vertical-align top
               & > img
                 width 170px
-.prev,.next
-  position  absolute
-  top 50%
-  transform translateY(-50%)
-.prev
-  left -10px
-.next
-  right -10px
+  .prev,.next
+    position  absolute
+    top 50%
+    transform translateY(-50%)
+  .prev
+    left -10px
+  .next
+    right -10px
+  .text-center
+    position relative
+    & > div
+      position absolute
+      left 50% 
+      top 50%
+      transform translate(-50%)
 </style>

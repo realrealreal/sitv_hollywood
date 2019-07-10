@@ -108,6 +108,8 @@ export default {
 
       console.info(this.$route.name);
       console.info(this.$route.params.type);
+      console.info(this.$store.state.categoryCode);
+      console.info(this.$store.state.bizCode);
       if(this.$route.name == 'VodList'){
         
       }else{

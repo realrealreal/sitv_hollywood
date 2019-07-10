@@ -93,9 +93,11 @@ export default {
       },function(res){
         console.info('your like***********************');
         vm.like = [];
+        let num = res.data.JSONArray.length;
+        if(num == 0) return;
         while (vm.like.length <  6)
         {
-           let randomIndex = Math.floor(Math.random()*50);
+           let randomIndex = Math.floor(Math.random()*num);
            let status = false;
            if(res.data.JSONArray[randomIndex].code == code){
               continue;

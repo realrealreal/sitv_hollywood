@@ -6,7 +6,8 @@ const config = {
 	base: 'http://localhost:8999',
 	href: {
 		repo:'repo'
-	}
+	},
+	orderDefaultImg:'../../assets/images/order.png'
 }
 
 /**

@@ -32,5 +32,4 @@ export default {
 		console.info(clock); 
 		return clock;
 	}
-	
 }

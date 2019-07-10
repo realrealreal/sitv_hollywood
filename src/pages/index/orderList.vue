@@ -5,18 +5,39 @@
         <h2>{{title}}</h2>
       </div>
       <ul>
-        <li v-for='(value, index) in leftColumn'><a :class="index == $route.params.type ? 'current' : ''" :href="'#/list/'+index">{{value.name}}</a></li>
+        <li v-for='(value, index) in leftColumn'><a :class="index == current ? 'current' : ''" href="javascript:void(0)" @click="filterbyDate(index)">{{value.name}}</a></li>
       </ul>
     </div>
-    <div>
-      <ul>
-         <li v-for='(value, index) in data'><a href='#'><span>{{value.contentName}}</span><span>{{value.expireTime | formatDate}}到期</span><span>{{`￥${value.price/100}元`}}</span><span>{{value.expireTime | isExpire}}</span></a></li>
+    <div v-if='current == 0'>
+      <span v-show='data.length == 0'>{{empty_tips}}</span>
+      <ul v-show='data.length != 0'>
+         <li v-for='(value, index) in data'><a href='javascript:void(0)' @click='goToDetail(value)'><span>{{value.contentName}}</span><span>{{value.expireTime | formatDate}}到期</span><span>{{`￥${value.price/100}元`}}</span><span>{{value.expireTime | isExpire}}</span></a></li>
+      </ul>
+    </div>
+    <div v-if='current == 1'>
+      <span v-show='currentWeek.length == 0'>{{empty_tips}}</span>
+      <ul v-show='currentWeek.length != 0'>
+         <li v-for='(value, index) in currentWeek'><a href='javascript:void(0)' @click='goToDetail(value)'><span>{{value.contentName}}</span><span>{{value.expireTime | formatDate}}到期</span><span>{{`￥${value.price/100}元`}}</span><span>{{value.expireTime | isExpire}}</span></a></li>
+      </ul>
+    </div>
+    <div v-if='current == 2'>
+      <span v-show='lastWeek.length == 0'>{{empty_tips}}</span>
+      <ul v-show='lastWeek.length != 0'>
+         <li v-for='(value, index) in lastWeek'><a href='javascript:void(0)' @click='goToDetail(value)'><span>{{value.contentName}}</span><span>{{value.expireTime | formatDate}}到期</span><span>{{`￥${value.price/100}元`}}</span><span>{{value.expireTime | isExpire}}</span></a></li>
+      </ul>
+    </div>
+    <div v-if='current == 3'>
+      <span v-show='beforeLastWeek.length == 0'>{{empty_tips}}</span>
+      <ul v-show='beforeLastWeek.length != 0'>
+         <li v-for='(value, index) in beforeLastWeek'><a href='javascript:void(0)' @click='goToDetail(value)'><span>{{value.contentName}}</span><span>{{value.expireTime | formatDate}}到期</span><span>{{`￥${value.price/100}元`}}</span><span>{{value.expireTime | isExpire}}</span></a></li>
       </ul>
     </div>
   </div> 
 </template>
 
 <script>
+const sj = getCurrentWeekTimestamp();//本周开始时间时间戳 
+const emptyTips = '没有更多的订购记录';
 const config264 = {
   initNumber: 12, //初始值总数量
   lineNumber: 3, //每行数量
@@ -53,18 +74,52 @@ const column = [
     name:'更早',
   }
 ];
+function dateToStr(now){
+  var yy = now.getFullYear();      //年
+  var mm = now.getMonth() + 1;     //月
+  var dd = now.getDate();          //日
+  var hh = now.getHours();         //时
+  var ii = now.getMinutes();       //分
+  var ss = now.getSeconds();       //秒
+  //var clock = yy + "-";
+  var clock = yy;
+  if(mm < 10) clock += "0";
+  clock += mm; //+ "-";
+  if(dd < 10) clock += "0";
+  clock += dd; //+ " ";
+  if(hh < 10) clock += "0";
+  clock += hh; //+ ":";
+  if (ii < 10) clock += '0'; 
+  clock += ii; //+ ":";
+  if (ss < 10) clock += '0'; 
+  clock += ss;
+  console.info(clock); 
+  return clock;
+}
+function getCurrentWeekTimestamp(){
+  let current = new Date();
+  let week = current.getDay() == 0 ? 6 : current.getDay()-1;
+  //let times = current.getTime();
+  let hour = current.getHours();
+  let minute = current.getMinutes();
+  let second = current.getSeconds();
+  let weekBeginTime = Math.floor(current / 1000)*1000 - week *24 *60 *60 *1000 - hour * 3600 * 1000 - minute * 60 * 1000 - second * 1000;
+  //let lastWeekBeginTime = weekBeginTime - 7 *24 *60 *60 *1000;
+  return weekBeginTime;
+}
 import ScrollList from '@/components/ScrollList'
 import Animations from '@/assets/css/animations.css'
 export default {
   name: 'orderList',
   data () {
     return {
+      empty_tips: emptyTips,
       biz_logo: require('../../assets/images/hollywoodLogo.png'),
       config:{},
       data: [],
       leftColumn: column,
       title:title,
-      current: 1
+      current: 0
     }
   },
   created() {
@@ -123,6 +178,17 @@ export default {
         }
         return array;
       })();
+    },
+    filterbyDate(index){
+      let vm = this;
+      vm.current = index;
+    },
+    goToDetail(item) {
+      let vm = this;
+      console.info('dispatch****1'+vm.$store.state.programCode);
+      vm.$store.dispatch('setProgramCode',item.contentId)
+      console.info('dispatch****2'+vm.$store.state.programCode);
+      vm.$router.push({path: '/hollywood/vod'});
     }
   },
   filters: {
@@ -130,19 +196,29 @@ export default {
       let time = value.substring(0,8);
       return time.substring(0,4)+'.'+time.substring(4,6)+'.'+time.substring(6,8)
     },
-    isExpire(value) {
-      let current = this.utils.dateToStr(new Date());
-      if(current < value){
-         return '过期'
-      }else{
-        return '有效'
-      }
+    isExpire(value) { 
+      return dateToStr(new Date()) > value ? '过期' : '有效';
     }
   },
-  directives: {
+  computed: {
+    currentWeek(){
+      return this.data.filter(function(item){
+          return item.expireTime >= dateToStr(new Date(sj))
+      })
+    },
+    lastWeek(){
+      return this.data.filter(function(item){
+          return item.expireTime < dateToStr(new Date(sj)) && item.expireTime >= dateToStr(new Date(sj - 7 *24 *60 *60 *1000 ))
+      })
+    },
+    beforeLastWeek(){
+      return this.data.filter(function(item){
+          return item.expireTime < dateToStr(new Date(sj - 7 *24 *60 *60 *1000 ))
+      })
+    }
   },
   components: {
-    ScrollList
+
   }
 }
 </script>
@@ -182,10 +258,26 @@ export default {
       margin-left 264px
       margin-top 100px
       width 960px
+      text-align center
+      & > span
+        line-height 300px
+      & > ul > li:nth-child(2n) > a
+        background rgba(27, 33, 44, 0.5)
       & > ul > li > a
+        text-align left
         width 932px
         padding 14px
-    
+        display flex
+        flex-direction row
+        & > span
+          display block
+          &:nth-child(1)
+          &:nth-child(2)
+            width 0
+            flex-grow 2
+          &:nth-child(3)
+            width 0 
+            flex-grow 1
 #index > div:first-child > div > a, #index > div:first-child > ul > li > a
   width 100%
   padding 7px 0

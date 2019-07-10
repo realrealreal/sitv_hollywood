@@ -139,8 +139,6 @@ export default {
       */
      goToDetail() {
         let vm = this;
-        vm.GLOBAL.store.setItem('programCode',(vm.item.code || vm.item.contentId));
-        console.info(vm.GLOBAL.store.getItem('programCode'));
         console.info('dispatch****1'+vm.$store.state.programCode);
         console.info((vm.item.code || vm.item.contentId));
         vm.$store.dispatch('setProgramCode',(vm.item.code || vm.item.contentId))

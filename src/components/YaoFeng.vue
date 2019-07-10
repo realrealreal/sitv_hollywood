@@ -2,7 +2,7 @@
   <div>
     <ul>
       <li class="iconfont" v-for='item in items' :key='item.code'>
-        <a :href="item.code">              
+        <a href="javascript:void(0)" @click='clickItem(item)'>              
           <img :src="`${GLOBAL.config.base + item.image}`" alt="" >
         </a>
       </li>
@@ -18,6 +18,15 @@ export default {
       type: Array,
       default: () => [],
       required: true
+    }
+  },
+  methods: {
+    clickItem(item){
+      console.info(item);
+      let vm = this;
+      vm.$store.dispatch('setCategoryCode', item.categoryCode)
+      vm.$store.dispatch('setBizCode', item.code)
+      vm.$router.push({path: '/hollywood/movielist'});
     }
   }
 }
