@@ -18,8 +18,9 @@
       <p>{{description}}</p>
       <div>
         <ul>
-          <li><a href=""><img src="../../assets/images/china_blur.jpg" alt=""></a></li>
-          <li><a href=""><img src="../../assets/images/english_blur.jpg" alt=""></a></li>
+          <li v-if="$route.params.type == 'mix'"><a href=""><img src="../../assets/images/china_blur.jpg" alt=""></a></li>
+          <li v-if="$route.params.type == 'mix'"><a href=""><img src="../../assets/images/english_blur.jpg" alt=""></a></li>
+          <li v-if="$route.params.type == 'vod'"><a href=""><img src="../../assets/images/control_bf.png" alt=""></a></li>
           <li><a href=""><img src="../../assets/images/control.png" alt=""><span class="collect">收藏</span></a></li>
         </ul>
         <span class='blue'>*该节目付费后可观看</span>
@@ -67,14 +68,15 @@ export default {
   },
   methods: {
     init(){
-      this.getVodDetail(this.programCode)
+      this.getDetails(this.programCode)
     },
-    getVodDetail(code){
+    getDetails(code){
       let vm = this;
       console.info(code);
-      vm.dataService.queryVodDetail(code,function(res){
+      console.info(this.$route.params.type);
+      vm.dataService.queryDetails(vm.$route.params.type, code, function(res){
         console.info(res.data);
-        vm.data = res.data.vod;
+        vm.data = res.data[vm.$route.params.type];
         if(!vm.utils.empty(vm.data)){
           vm.getYourLike(code);
         }

@@ -7,7 +7,28 @@ const config = {
 	href: {
 		repo:'repo'
 	},
-	orderDefaultImg:'../../assets/images/order.png'
+	orderDefaultImg:'../../assets/images/order.png',
+	poster: {
+		name: 'poster',
+		initNumber: 15,
+		lineNumber: 5,
+		width: '168',
+		isImgIn: false
+	},
+	still: {
+		name: 'still',
+		initNumber: 12, //初始值总数量
+		lineNumber: 3, //每行数量
+		width: '264',
+		isImgIn: false
+	},
+	noImage: {
+		name: 'noImage',
+		initNumber: 28,
+		lineNumber: 2,
+		width: '168',
+		isImgIn: false
+	}
 }
 
 /**

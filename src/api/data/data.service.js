@@ -45,16 +45,17 @@ function queryCollection(cb){
 }
 
 /**
- * [queryVodDetail 根据节目code查询节目信息]
+ * [queryDetails 根据节目code查询节目信息]]
  * @Author   shanjing
- * @DateTime 2019-07-03T14:02:37+0800
+ * @DateTime 2019-07-11T18:31:25+0800
+ * @param    {[type]}                 type        [节目type]
  * @param    {[type]}                 programCode [节目code]
  * @param    {Function}               cb          [回调函数]
  * @return   {[type]}                             [null]
  */
-function queryVodDetail(programCode,cb){
-	console.info(`${url.vodDetailApi}${programCode}.json`);
-	http.getRequest(`${url.vodDetailApi}${programCode}.json`,null,cb);
+function queryDetails(type, programCode, cb){
+	console.info(`${url.dataApi}/${type}/${programCode}.json`);
+	http.getRequest(`${url.dataApi}/${type}/${programCode}.json`,null,cb);
 }
 
 /**
@@ -69,10 +70,36 @@ function search(params,cb){
 	console.info(url.searchApi);
 	http.getRequest(url.searchApi,params,cb);
 }
+
+/**
+ * [getbizList 获取子展示栏目]
+ * @Author   shanjing
+ * @DateTime 2019-07-11T13:52:12+0800
+ * @param    {[type]}                 code [父级bizcode]
+ * @param    {Function}               cb   [回调函数]
+ * @return   {[type]}                      [description]
+ */
+function getbizList(code,cb){
+	http.getRequest(`${url.bizListApi}${code}.json`,null,cb);
+}
+
+/**
+ * [getCategroyList 获取编排节目]
+ * @Author   shanjing
+ * @DateTime 2019-07-11T14:22:09+0800
+ * @param    {[type]}                 code [categoryCode]
+ * @param    {Function}               cb   [description]
+ * @return   {[type]}                      [description]
+ */
+function getCategroyList(code,cb){
+	http.getRequest(`${url.categroyListApi}${code}.json?size=20000`,null,cb);
+}
 export default{
 	getMovieIndex,
 	queryHistory,
 	queryCollection,
-	queryVodDetail,
-	search
+	queryDetails,
+	search,
+	getbizList,
+	getCategroyList
 }

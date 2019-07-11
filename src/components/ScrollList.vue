@@ -1,7 +1,7 @@
 <template>
   <ul>
-    <li v-if='config.lineNumber != 2' v-for="(value, index) in loadedData"><Poster :width='config.width' :index='index' :is-img-in="config.isImgIn" isCheck v-on:checkIndex='check'/><!-- <a href="" @focus="check(key)"><img :src="rootImage+'P_'+value+'.jpg'" alt="" onerror="this.src='1.JPG'"></a> --></li>
-    <li v-if='config.lineNumber == 2' v-for="(value, index) in loadedData"><a v-if='config.lineNumber == 2' href="" @focus="check({index: index})">test</a></li>
+    <li v-if="config.name != 'noImage'" v-for="(value, index) in loadedData"><Poster :width='config.width' :index='index' :item='value' :is-img-in="config.isImgIn" isCheck v-on:checkIndex='check'/><!-- <a href="" @focus="check(key)"><img :src="rootImage+'P_'+value+'.jpg'" alt="" onerror="this.src='1.JPG'"></a> --></li>
+    <li v-if="config.name == 'noImage'" v-for="(value, index) in loadedData"><a :class='config.name' href="" @focus="check({index: index})">{{value.title}}</a></li>
   </ul>
 </template>
 
@@ -33,11 +33,13 @@ export default {
   },
   methods: {
     init(){ //初始化数据
+      console.info(this.data);
       let length = this.data.length < this.config.initNumber ? this.data.length : this.config.initNumber;
       for (var i = 0; i < length; i++) {
         this.loadedData.push(this.data[i]);
         this.number++;
       }
+      console.info(this.loadedData);
     },
     add() { //刷新新条目
       //$scope.number += 6;
@@ -75,13 +77,17 @@ ul
     display inline-block
     vertical-align middle
     margin-left 24px
-    & > a
+    margin-bottom 24px
+    &:nth-child(4n+3) > a.noImage
+    &:nth-child(4n+4) > a.noImage
+          background rgba(27, 33, 44, 0.5)
+    & > a.noImage
       padding 10px
       width 397px
-    &:nth-child(4n+3) > a
-        background rgba(27, 33, 44, 0.5)
-    &:nth-child(4n+4) > a
-        background rgba(27, 33, 44, 0.5)
+      &:nth-child(4n+3)
+          background rgba(27, 33, 44, 0.5)
+      &:nth-child(4n+4)
+          background rgba(27, 33, 44, 0.5)
 .poster-li{
   margin-bottom 30px
 }

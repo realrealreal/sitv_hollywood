@@ -24,8 +24,9 @@ export default {
     clickItem(item){
       console.info(item);
       let vm = this;
-      vm.$store.dispatch('setCategoryCode', item.categoryCode)
-      vm.$store.dispatch('setBizCode', item.code)
+      vm.$store.dispatch('setParentCode', item.parentCode);
+      vm.$store.dispatch('setCategoryCode', item.categoryCode);
+      vm.$store.dispatch('setBizCode', item.code);
       vm.$router.push({path: '/hollywood/movielist'});
     }
   }

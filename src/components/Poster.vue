@@ -1,6 +1,7 @@
 <template>
 	<a href="javascript:void(0)" :style="{width: toRem(width)+'rem'}" @focus="onFocus(index,$event)" @click="goToDetail">              
-	  <img :src="`${GLOBAL.config.base + (item.image || item.contentPoster || '/epg/resource/picture' + item.icon)}`" alt="">
+	  <img :src="`${GLOBAL.config.base + (item.image || item.contentPoster || item.contentposter
+|| item.contenticon || '/epg/resource/picture' + item.icon)}`" alt="">
 	  <div :class="{ shadow: isImgIn }"><span :class="marguee == 0 ? '':'marquee'+marguee">{{item.title || item.contentName}}</span></div>
     <div v-show="isIconShow" style="color: white">{{index}}</div>
 	</a>
@@ -141,9 +142,9 @@ export default {
         let vm = this;
         console.info('dispatch****1'+vm.$store.state.programCode);
         console.info((vm.item.code || vm.item.contentId));
-        vm.$store.dispatch('setProgramCode',(vm.item.code || vm.item.contentId))
+        vm.$store.dispatch('setProgramCode',(vm.item.code || vm.item.contentId || vm.item.itemcode))
         console.info('dispatch****2'+vm.$store.state.programCode);
-        vm.$router.push({path: '/hollywood/vod'});
+        vm.$router.push({path: `/hollywood/detail/${vm.item.type || vm.item.itemtype}`});
      },
      //在这里引入 action 里的方法，使用方法和 methods 里的其他方法一样
       ...mapActions([
@@ -188,6 +189,7 @@ a
       bottom 0
       & > span
         position relative
+        white-space nowrap
     &:last-child
       position absolute
       left -2px

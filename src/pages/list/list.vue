@@ -1,7 +1,7 @@
 <template>
 	<div id="index">
     <div>
-      <div v-if="$route.name == 'VodList'">
+      <div v-if="$route.name == 'Movielist'">
         <div><a href="">搜索</a></div>
         <img :src="biz_logo" alt="">  
       </div>
@@ -10,76 +10,20 @@
         <a href="">编辑</a>
       </div>
       <ul>
-        <li v-for='(value, index) in leftColumn'><a :class="index == $route.params.type ? 'current' : ''" :href="'#/list/'+index">{{value.name}}</a></li>
+        <li v-for='(value, index) in leftColumn'><a :class="value.code == $store.state.bizCode ? 'current' : ''" href="javascript:void(0)" @click='toggleCategroy(value)'>{{value.title}}</a></li>
       </ul>
     </div>
-    <div :class="config.lineNumber == 3 ? 'line-3' : ''">
+    <div v-if='config != null && data.length != 0' class='scroll' :class="config.lineNumber == 3 ? 'line-3' : ''">
       <ScrollList :data='data' :config='config'/>
     </div>
   </div> 
 </template>
 
 <script>
-const config264 = {
-  initNumber: 12, //初始值总数量
-  lineNumber: 3, //每行数量
-  width: '264',
-  isImgIn: true
-};
-const config168 = {
-  initNumber: 15,
-  lineNumber: 5,
-  width: '168',
-  isImgIn: false
-};
-const configText = {
-  initNumber: 28,
-  lineNumber: 2,
-  width: '168',
-  isImgIn: false
-};
 const title = {
   'history': '观看历史',
   'collection': '我的收藏'
 }
-const column = [
-  {
-    index:0,
-    name:'院线',
-  },
-  {
-    index:1,
-    name:'全部',
-  },
-    {
-    index:2,
-    name:'动作',
-  },
-  {
-    index:3,
-    name:'动画',
-  },
-  {
-    index:4,
-    name:'喜剧',
-  },
-  {
-    index:5,
-    name:'科幻',
-  },
-  {
-    index:6,
-    name:'惊悚',
-  },
-  {
-    index:7,
-    name:'情感',
-  },
-  {
-    index:8,
-    name:'IN迷',
-  }
-];
 import ScrollList from '@/components/ScrollList'
 import Animations from '@/assets/css/animations.css'
 export default {
@@ -87,11 +31,11 @@ export default {
   data () {
     return {
       biz_logo: require('../../assets/images/hollywoodLogo.png'),
-      config:{},
       data: [],
+      config: null,
       leftColumn: [],
-      title:title,
-      current: 1
+      title:title
+      //current: this.$store.state.bizCode
     }
   },
   created() {
@@ -100,39 +44,84 @@ export default {
   // mounted() {
   //   this.init()
   // },
+  watch: {
+    '$store.state.categoryCode': {
+        immediate: true,
+        handler(newVal, oldVal) {
+            console.log(this.leftColumn);
+            console.info('watch----');
+            console.log(newVal, oldVal);
+            let vm = this;
+            vm.data = [];
+            vm.dataService.getCategroyList(vm.$store.state.categoryCode, function(res){
+              if(res.data.status == 200){
+                console.info(res.data);
+                vm.data = res.data.categoryitem;
+                console.info(vm.data)
+              }
+            });
+            if(vm.leftColumn.length != 0){
+              let key = vm.leftColumn.filter(function(item){
+                  return item.code == vm.$store.state.bizCode
+              })[0].subTitle;
+              vm.config = {};
+              vm.config = vm.GLOBAL.config[key]
+            }
+        }
+    },
+
+  },
   props: {
     
   },
   methods: {
     init(){
-
       console.info(this.$route.name);
       console.info(this.$route.params.type);
-      console.info(this.$store.state.categoryCode);
-      console.info(this.$store.state.bizCode);
-      if(this.$route.name == 'VodList'){
-        
+      if(this.$route.name == 'Movielist'){
+        let vm = this;
+        console.info('movie-------');
+        console.info(vm.$store.state.parentCode);
+        console.info(vm.$store.state.categoryCode);
+        console.info(vm.$store.state.bizCode);
+        console.info('-------');
+        vm.dataService.getbizList(vm.$store.state.parentCode, function(res){
+          console.info(res.data);
+          if(res.data.status == 200){
+            vm.leftColumn = res.data.bizlist;
+            let key = vm.leftColumn.filter(function(item){
+                return item.code == vm.$store.state.bizCode
+            })[0].subTitle;
+            vm.config = vm.GLOBAL.config[key]
+            //vm.config = vm.GLOBAL.config.noImage;
+          }
+        });
+        // vm.dataService.getCategroyList(vm.$store.state.categoryCode, function(res){
+        //   if(res.data.status == 200){
+        //     console.info(res.data);
+        //     vm.data = res.data.categoryitem
+        //   }
+        // });
       }else{
 
       }
-      this.config = configText;
-      /*if(this.$route.params.type == 8){
-        this.config = config264;
-      }else{
-        this.config = config168;
-      }*/
-      this.data = (function(){
-        let array = [];
-        for (var i = 0; i < 46; i++) {
-          array.push(i);
-        }
-        return array;
-      })();
-      this.leftColumn = column;
+    },
+    toggleCategroy(value){
+      console.info(value);
+      let vm = this;
+      vm.$store.dispatch('setCategoryCode', value.catcode);
+      vm.$store.dispatch('setBizCode', value.code);
     }
   },
   computed: {
-    
+    /*config(){
+      let vm = this;
+      let subTitle = vm.leftColumn.filter(function(item){
+          return item.code == vm.$store.state.bizCode
+      })[0].subTitle;
+      console.info(subTitle);
+      return vm.GLOBAL.config[subTitle];
+    }*/
   },
   directives: {
   },
@@ -176,10 +165,6 @@ export default {
         & > li
           font-size 26px
           margin-bottom 7px
-    &:last-child
-      margin-left 264px
-      margin-top 100px
-      width 960px
 
 #index > div:first-child > div > a, #index > div:first-child > ul > li > a
   width 100%
@@ -210,4 +195,9 @@ export default {
   position fixed
   left 0
   top 0
+  
+.scroll
+  margin-left 264px
+  margin-top 100px
+  width 960px
 </style>
