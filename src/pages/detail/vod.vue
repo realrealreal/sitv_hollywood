@@ -18,9 +18,9 @@
       <p>{{description}}</p>
       <div>
         <ul>
-          <li v-if="$route.params.type == 'mix'"><a href=""><img src="../../assets/images/china_blur.jpg" alt=""></a></li>
-          <li v-if="$route.params.type == 'mix'"><a href=""><img src="../../assets/images/english_blur.jpg" alt=""></a></li>
-          <li v-if="$route.params.type == 'vod'"><a href=""><img src="../../assets/images/control_bf.png" alt=""></a></li>
+          <li v-if="programType == 'mix'"><a id="play1" href="" v-focus='isFocus'><img src="../../assets/images/china_blur.jpg" alt=""></a></li>
+          <li v-if="programType == 'mix'"><a href=""><img src="../../assets/images/english_blur.jpg" alt=""></a></li>
+          <li v-if="programType== 'vod'"><a id="play2" href="" v-focus='isFocus'><img src="../../assets/images/control_bf.png" alt=""><span class="collect">播放</span></a></li>
           <li><a href=""><img src="../../assets/images/control.png" alt=""><span class="collect">收藏</span></a></li>
         </ul>
         <span class='blue'>*该节目付费后可观看</span>
@@ -47,14 +47,15 @@ export default {
     return {
       config:{},
       data: {},
-      like: []
+      like: [],
+      isFocus:true
     }
   },
   watch: {
     programCode(newValue, oldValue) {
       console.info('newValue*********'+ newValue);
       console.info('oldValue*********'+ oldValue);
-      this.getVodDetail(newValue);
+      this.getDetails(newValue);
     }
   },
   created() {
@@ -73,10 +74,10 @@ export default {
     getDetails(code){
       let vm = this;
       console.info(code);
-      console.info(this.$route.params.type);
-      vm.dataService.queryDetails(vm.$route.params.type, code, function(res){
+      console.info(vm.programType);
+      vm.dataService.queryDetails(vm.programType, code, function(res){
         console.info(res.data);
-        vm.data = res.data[vm.$route.params.type];
+        vm.data = res.data[vm.programType];
         if(!vm.utils.empty(vm.data)){
           vm.getYourLike(code);
         }
@@ -141,10 +142,22 @@ export default {
       return arr.join(' • ');
     },
     ...mapState([
-      'programCode'
+      'programCode',
+      'programType'
     ])
   },
   directives: {
+    // focus: {
+    //   // 指令的定义
+    //   inserted: function (el) {
+    //     console.info('test--------------'+ el);
+    //     el.focus()
+    //   },
+    //   update:function(el){//组件更新
+    //     console.log('3 - update');
+    //     el.focus();
+    //   }
+    // },
   },
   components: {
     Poster

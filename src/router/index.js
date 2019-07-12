@@ -42,7 +42,7 @@ export default new Router({
       component: () => import('@/pages/list/list') // 懒加载引入方式
     },
     {
-      path: '/hollywood/detail/:type',
+      path: '/hollywood/detail',
       name: 'Details',
       component: () => import('@/pages/detail/vod') // 懒加载引入方式
     },

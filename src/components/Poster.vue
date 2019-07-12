@@ -1,5 +1,5 @@
 <template>
-	<a href="javascript:void(0)" :style="{width: toRem(width)+'rem'}" @focus="onFocus(index,$event)" @click="goToDetail">              
+	<a href="javascript:void(0)" :style="{width: toRem(width)+'rem'}" @focus="onFocus(index,$event)" @keyup.left="back" @keyup.down="down" @click="goToDetail">              
 	  <img :src="`${GLOBAL.config.base + (item.image || item.contentPoster || item.contentposter
 || item.contenticon || '/epg/resource/picture' + item.icon)}`" alt="">
 	  <div :class="{ shadow: isImgIn }"><span :class="marguee == 0 ? '':'marquee'+marguee">{{item.title || item.contentName}}</span></div>
@@ -122,6 +122,12 @@ export default {
           this.$emit("checkIndex",data)
         }
      },
+     back(){
+        this.$emit("back",{})
+     },
+     down(){
+        this.$emit("down",{})
+     },
      /**
       * [toRem 换算rem root font-size 21]
       * @Author   shanjing
@@ -140,19 +146,25 @@ export default {
       */
      goToDetail() {
         let vm = this;
-        console.info('dispatch****1'+vm.$store.state.programCode);
-        console.info((vm.item.code || vm.item.contentId));
-        vm.$store.dispatch('setProgramCode',(vm.item.code || vm.item.contentId || vm.item.itemcode))
-        console.info('dispatch****2'+vm.$store.state.programCode);
-        vm.$router.push({path: `/hollywood/detail/${vm.item.type || vm.item.itemtype}`});
+        console.info('dispatch****1'+vm.programCode);
+        console.info('dispatch****1'+vm.programType);
+        vm.setProgramCode(vm.item.code || vm.item.contentId || vm.item.itemcode)
+        vm.setProgramType(vm.item.type || vm.item.itemtype)
+        console.info('dispatch****2'+vm.programCode);
+        console.info('dispatch****2'+vm.programType);
+        vm.$router.push({path: `/hollywood/detail`});
      },
      //在这里引入 action 里的方法，使用方法和 methods 里的其他方法一样
       ...mapActions([
-          'incrementStep'
+          'setProgramCode',
+          'setProgramType'
       ])
   },
   computed: {
-    
+      ...mapState([
+        'programCode',
+        'programType'
+      ])
   },
   directives: {
   	test:{
@@ -207,7 +219,7 @@ a
     animation scale-up 0.5s ease-in-out 1 forwards
     & > div
       &:nth-child(2)
-        background-color $linkColor
+        background $linkColor
         & > span.marquee30
           animation marquee30 4.5s ease-in-out infinite
         & > span.marquee60

@@ -7,6 +7,7 @@
             <div id="logo">
               <img :src="copyright_logo" alt="">
               <img :src="biz_logo" alt="">
+              <div>{{test}}</div>
             </div>
             <ul>
               <li><router-link to='list/1'>搜索</router-link></li>
@@ -19,7 +20,7 @@
         </div>
         <div id="recommand-1">
           <div v-for="(value, key, index) in bottomItems.slice(0,4)">
-            <Poster width='264' is-img-in :item='value'/>
+            <Poster width='264' is-img-in :item='value' v-on:down='down'/>
           </div> 
         </div>
         <div id="recommand-2">
@@ -60,7 +61,8 @@ export default {
       beltItems: [],
       bottomItems: [],
       waterfallItems: [],
-      albumItems: []
+      albumItems: [],
+      test: 'test'
     }
   },
   created() {
@@ -77,6 +79,13 @@ export default {
         vm.waterfallItems = res.data.positions[4].waterfallItems ? res.data.positions[4].waterfallItems : [];
         vm.albumItems = res.data.positions[5].albumItems ? res.data.positions[5].albumItems : [];
       });
+    },
+    down(value){
+      this.test = document.documentElement.clientHeight + '-----' + document.documentElement.scrollTop;
+      this.$nextTick(() => {
+        let doc = document.body;
+        doc.scrollTop += 70;
+      })
     }
   },
   components: {

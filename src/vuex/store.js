@@ -5,14 +5,18 @@ Vue.use(Vuex)  //使用 vuex
 
 const state = {
     programCode: '121211',
+    programType: '',
     parentCode: '',
     categoryCode: '',
-    bizCode: ''
+    bizCode: '',
 }
 
 const getters = {   
     programCode(state) {  
        return state.programCode
+    },
+    programType(state) {  
+       return state.programType
     },
     parentCode(state) {  
        return state.parentCode
@@ -27,9 +31,11 @@ const getters = {
 
 const mutations = {
 	setProgramCode(state,value){
-		console.info('mutations-value:' + value);
 		state.programCode = value
 	},
+    setProgramType(state,value){
+        state.programType = value
+    },
     setParentCode(state,value){
         state.parentCode = value
     },
@@ -43,19 +49,18 @@ const mutations = {
 
 const actions = {
     setProgramCode(context,value){
-    	console.info('actions:' + value);
         context.commit('setProgramCode', value);
     },
+    setProgramType(context,value){
+        context.commit('setProgramType', value);
+    },
     setParentCode(context,value){
-        console.info('actions:' + value);
         context.commit('setParentCode', value);
     },
     setCategoryCode(context,value){
-        console.info('actions:' + value);
         context.commit('setCategoryCode', value);
     },
     setBizCode(context,value){
-        console.info('actions:' + value);
         context.commit('setBizCode', value);
     }
 };

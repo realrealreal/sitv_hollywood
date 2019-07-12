@@ -6,7 +6,10 @@
           <div> 
             <ul v-bind:data-index="index" :style="{left: scrollLeft[index]+'px'}">
               <li>
-                <a :href="value.href" @focus="onfocus($event,1,index)">              
+                <a v-if="index == 0" :href="value.href" @focus="onfocus($event,1,index)" v-focus>    
+                  <img :src="value.src" alt="" />
+                </a>
+                <a v-if="index != 0" :href="value.href" @focus="onfocus($event,1,index)">    
                   <img :src="value.src" alt="" />
                 </a>
               </li>
@@ -219,8 +222,7 @@ export default {
           position absolute
           transition: left 1.5s
           font-size 0px
-          letter-spacing -4px
-          // display inline
+          //letter-spacing -4px
           & > li
             padding-right 24px
             display inline-block

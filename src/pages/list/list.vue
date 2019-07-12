@@ -10,11 +10,11 @@
         <a href="">编辑</a>
       </div>
       <ul>
-        <li v-for='(value, index) in leftColumn'><a :class="value.code == $store.state.bizCode ? 'current' : ''" href="javascript:void(0)" @click='toggleCategroy(value)'>{{value.title}}</a></li>
+        <li v-for='(value, index) in leftColumn'><a :id="value.catcode" :class="value.code == $store.state.bizCode ? 'current' : ''" href="javascript:void(0)" @click='toggleCategroy(value)' v-test='categoryCode'>{{value.title}}</a></li>
       </ul>
     </div>
     <div v-if='config != null && data.length != 0' class='scroll' :class="config.lineNumber == 3 ? 'line-3' : ''">
-      <ScrollList :data='data' :config='config'/>
+      <ScrollList :data='data' :config='config' v-on:back='backMenu'/>
     </div>
   </div> 
 </template>
@@ -26,6 +26,7 @@ const title = {
 }
 import ScrollList from '@/components/ScrollList'
 import Animations from '@/assets/css/animations.css'
+import {mapState} from 'vuex'
 export default {
   name: 'List',
   data () {
@@ -45,7 +46,7 @@ export default {
   //   this.init()
   // },
   watch: {
-    '$store.state.categoryCode': {
+    'categoryCode': {
         immediate: true,
         handler(newVal, oldVal) {
             console.log(this.leftColumn);
@@ -96,12 +97,6 @@ export default {
             //vm.config = vm.GLOBAL.config.noImage;
           }
         });
-        // vm.dataService.getCategroyList(vm.$store.state.categoryCode, function(res){
-        //   if(res.data.status == 200){
-        //     console.info(res.data);
-        //     vm.data = res.data.categoryitem
-        //   }
-        // });
       }else{
 
       }
@@ -111,19 +106,25 @@ export default {
       let vm = this;
       vm.$store.dispatch('setCategoryCode', value.catcode);
       vm.$store.dispatch('setBizCode', value.code);
+    },
+    backMenu(){
+      document.getElementById(this.categoryCode).focus();
     }
   },
   computed: {
-    /*config(){
-      let vm = this;
-      let subTitle = vm.leftColumn.filter(function(item){
-          return item.code == vm.$store.state.bizCode
-      })[0].subTitle;
-      console.info(subTitle);
-      return vm.GLOBAL.config[subTitle];
-    }*/
+    ...mapState([
+      'categoryCode'
+    ])
   },
   directives: {
+    test:{
+      inserted:function(el,binding,){//绑定到节点
+            console.log('2 - inserted');
+            console.log(binding);
+            if(el.id == binding.value) el.focus();
+   
+      }
+    }
   },
   components: {
     ScrollList
