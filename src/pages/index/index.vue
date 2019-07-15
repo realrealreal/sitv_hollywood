@@ -1,5 +1,5 @@
 <template>
-    <div id="index">
+    <div id="index" :style="{top: top+'px'}">
         <div id="carousel">
           <Carousel :items="middleItems.slice(0,2)"/>
         </div>
@@ -7,7 +7,6 @@
             <div id="logo">
               <img :src="copyright_logo" alt="">
               <img :src="biz_logo" alt="">
-              <div>{{test}}</div>
             </div>
             <ul>
               <li><router-link to='list/1'>搜索</router-link></li>
@@ -19,26 +18,26 @@
           <YaoFeng :items='beltItems'/>
         </div>
         <div id="recommand-1">
-          <div v-for="(value, key, index) in bottomItems.slice(0,4)">
-            <Poster width='264' is-img-in :item='value' v-on:down='down'/>
-          </div> 
+          <div v-for="(value, key, index) in bottomItems.slice(0,4)" >
+            <Poster width='264' is-img-in :item='value' isKeyListener v-on:keyListener='keydown' :column='1'/>
+          </div>
         </div>
         <div id="recommand-2">
           <h3>{{little1}}</h3>
-          <div v-for="(value, key, index) in waterfallItems.slice(0,6)">
-            <Poster width='168' :item='value'/>
+          <div :data-index='`2-${key}`' id="test" v-for="(value, key, index) in waterfallItems.slice(0,6)">
+            <Poster width='168' :item='value' isKeyListener v-on:keyListener='keydown' :column='2'/>
           </div> 
         </div>
         <div id="recommand-3">
           <h3>{{little2}}</h3>
           <div v-for="(value, key, index) in waterfallItems.slice(0,6)">
-            <Poster width='168' :item='value' is-icon-show :index='key+1' />
+            <Poster width='168' :item='value' is-icon-show :index='key+1' isKeyListener v-on:keyListener='keydown' :column='3'/>
           </div> 
         </div>
         <div id="recommand-4">
           <h3>{{little3}}</h3>
           <div v-for="(value, key, index) in albumItems.slice(0,6)">
-            <Poster width="168" :item='value'/>
+            <Poster width="168" :item='value' isKeyListener v-on:keyListener='keydown' :column='4'/>
           </div> 
         </div>
     </div>
@@ -62,7 +61,8 @@ export default {
       bottomItems: [],
       waterfallItems: [],
       albumItems: [],
-      test: 'test'
+      test: 'test',
+      top: 0
     }
   },
   created() {
@@ -80,12 +80,33 @@ export default {
         vm.albumItems = res.data.positions[5].albumItems ? res.data.positions[5].albumItems : [];
       });
     },
-    down(value){
-      this.test = document.documentElement.clientHeight + '-----' + document.documentElement.scrollTop;
-      this.$nextTick(() => {
-        let doc = document.body;
-        doc.scrollTop += 70;
-      })
+    onfocus(data){
+      console.info(data);
+      console.info(data.column);
+      return;
+      if(data.column == 1){
+        this.top = -550
+      }
+    },
+    keydown(value){
+      if(value.keyCode == 40){
+        if(value.column == 1){
+          document.querySelector('div[data-index="2-0"]>a').focus();
+          /*this.top -= 720;
+          this.$nextTick(() => {
+            document.querySelector('div[data-index="2-0"]>a').focus();
+          });*/      
+        }
+      }
+      if(value.keyCode == 38){
+        if(value.column == 0){
+          return;
+        }
+        if(value.column == 1){
+          this.top += 720;
+        }
+      }
+      
     }
   },
   components: {
@@ -99,9 +120,9 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang='stylus'>
   #index
+    position absolute
     width 100%
-    height 100%
-    margin 0 auto
+    transition: top 3s
   #header
     position absolute
     top 0

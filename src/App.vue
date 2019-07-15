@@ -47,6 +47,7 @@ export default {
   height 100%
   min-height 720px
   overflow hidden
+  position: relative
   background url($bgImg) no-repeat fixed 100% 100%
   background-size 100% 100%
 a

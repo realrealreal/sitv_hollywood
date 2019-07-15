@@ -1,15 +1,15 @@
 <template>
-	<a href="javascript:void(0)" :style="{width: toRem(width)+'rem'}" @focus="onFocus(index,$event)" @keyup.left="back" @keyup.down="down" @click="goToDetail">              
+	<a href="javascript:void(0)" :style="{width: toRem(width)+'rem'}" @focus="onFocus(index,$event)" @keyup.left="back" @keydown="keyListener($event)" @click="goToDetail">              
 	  <img :src="`${GLOBAL.config.base + (item.image || item.contentPoster || item.contentposter
 || item.contenticon || '/epg/resource/picture' + item.icon)}`" alt="">
-	  <div :class="{ shadow: isImgIn }"><span :class="marguee == 0 ? '':'marquee'+marguee">{{item.title || item.contentName}}</span></div>
+	  <div :class="{ shadow: isImgIn }"><span :class="marguee == 0 ? '':'marquee'+marguee">{{item.title || item.contentName}}{{'---'+keycode}}</span></div>
     <div v-show="isIconShow" style="color: white">{{index}}</div>
 	</a>
 </template>
 
 <script>
 import Animations from '@/assets/css/animations.css'
-import {mapActions, mapState,mapGetters} from 'vuex' //注册 action 和 state
+import {mapActions, mapState, mapGetters} from 'vuex' //注册 action 和 state
 export default {
   name: 'Poster',
   data () {
@@ -28,7 +28,8 @@ export default {
        * [default 默认图（暂时未用到）]
        * @type {[type]}
        */
-      default: require('../assets/images/test/default1.jpg')
+      default: require('../assets/images/test/default1.jpg'),
+      keycode: 0
     }
   },
   mounted() {
@@ -88,6 +89,18 @@ export default {
       default: function () {
         return 1
       }
+    },
+    column: {
+      type: Number,
+      default: function () {
+        return -1
+      }
+    },
+    isKeyListener: {
+      type: Boolean,
+      default: function () {
+        return false
+      }
     }
   },
   methods: {
@@ -117,7 +130,8 @@ export default {
         if(this.isCheck){
           let data = {
             index: index,
-            el: e.target
+            el: e.target,
+            column: this.column
           };
           this.$emit("checkIndex",data)
         }
@@ -125,8 +139,14 @@ export default {
      back(){
         this.$emit("back",{})
      },
-     down(){
-        this.$emit("down",{})
+     keyListener(e){
+        if(!this.isKeyListener) return;
+        let data = {
+          keyCode: e.keyCode,
+          column: this.column
+        }
+        this.$emit("keyListener", data)
+    
      },
      /**
       * [toRem 换算rem root font-size 21]
