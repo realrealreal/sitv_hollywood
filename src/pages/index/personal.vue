@@ -9,12 +9,12 @@
                 <a v-if="index == 0" :href="value.href" @focus="onfocus($event,1,index)" v-focus>    
                   <img :src="value.src" alt="" />
                 </a>
-                <a v-if="index != 0" :href="value.href" @focus="onfocus($event,1,index)">    
+                <a v-if="index != 0" :href="value.href" @focus="onfocus($event,1,index)" @keydown="keydown1($event,index+1)">    
                   <img :src="value.src" alt="" />
                 </a>
               </li>
               <li v-if="index != 2" v-for="(item, key) in list[index].slice(0,10)">
-                <Poster :width='config.width' :item='item' isCheck v-on:checkIndex='check' :index='key+1'/>
+                <Poster :width='config.width' :item='item' isCheck v-on:checkIndex='check' :index='key+1' isKeyListener v-on:keyListener='keydown' :column='index+1'/>
               </li>
               <li v-if="index == 2" v-for="(item, key) in list[index].slice(0,10)">
                   <a class='text-center' href="javascript:void(0)" @focus='orderFocus($event, key+1, index)'>           
@@ -23,7 +23,7 @@
                   </a>
               </li>
               <li>
-                <a :href="value.href" v-if='list[index].length>10' @focus='onfocus($event,2,index)'>
+                <a :href="value.href" v-if='list[index].length>10' @focus='onfocus($event,2,index)' @keydown="keydown1($event,index+1)">
                   <img src="../../assets/images/more.png" alt="" />
                 </a>
               </li>
@@ -162,6 +162,7 @@ export default {
       }
     },
     check(data){
+      document.getElementById('app').scrollTop = 0;
       let vm = this;
       console.info("index:-------"+data.index)
       let container = data.el.parentElement.parentElement.parentElement;//container
@@ -189,6 +190,22 @@ export default {
           vm.scrollTimes.splice(ul.dataset.index, 1, 0);
           vm.scrollLeft.splice(ul.dataset.index, 1, 0);
       }
+    },
+    keydown1(e,index){
+      let value = {
+        keyCode:e.keyCode,
+        column:index
+      }
+      this.keydown(value);
+    },
+    keydown(value){
+      if(value.keyCode == 40 && value.column == 2){
+        document.getElementById('app').scrollTop = document.getElementById('app').scrollHeight;
+      }
+      if(value.keyCode == 38 && value.column == 3){
+        document.getElementById('app').scrollTop = 0;
+
+      }
     }
   },
   components: {
@@ -201,7 +218,6 @@ export default {
 <style scoped lang='stylus'>
 #index
   width 1160px
-  height 100%
   margin 44px auto
   & > div
     & > h3

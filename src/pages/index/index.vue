@@ -91,19 +91,23 @@ export default {
     keydown(value){
       if(value.keyCode == 40){
         if(value.column == 1){
-          document.querySelector('div[data-index="2-0"]>a').focus();
+          //document.querySelector('div[data-index="2-0"]>a').focus();
+          document.getElementById('app').scrollTop = document.getElementById('app').clientHeight;
           /*this.top -= 720;
           this.$nextTick(() => {
             document.querySelector('div[data-index="2-0"]>a').focus();
           });*/      
         }
+        if(value.column == 3){
+          document.getElementById('app').scrollTop = document.getElementById('app').scrollHeight;
+        }
       }
       if(value.keyCode == 38){
-        if(value.column == 0){
-          return;
+        if(value.column == 2){
+          document.getElementById('app').scrollTop = 0;
         }
-        if(value.column == 1){
-          this.top += 720;
+        if(value.column == 4){
+          document.getElementById('app').scrollTop = document.getElementById('app').clientHeight;
         }
       }
       

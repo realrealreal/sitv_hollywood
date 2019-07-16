@@ -6,7 +6,7 @@
    :duration="{ enter: 2000, leave: 800 }" :key="value.key">
       <img v-show='showIndex == index' :src="`${GLOBAL.config.base + '/epg/resource/picture' + value.icon1}`" alt="">
     </transition> 
-    <a href="">
+    <a href="" v-focus="false">
        <transition v-for="(value, index) in items" name="left" enter-active-class="animated fadeInLeft"
      leave-active-class="animated fadeOut"
      :duration="{ enter: 2000, leave: 800 }" :key="value.key">
