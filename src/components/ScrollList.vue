@@ -1,6 +1,6 @@
 <template>
   <ul>
-    <li v-if="config.name != 'noImage'" v-for="(value, index) in loadedData"><Poster :width='config.width' :index='index' :item='value' :is-img-in="config.isImgIn" isCheck v-on:checkIndex='check' v-on:back='back'/><!-- <a href="" @focus="check(key)"><img :src="rootImage+'P_'+value+'.jpg'" alt="" onerror="this.src='1.JPG'"></a> --></li>
+    <li v-if="config.name != 'noImage'" v-for="(value, index) in loadedData"><Poster :width='config.width' :index='index' :item='value' :is-img-in="config.isImgIn" isCheck v-on:checkIndex='check' isKeyListener v-on:keyListener='keydown' :column='Math.floor(index/config.lineNumber)'v-on:back='back'/><!-- <a href="" @focus="check(key)"><img :src="rootImage+'P_'+value+'.jpg'" alt="" onerror="this.src='1.JPG'"></a> --></li>
     <li v-if="config.name == 'noImage'" v-for="(value, index) in loadedData"><a :class='config.name' href="" @focus="check({index: index})">{{value.title}}</a></li>
   </ul>
 </template>
@@ -53,19 +53,38 @@ export default {
       }
     },
     check(data) {  //检查是否需要刷新
-      //console.info("check:---------"+ data.index);
+      console.info("check:---------"+ data.index);
       if(data.index >= this.number-this.config.lineNumber){
         this.add();
       }
+      this.$nextTick(() => {
+        let column = Math.ceil((data.index+1)/this.config.lineNumber);
+        document.getElementById('app').scrollTop = column-2 < 0 ? 0 : (column-2)*288;
+        console.info(document.getElementById('app').scrollTop);
+      });
     },
     back(){
       this.$emit("back",{})
+    },
+    keydown(value){
+      console.info(value);
+      // if(value.keyCode == 40){
+      //     document.getElementById('app').scrollTop = value.column;
+      // }
+      // if(value.keyCode == 38 && value.column > 2){
+
+      // }
     }
   },
-  computed: {
-    
+  filters: {
+    computeColumn(value) {
+      console.info(this)
+      console.info('index------'+value);
+      console.info('lineNunber------'+this.config.lineNumber);
+      return Math.floor(value/this.config.lineNumber);
+    }
   },
-  directives: {
+  computed: {  
   },
   components: {
     Poster

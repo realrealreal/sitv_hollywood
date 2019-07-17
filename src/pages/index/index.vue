@@ -99,7 +99,7 @@ export default {
           });*/      
         }
         if(value.column == 3){
-          document.getElementById('app').scrollTop = document.getElementById('app').scrollHeight;
+          document.getElementById('app').scrollTop = document.getElementById('app').scrollHeight-document.getElementById('app').offsetHeight;
         }
       }
       if(value.keyCode == 38){

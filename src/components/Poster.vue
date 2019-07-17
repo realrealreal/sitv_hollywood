@@ -143,7 +143,8 @@ export default {
         if(!this.isKeyListener) return;
         let data = {
           keyCode: e.keyCode,
-          column: this.column
+          column: this.column,
+          index: this.index
         }
         this.$emit("keyListener", data)
     

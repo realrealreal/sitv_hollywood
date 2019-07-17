@@ -169,7 +169,6 @@ export default {
 <style scoped lang='stylus'>
 #index{
   width: 100%;
-  height: 100%;
   margin: 0 auto;
 }
 #index > div:first-child {

@@ -227,7 +227,6 @@ export default {
 <style scoped lang='stylus'>
 #index
   width 100%
-  height 100%
   margin 0 auto
   vertical-align top
   & > div
@@ -261,23 +260,25 @@ export default {
       text-align center
       & > span
         line-height 300px
-      & > ul > li:nth-child(2n) > a
-        background rgba(27, 33, 44, 0.5)
-      & > ul > li > a
-        text-align left
-        width 932px
-        padding 14px
-        display flex
-        flex-direction row
-        & > span
-          display block
-          &:nth-child(1)
-          &:nth-child(2)
-            width 0
-            flex-grow 2
-          &:nth-child(3)
-            width 0 
-            flex-grow 1
+      & > ul > li
+        margin-bottom 5px
+        &:nth-child(2n) > a
+          background rgba(27, 33, 44, 0.5)
+        & > a
+          text-align left
+          width 932px
+          padding 14px
+          display flex
+          flex-direction row
+          & > span
+            display block
+            &:nth-child(1)
+            &:nth-child(2)
+              width 0
+              flex-grow 2
+            &:nth-child(3)
+              width 0 
+              flex-grow 1
 #index > div:first-child > div > a, #index > div:first-child > ul > li > a
   width 100%
   padding 7px 0

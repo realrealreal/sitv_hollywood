@@ -6,31 +6,31 @@
           <div> 
             <ul v-bind:data-index="index" :style="{left: scrollLeft[index]+'px'}">
               <li>
-                <a v-if="index == 0" :href="value.href" @focus="onfocus($event,1,index)" v-focus>    
+                <a v-if="index == 0" :href="value.href" v-focus>    
                   <img :src="value.src" alt="" />
                 </a>
-                <a v-if="index != 0" :href="value.href" @focus="onfocus($event,1,index)" @keydown="keydown1($event,index+1)">    
+                <a v-if="index != 0" :href="value.href" @keydown="keydown1($event,index)">    
                   <img :src="value.src" alt="" />
                 </a>
               </li>
               <li v-if="index != 2" v-for="(item, key) in list[index].slice(0,10)">
-                <Poster :width='config.width' :item='item' isCheck v-on:checkIndex='check' :index='key+1' isKeyListener v-on:keyListener='keydown' :column='index+1'/>
+                <Poster :width='config.width' :item='item' :index='key+1' isKeyListener v-on:keyListener='keydown' :column='index'/>
               </li>
               <li v-if="index == 2" v-for="(item, key) in list[index].slice(0,10)">
-                  <a class='text-center' href="javascript:void(0)" @focus='orderFocus($event, key+1, index)'>           
+                  <a class='text-center' href="javascript:void(0)" @keydown="keydown1($event,index,key+1)" >
                     <img :src="orderDefaultImg" alt="">
                     <div><span>{{item.contentName}}</span><br><span>{{item.expireTime | formatDate}}有效</span></div>
                   </a>
               </li>
               <li>
-                <a :href="value.href" v-if='list[index].length>10' @focus='onfocus($event,2,index)' @keydown="keydown1($event,index+1)">
+                <a href="avascript:void(0)" v-if='list[index].length>10' @keydown="keydown1($event,index,11)">
                   <img src="../../assets/images/more.png" alt="" />
                 </a>
               </li>
             </ul>
           </div>
-          <span class='prev' v-if='scrollTimes[index] > 0'><</span>
-          <span class='next' v-if='list[index].length >= 6 && ((list[index].length > 10  && scrollTimes[index] < 6) || (list[index].length <= 10  && scrollTimes[index] < list[index].length-5))'>></span>
+          <span class='prev' v-if='isSecond[index]'><</span>
+          <span class='next' v-if='list[index].length >= 6 && !isSecond[index]'>></span>
         </div>
       </div>
     </div>
@@ -67,12 +67,18 @@ export default {
       collectionList: [],
       scrollLeft: [0,0,0],
       scrollTimes: [0,0,0],
+      isSecond:[false,false,false],
       orderDefaultImg: require('../../assets/images/order.png'),
     }
   },
   watch: {
-    scrollTimes(oldValue, newValue) {
-      console.info('new:'+ newValue[1]);
+    isSecond(oldValue, newValue) {
+      for (var i = 0; i < newValue.length; i++) {
+        if(oldValue[i] != newValue[i]){
+
+          break;
+        }
+      }
     }
   },
   mounted() {
@@ -87,7 +93,6 @@ export default {
   methods: {
     init(){
       let vm = this;
-      //console.info(this.config);
       //vm.config = config;
       vm.dataService.queryHistory(function(res){
         console.info(res);
@@ -191,20 +196,33 @@ export default {
           vm.scrollLeft.splice(ul.dataset.index, 1, 0);
       }
     },
-    keydown1(e,index){
+    keydown1(e,column,index){
       let value = {
-        keyCode:e.keyCode,
-        column:index
+        keyCode: e.keyCode,
+        column: column,
+        index: index
       }
       this.keydown(value);
     },
     keydown(value){
-      if(value.keyCode == 40 && value.column == 2){
-        document.getElementById('app').scrollTop = document.getElementById('app').scrollHeight;
+      console.info(this.$el);
+      if(value.keyCode == 40 && value.column == 1){
+        document.getElementById('app').scrollTop = document.getElementById('app').scrollHeight - document.getElementById('app').offsetHeight;
       }
-      if(value.keyCode == 38 && value.column == 3){
+      if(value.keyCode == 38 && value.column == 2){
         document.getElementById('app').scrollTop = 0;
-
+      }
+      if(value.keyCode == 39 && value.index == 5 && this.list[value.column].length > 5){
+        let scrollEl = this.$el.children[value.column].children[1].children[0];
+        scrollEl.scrollLeft = scrollEl.scrollWidth - scrollEl.offsetWidth - 10;//10个像素 margin
+        //this.scrollLeft.splice(value.column, 1, 0 - this.$el.offsetWidth);
+        this.isSecond.splice(value.column, 1, true);
+      }
+      if(value.keyCode == 37 && value.index == 6){
+        let scrollEl = this.$el.children[value.column].children[1].children[0];
+        scrollEl.scrollLeft = 0
+        //this.scrollLeft.splice(value.column, 1, 0);
+        this.isSecond.splice(value.column, 1, false);
       }
     }
   },

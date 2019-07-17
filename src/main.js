@@ -25,7 +25,6 @@ Vue.directive('focus',{
     el.focus()
   },
   update:function(el,binding){//组件更新
-    console.log('3 - update');
     console.log(binding.value);
     if(binding.value){
     	el.focus();

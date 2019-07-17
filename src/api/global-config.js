@@ -13,6 +13,7 @@ const config = {
 		initNumber: 15,
 		lineNumber: 5,
 		width: '168',
+		scrollTop: '288', //单次滚动高度
 		isImgIn: false
 	},
 	still: {
@@ -20,13 +21,15 @@ const config = {
 		initNumber: 12, //初始值总数量
 		lineNumber: 3, //每行数量
 		width: '264',
+		scrollTop: '185', //单次滚动高度
 		isImgIn: false
 	},
 	noImage: {
 		name: 'noImage',
 		initNumber: 28,
 		lineNumber: 2,
-		width: '168',
+		width: '168', //未用到
+		scrollTop: '288', //单次滚动高度
 		isImgIn: false
 	}
 }
