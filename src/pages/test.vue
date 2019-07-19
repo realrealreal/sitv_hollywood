@@ -1,22 +1,34 @@
 <!-- 测试页面 -->
 <template>
     <div id="index">
-        <router-link to='index' replace>首页</router-link>
-        <router-link to='repo' replace>个人中心</router-link>
-        <router-link to='repo/histroy/1' replace>list</router-link>
+          <div @click="clickShow">clickShow</div>
+          <transition name="fade" enter-active-class="animated topIn"
+       leave-active-class="animated topOut"
+       :duration="{ enter: 2000, leave: 2000 }">
+          <div v-show="isShow">11111</div>
+        </transition>
+          <transition name="fade" enter-active-class="animated bottomIn"
+       leave-active-class="animated bottomOut"
+       :duration="{ enter: 2000, leave: 2000 }">
+          <div v-show="!isShow">22222</div>
+          </transition>
     </div>
 </template>
 <script>
-import Poster from '@/components/Poster'
 export default {
   name: 'Test',
   data () {
     return {
-      
+      isShow: true
     }
   },
   components: {
-    Poster
+
+  },
+  methods: {
+    clickShow(){
+      this.isShow = !this.isShow
+    }
   }
 }
 </script>

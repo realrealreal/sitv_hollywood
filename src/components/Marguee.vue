@@ -15,8 +15,7 @@ export default {
       type: String,
       required: true
     }
-  },
-  mou
+  }
 }
 </script>
 

@@ -41,7 +41,10 @@ export default {
     margin-top 10px
     padding 5px
     overflow hidden
+    overflow-x scroll
     white-space nowrap
+    &::-webkit-scrollbar
+      display none
     & > ul
       display inline-block
       & > li

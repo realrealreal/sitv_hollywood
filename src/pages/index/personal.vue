@@ -1,29 +1,29 @@
 <template>
     <div id="index">
-      <div v-for='(value, index) in config.groups'>
+      <div v-for='(value, index) in config.groups' >
         <h3>{{value.name}}</h3>
         <div>
-          <div> 
+          <div :ref='`column-${index}`'> 
             <ul v-bind:data-index="index" :style="{left: scrollLeft[index]+'px'}">
               <li>
-                <a v-if="index == 0" :href="value.href" v-focus>    
+                <a v-if="index == 0" :href="value.href" v-focus @focus="onfocus(0,index)">    
                   <img :src="value.src" alt="" />
                 </a>
-                <a v-if="index != 0" :href="value.href" @keydown="keydown1($event,index)">    
+                <a v-if="index != 0" :href="value.href" @focus="onfocus(0,index)">    
                   <img :src="value.src" alt="" />
                 </a>
               </li>
-              <li v-if="index != 2" v-for="(item, key) in list[index].slice(0,10)">
-                <Poster :width='config.width' :item='item' :index='key+1' isKeyListener v-on:keyListener='keydown' :column='index'/>
+              <li v-if="index != 2" v-for="(item, key) in list[index].slice(0,10)" ref='posterLi'>
+                <Poster :width='config.width' :item='item' :index='key+1' isCheck v-on:checkIndex='check' :column="index"/>
               </li>
               <li v-if="index == 2" v-for="(item, key) in list[index].slice(0,10)">
-                  <a class='text-center' href="javascript:void(0)" @keydown="keydown1($event,index,key+1)" >
+                  <a class='text-center' href="javascript:void(0)" @focus="onfocus(key+1, index)" >
                     <img :src="orderDefaultImg" alt="">
                     <div><span>{{item.contentName}}</span><br><span>{{item.expireTime | formatDate}}有效</span></div>
                   </a>
               </li>
               <li>
-                <a href="avascript:void(0)" v-if='list[index].length>10' @keydown="keydown1($event,index,11)">
+                <a href="javascript:void(0)" v-if='list[index].length>10' @focus="onfocus(11,index)">
                   <img src="../../assets/images/more.png" alt="" />
                 </a>
               </li>
@@ -69,13 +69,13 @@ export default {
       scrollTimes: [0,0,0],
       isSecond:[false,false,false],
       orderDefaultImg: require('../../assets/images/order.png'),
+      timer:[undefined,undefined,undefined,undefined]
     }
   },
   watch: {
     isSecond(oldValue, newValue) {
       for (var i = 0; i < newValue.length; i++) {
         if(oldValue[i] != newValue[i]){
-
           break;
         }
       }
@@ -91,7 +91,13 @@ export default {
     }
   },
   methods: {
-    init(){
+    /**
+     * [init 初始化]
+     * @Author   shanjing
+     * @DateTime 2019-07-19T13:04:30+0800
+     * @return   {[type]}                 [description]
+     */
+    init() {
       let vm = this;
       //vm.config = config;
       vm.dataService.queryHistory(function(res){
@@ -134,7 +140,7 @@ export default {
         return array;
       })())
     },
-    test(){
+    test() {
       console.info(this.$el)
     },
     clear(index) {  //清除當前行之外的left
@@ -146,85 +152,67 @@ export default {
         }
       }
     },
-    onfocus(event, type, index){
-      //e.preventDefault(); 會抖動
-      let vm = this;
-      event.target.parentElement.parentElement.parentElement.scrollLeft = 0;
-      vm.clear(index);
-      if(type == 2){
-        vm.scrollTimes.splice(index, 1, 6);
-        vm.scrollLeft.splice(index, 1, 0 - event.target.parentElement.offsetWidth*6);
-        //event.target.parentElement.parentElement.style.left ="-"+event.target.parentElement.offsetWidth*6+"px";
-      }
+    check(value) {
+      this. onfocus(value.index,value.column);
     },
-    orderFocus(event, key, index){
-      let vm = this;
-      event.target.parentElement.parentElement.parentElement.scrollLeft = 0;
-      vm.clear(index);
-      if(key >= 6){   
-        vm.scrollTimes.splice(index, 1, key-5);
-        vm.scrollLeft.splice(index, 1, 0 - event.target.parentElement.offsetWidth*(key-5))
+    onfocus(index,column){
+      if(column == 2){
+        let el = this.$parent.$el;
+        this.scrollTo(el, 500, el.scrollHeight - el.offsetHeight, 'scrollTop', 3, this);
       }
-    },
-    check(data){
-      document.getElementById('app').scrollTop = 0;
-      let vm = this;
-      console.info("index:-------"+data.index)
-      let container = data.el.parentElement.parentElement.parentElement;//container
-      container.scrollLeft = 0;
-      let ul = data.el.parentElement.parentElement;
-      vm.clear(ul.dataset.index);
-      console.info("left:"+ul.style.left);
-      console.info("index:"+ul.dataset.index);
-      if(data.index >= 6){   
-          let li = data.el.parentElement;//li
-          console.info(container);
-          console.info(container.scrollWidth);
-          console.info(container.offsetWidth);
-          let onceLeft = li.offsetWidth;//单次滚动距离
-          //let maxScroll = container.scrollWidth - container.offsetWidth;//最大滚动距离
-          //let maxScroll = li.offsetWidth*10;//最大滚动距离
-          //let scrollLeft = (data.index-5)*onceLeft < maxScroll ? (data.index-5)*onceLeft : maxScroll; //滚动距离
-          console.info('onceLeft:-----'+ onceLeft);
-          //console.info('maxScroll:-----'+ maxScroll);
-          //console.info('scrollLeft:-----'+ scrollLeft);
-          //container.scrollLeft = scrollLeft;
-          vm.scrollTimes.splice(ul.dataset.index, 1, data.index-5);
-          vm.scrollLeft.splice(ul.dataset.index, 1, 0 - onceLeft*(data.index-5));//vm.scrollLeft[ul.dataset.index] 不更新视图  vm.items.splice(indexOfItem, 1, newValue)  Vue.set(vm.items, indexOfItem, newValue)  更新视图
+      if(column == 1 || column == 0){
+        let el = this.$parent.$el;
+        this.scrollTo(el, 500, 0, 'scrollTop', 3, this);
+      }
+      if(index >= 6){
+        console.info('check',index)
+        let leftOnce = this.$refs.posterLi[0].offsetWidth; //单次移动距离
+        this.$refs[`column-${column}`][0].scrollLeft = this.scrollLeft[column];
+        this.scrollTo(this.$refs[`column-${column}`][0], 500, (index-5)*leftOnce, 'scrollLeft', column, this);
+        this.scrollLeft[column] = (index-5)*leftOnce;
       }else{
-          vm.scrollTimes.splice(ul.dataset.index, 1, 0);
-          vm.scrollLeft.splice(ul.dataset.index, 1, 0);
+        this.scrollTo(this.$refs[`column-${column}`][0], 500, 0, 'scrollLeft', column, this);
+        this.scrollLeft[column] = 0;
       }
     },
-    keydown1(e,column,index){
-      let value = {
-        keyCode: e.keyCode,
-        column: column,
-        index: index
-      }
-      this.keydown(value);
+    // keydown(e, index) {
+    //   console.info(e.keyCode,index)
+    //   let el = this.$parent.$el;
+    //   if(e.keyCode == 40 && index == 1){
+    //     console.info(el);
+    //     this.scrollTo(el, 500, el.scrollHeight - el.offsetHeight, 'scrollTop');
+    //   }
+    //   if(e.keyCode == 38 && index == 2){
+    //     console.info(el);
+    //     this.scrollTo(el, 500, 0, 'scrollTop');
+    //   }    
+    // },
+    /**
+     * [scrollTo 滚动效果函数 (暂时无法全局 this作用域)]
+     * @Author   shanjing
+     * @DateTime 2019-07-19T16:18:56+0800
+     * @param    {[type]}                 el             [滚动元素]
+     * @param    {[type]}                 scrollDuration [滚动时长]
+     * @param    {[type]}                 distance       [滚动距离]
+     * @param    {[type]}                 direction      [滚动方向 'scrollTop' 'scrollLeft']
+     * @param    {[type]}                 num            [timer]
+     * @param    {[type]}                 vm             [this]
+     * @return   {[type]}                                [description]
+     */
+    scrollTo(el,scrollDuration,distance,direction,num,vm) {
+        var scrollStep = (distance-el[direction]) / (scrollDuration / 15)
+        clearInterval(vm.timer[num]);
+        vm.timer[num] = setInterval(function(){
+          if ( el[direction] != distance ) {
+            el[direction] += scrollStep;
+            if(scrollStep < 0 && el[direction] < distance || scrollStep > 0 && el[direction] > distance){
+              el[direction] = distance
+            }
+          }else {
+              clearInterval(vm.timer[num]);
+            }
+        },15);
     },
-    keydown(value){
-      console.info(this.$el);
-      if(value.keyCode == 40 && value.column == 1){
-        document.getElementById('app').scrollTop = document.getElementById('app').scrollHeight - document.getElementById('app').offsetHeight;
-      }
-      if(value.keyCode == 38 && value.column == 2){
-        document.getElementById('app').scrollTop = 0;
-      }
-      if(value.keyCode == 39 && value.index == 5 && this.list[value.column].length > 5){
-        let scrollEl = this.$el.children[value.column].children[1].children[0];
-        scrollEl.scrollLeft = scrollEl.scrollWidth - scrollEl.offsetWidth - 10;//10个像素 margin
-        //this.scrollLeft.splice(value.column, 1, 0 - this.$el.offsetWidth);
-        this.isSecond.splice(value.column, 1, true);
-      }
-      if(value.keyCode == 37 && value.index == 6){
-        let scrollEl = this.$el.children[value.column].children[1].children[0];
-        scrollEl.scrollLeft = 0
-        //this.scrollLeft.splice(value.column, 1, 0);
-        this.isSecond.splice(value.column, 1, false);
-      }
-    }
   },
   components: {
     Poster
@@ -246,7 +234,7 @@ export default {
       & > div
         height 280px
         position relative
-        overflow-x hidden
+        overflow-x scroll
         overflow-y hidden
         white-space nowrap 
         &::-webkit-scrollbar

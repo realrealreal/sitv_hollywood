@@ -1,8 +1,8 @@
 <template>
-	<a href="javascript:void(0)" :style="{width: toRem(width)+'rem'}" @focus="onFocus(index,$event)" @keyup.left="back" @keydown="keyListener($event)" @click="goToDetail">              
+	<a href="javascript:void(0)" :style="{width: toRem(width)+'rem'}" @focus="onFocus(index,$event)" @keydown="keyListener($event)" @click="goToDetail">              
 	  <img :src="`${GLOBAL.config.base + (item.image || item.contentPoster || item.contentposter
-|| item.contenticon || '/epg/resource/picture' + item.icon)}`" alt="">
-	  <div :class="{ shadow: isImgIn }"><span :class="marguee == 0 ? '':'marquee'+marguee">{{item.title || item.contentName}}{{'---'+keycode}}</span></div>
+|| item.contenticon || '/epg/resource/picture' + item.icon)}`" alt="" :onerror="defaultImg">
+	  <div :class="{ shadow: isImgIn }"><span :class="marguee == 0 ? '':'marquee'+marguee">{{item.title || item.contentName}}</span></div>
     <div v-show="isIconShow" style="color: white">{{index}}</div>
 	</a>
 </template>
@@ -28,8 +28,7 @@ export default {
        * [default 默认图（暂时未用到）]
        * @type {[type]}
        */
-      default: require('../assets/images/test/default1.jpg'),
-      keycode: 0
+      defaultImg: require('../assets/images/test/default1.jpg'),
     }
   },
   mounted() {
@@ -126,7 +125,7 @@ export default {
       */
      onFocus(index,e) {
         //e.preventDefault(); 會抖動
-        console.info(e.target);
+        console.info(window.getComputedStyle(e.target.parentElement, null).getPropertyValue("padding-bottom"));
         if(this.isCheck){
           let data = {
             index: index,
@@ -136,12 +135,11 @@ export default {
           this.$emit("checkIndex",data)
         }
      },
-     back(){
-        this.$emit("back",{})
-     },
      keyListener(e){
         if(!this.isKeyListener) return;
         let data = {
+          el: e.target,
+          event: e,
           keyCode: e.keyCode,
           column: this.column,
           index: this.index
@@ -170,7 +168,7 @@ export default {
         console.info('dispatch****1'+vm.programCode);
         console.info('dispatch****1'+vm.programType);
         vm.setProgramCode(vm.item.code || vm.item.contentId || vm.item.itemcode)
-        vm.setProgramType(vm.item.type || vm.item.itemtype)
+        vm.setProgramType(vm.item.type || vm.item.itemtype || vm.item.contentType)
         console.info('dispatch****2'+vm.programCode);
         console.info('dispatch****2'+vm.programType);
         vm.$router.push({path: `/hollywood/detail`});

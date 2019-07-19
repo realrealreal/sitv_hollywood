@@ -13,7 +13,8 @@ export default {
   data () {
     return {
       loadedData: [], //加载的数据
-      number: 0
+      number: 0,
+      timer: undefined
     }
   },
   mounted() {
@@ -57,11 +58,31 @@ export default {
       if(data.index >= this.number-this.config.lineNumber){
         this.add();
       }
-      this.$nextTick(() => {
+      let vm = this;
+      vm.$nextTick(() => {
         let column = Math.ceil((data.index+1)/this.config.lineNumber);
-        document.getElementById('app').scrollTop = column-2 < 0 ? 0 : (column-2)*288;
-        console.info(document.getElementById('app').scrollTop);
+        let el = document.getElementById('app');
+        let scrollDistance = column-2 < 0 ? 0 : (column-2)*data.el.parentElement.offsetHeight
+        //vm.utils.scrollTo(el, 500, scrollDistance, 'scrollTop', vm.timer)
+        this.scrollTo(el, 500, scrollDistance, 'scrollTop')
+        //document.getElementById('app').scrollTop = column-2 < 0 ? 0 : (column-2)*data.el.parentElement.offsetHeight; //无动画效果的
+        //console.info(document.getElementById('app').scrollTop);
       });
+    },
+    scrollTo(el,scrollDuration,distance,direction) {
+        console.info('shanjing========='+this.timer);
+        var scrollStep = (distance-el[direction]) / (scrollDuration / 15)
+        clearInterval(this.timer);
+        this.timer = setInterval(function(){
+          if ( el[direction] != distance ) {
+            el[direction] += scrollStep;
+            if(scrollStep < 0 && el[direction] < distance || scrollStep > 0 && el[direction] > distance){
+              el[direction] = distance
+            }
+          }else {
+              clearInterval(this.timer);
+            }
+        },15);
     },
     back(){
       this.$emit("back",{})
@@ -99,7 +120,8 @@ ul
     display inline-block
     vertical-align middle
     margin-left 24px
-    margin-bottom 24px
+    //margin-bottom 24px
+    padding-bottom 24px
     &:nth-child(4n+3) > a.noImage
     &:nth-child(4n+4) > a.noImage
           background rgba(27, 33, 44, 0.5)

@@ -6,7 +6,7 @@
    :duration="{ enter: 2000, leave: 800 }" :key="value.key">
       <img v-show='showIndex == index' :src="`${GLOBAL.config.base + '/epg/resource/picture' + value.icon1}`" alt="">
     </transition> 
-    <a href="" v-focus="false">
+    <a href="javascript:void(0)" v-focus="false" @click="click">
        <transition v-for="(value, index) in items" name="left" enter-active-class="animated fadeInLeft"
      leave-active-class="animated fadeOut"
      :duration="{ enter: 2000, leave: 800 }" :key="value.key">
@@ -25,6 +25,7 @@
 </template>
 
 <script>
+import {mapActions, mapState, mapGetters} from 'vuex' //注册 action 和 state
 export default {
   name: 'Carousel',
   data () {
@@ -69,8 +70,25 @@ export default {
               }
             },5000)
         },1000)
-     } 
-  }
+     },
+     click() {
+        let vm = this;
+        vm.setProgramCode(vm.items[vm.showIndex].code)
+        vm.setProgramType(vm.items[vm.showIndex].type)
+        vm.$router.push({path: `/hollywood/detail`});
+     },
+     //在这里引入 action 里的方法，使用方法和 methods 里的其他方法一样
+      ...mapActions([
+          'setProgramCode',
+          'setProgramType'
+      ])
+  },
+  computed: {
+    ...mapState([
+      'programCode',
+      'programType'
+    ])
+  },
 }
 </script>
 

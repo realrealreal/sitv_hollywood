@@ -1,5 +1,5 @@
 <template>
-    <div id="index" :style="{top: top+'px'}">
+    <div id="index">
         <div id="carousel">
           <Carousel :items="middleItems.slice(0,2)"/>
         </div>
@@ -18,26 +18,26 @@
           <YaoFeng :items='beltItems'/>
         </div>
         <div id="recommand-1">
-          <div v-for="(value, key, index) in bottomItems.slice(0,4)" >
-            <Poster width='264' is-img-in :item='value' isKeyListener v-on:keyListener='keydown' :column='1'/>
+          <div v-for="(value, index) in bottomItems.slice(0,4)" @keydown='keydown($event,1,index)'>
+            <Poster width='264' is-img-in :item='value' ref='recommand-1'/>
           </div>
         </div>
         <div id="recommand-2">
           <h3>{{little1}}</h3>
-          <div :data-index='`2-${key}`' id="test" v-for="(value, key, index) in waterfallItems.slice(0,6)">
-            <Poster width='168' :item='value' isKeyListener v-on:keyListener='keydown' :column='2'/>
+          <div v-for="(value, index) in waterfallItems.slice(0,6)" @keydown='keydown($event,2,index)'>
+            <Poster width='168' :item='value' ref='recommand-2' />
           </div> 
         </div>
         <div id="recommand-3">
           <h3>{{little2}}</h3>
-          <div v-for="(value, key, index) in waterfallItems.slice(0,6)">
-            <Poster width='168' :item='value' is-icon-show :index='key+1' isKeyListener v-on:keyListener='keydown' :column='3'/>
-          </div> 
+          <div v-for="(value, index) in waterfallItems.slice(0,6)" @keydown='keydown($event,3,index)'>
+            <Poster width='168' :item='value' is-icon-show :index='index+1' ref='recommand-3'/>
+          </div> 3
         </div>
         <div id="recommand-4">
           <h3>{{little3}}</h3>
-          <div v-for="(value, key, index) in albumItems.slice(0,6)">
-            <Poster width="168" :item='value' isKeyListener v-on:keyListener='keydown' :column='4'/>
+          <div v-for="(value, index) in albumItems.slice(0,6)" @keydown='keydown($event,4,index)'>
+            <Poster width="168" :item='value' ref='recommand-4' />
           </div> 
         </div>
     </div>
@@ -62,14 +62,26 @@ export default {
       waterfallItems: [],
       albumItems: [],
       test: 'test',
-      top: 0
+      top: 0,
+      timer: undefined,
     }
   },
   created() {
     this.init()
   },
+  /*destroyed(){
+    this.$parent.$el.scrollTop = 0;
+  },*/
   methods: {
-    init(){ //初始化数据
+    /**
+     * [init 初始化]
+     * @Author   shanjing
+     * @DateTime 2019-07-19T11:03:35+0800
+     * @return   {[type]}                 [null]
+     */
+    init(){
+      console.info(this);
+      //console.info(this.$refs.recommand[0]);
       let vm = this;
       vm.dataService.getMovieIndex(function(res){
         console.info(res.data);      
@@ -80,38 +92,70 @@ export default {
         vm.albumItems = res.data.positions[5].albumItems ? res.data.positions[5].albumItems : [];
       });
     },
-    onfocus(data){
-      console.info(data);
-      console.info(data.column);
-      return;
-      if(data.column == 1){
-        this.top = -550
+    /**
+     * [keydown 按键监听]
+     * @Author   shanjing
+     * @DateTime 2019-07-19T11:04:36+0800
+     * @param    {[type]}                 value [e && dom元素]
+     * @return   {[type]}                       [null]
+     */
+    keydown(e,column,index){
+      if(e.keyCode == 40){
+        if(column == 1){
+          //value.event.preventDefault();
+          let el = this.$parent.$el;//document.getElementById('app');
+          this.scrollTo(el, 500, el.clientHeight, 'scrollTop',this);
+        }
+        if(column == 3){
+          //value.event.preventDefault();
+          let el = this.$parent.$el;
+          this.scrollTo(el, 500, el.scrollHeight - el.offsetHeight,'scrollTop',this);
+        }
+        setTimeout(function(el){
+          el.focus();
+        },0,this.$refs[`recommand-${column+1}`][index].$el)
+      }
+      if(e.keyCode == 38){
+        if(column == 2){
+          let el = this.$parent.$el;
+          //el.scrollTop = 0;
+          this.scrollTo(el, 500, 0,'scrollTop',this);
+        }
+        if(column == 4){
+          let el = this.$parent.$el;
+          //el.scrollTop = el.clientHeight;
+          this.scrollTo(el, 500, el.clientHeight,'scrollTop',this);
+        }
+        setTimeout(function(el){
+          el.focus();
+        },0,this.$refs[`recommand-${column-1}`][index].$el)
       }
     },
-    keydown(value){
-      if(value.keyCode == 40){
-        if(value.column == 1){
-          //document.querySelector('div[data-index="2-0"]>a').focus();
-          document.getElementById('app').scrollTop = document.getElementById('app').clientHeight;
-          /*this.top -= 720;
-          this.$nextTick(() => {
-            document.querySelector('div[data-index="2-0"]>a').focus();
-          });*/      
-        }
-        if(value.column == 3){
-          document.getElementById('app').scrollTop = document.getElementById('app').scrollHeight-document.getElementById('app').offsetHeight;
-        }
-      }
-      if(value.keyCode == 38){
-        if(value.column == 2){
-          document.getElementById('app').scrollTop = 0;
-        }
-        if(value.column == 4){
-          document.getElementById('app').scrollTop = document.getElementById('app').clientHeight;
-        }
-      }
-      
-    }
+    /**
+     * [scrollTo 滚动效果函数 (暂时无法全局 this作用域)]
+     * @Author   shanjing
+     * @DateTime 2019-07-19T12:43:06+0800
+     * @param    {[type]}                 el             [滚动元素]
+     * @param    {[type]}                 scrollDuration [滚动时长]
+     * @param    {[type]}                 distance       [滚动距离]
+     * @param    {[type]}                 direction      [滚动方向 'scrollTop' 'scrollLeft']
+     * @return   {[type]}                                [null]
+     */
+    scrollTo(el,scrollDuration,distance,direction,vm) {
+        //console.info(this);
+        var scrollStep = (distance-el[direction]) / (scrollDuration / 15)
+        clearInterval(vm.timer);
+        vm.timer = setInterval(function(){
+          if ( el[direction] != distance ) {
+            el[direction] += scrollStep;
+            if(scrollStep < 0 && el[direction] < distance || scrollStep > 0 && el[direction] > distance){
+              el[direction] = distance
+            }
+          }else {
+              clearInterval(vm.timer);
+            }
+        },15);
+    },
   },
   components: {
     YaoFeng,
@@ -124,9 +168,9 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang='stylus'>
   #index
-    position absolute
-    width 100%
-    transition: top 3s
+    //position absolute
+    //width 100%
+    //transition: top 3s
   #header
     position absolute
     top 0

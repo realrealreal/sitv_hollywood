@@ -31,5 +31,20 @@ export default {
 		clock += ss;
 		console.info(clock); 
 		return clock;
+	},
+    scrollTo(el,scrollDuration,distance,direction,timer) {
+	    var scrollStep = (distance-el[direction]) / (scrollDuration / 15)
+	    clearInterval(timer);
+	    if(scrollStep == 0) return;
+	    timer = setInterval(function(){
+	    	if ( el[direction] != distance ) {
+	    		el[direction] += scrollStep;
+	    		if(scrollStep < 0 && el[direction] < distance || scrollStep > 0 && el[direction] > distance){
+	    			el[direction] = distance
+	    		}
+	    	}else {
+	          clearInterval(timer);
+	        }
+	    },15);
 	}
 }

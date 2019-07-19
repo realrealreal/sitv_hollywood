@@ -4,7 +4,7 @@ import VueAxios from 'vue-axios'
 
 Vue.use(VueAxios, axios)
 
-export default{
+export default {
 	getRequest(url, params, cb) {
 		return new Promise((resolve, reject) => {
 		  Vue.axios.get(url,{

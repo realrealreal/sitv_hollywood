@@ -4,8 +4,7 @@ import HelloWorld from '@/components/HelloWorld'
 
 Vue.use(Router)
 
-export default new Router({
-  routes: [
+let routes = [
     {
       path: '/',
       name: 'HelloWorld',
@@ -49,6 +48,34 @@ export default new Router({
     {
       path: '/hollywood',
       redirect:'/hollywood/index'
+    },
+    {
+      path: '/hollywood/iframe',
+      name: 'Iframe',
+      component: () => import('@/components/Iframe')
+    },
+    {
+      path: '/404',
+      name: '404',
+      component: () => import('@/pages/404')
+      
+    },
+    {
+      path: '*',
+      redirect: { path: '/404' }
     }
   ]
+
+// 全局路由钩子
+const router = new Router({
+  routes
 })
+
+router.beforeEach((to, from, next) => {
+  console.log('路由钩子')
+  console.log(to)
+  console.log(from)
+  next()
+})
+
+export default router

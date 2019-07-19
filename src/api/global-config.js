@@ -13,7 +13,7 @@ const config = {
 		initNumber: 15,
 		lineNumber: 5,
 		width: '168',
-		scrollTop: '288', //单次滚动高度
+		scrollTop: '295', //单次滚动高度
 		isImgIn: false
 	},
 	still: {

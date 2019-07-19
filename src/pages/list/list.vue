@@ -10,11 +10,11 @@
         <a href="">编辑</a>
       </div>
       <ul>
-        <li v-for='(value, index) in leftColumn'><a :id="value.catcode" :class="value.code == $store.state.bizCode ? 'current' : ''" href="javascript:void(0)" @click='toggleCategroy(value)' v-test='categoryCode'>{{value.title}}</a></li>
+        <li v-for='(value, index) in leftColumn'><a :ref="value.catcode" :class="value.code == $store.state.bizCode ? 'current' : ''" href="javascript:void(0)" @click='toggleCategroy(value)' v-test='categoryCode'>{{value.title}}</a></li>
       </ul>
     </div>
-    <div v-if='config != null && data.length != 0' class='scroll' :class="config.lineNumber == 3 ? 'line-3' : ''">
-      <ScrollList :data='data' :config='config' v-on:back='backMenu'/>
+    <div v-if='config != null && data.length != 0' class='scroll' :class="config.lineNumber == 3 ? 'line-3' : ''" @keydown='keydown($event)'>
+      <ScrollList :data='data' :config='config'/>
     </div>
   </div> 
 </template>
@@ -36,18 +36,22 @@ export default {
       config: null,
       leftColumn: [],
       title:title
-      //current: this.$store.state.bizCode
     }
   },
   created() {
     this.init()
   },
-  // mounted() {
-  //   this.init()
-  // },
   watch: {
     'categoryCode': {
         immediate: true,
+        /**
+         * [handler 监听$store categoryCode]
+         * @Author   shanjing
+         * @DateTime 2019-07-19T10:51:00+0800
+         * @param    {[type]}                 newVal [新值]
+         * @param    {[type]}                 oldVal [旧值]
+         * @return   {[type]}                        [null]
+         */
         handler(newVal, oldVal) {
             console.log(this.leftColumn);
             console.info('watch----');
@@ -76,6 +80,12 @@ export default {
     
   },
   methods: {
+    /**
+     * [init 初始化]
+     * @Author   shanjing
+     * @DateTime 2019-07-19T10:50:00+0800
+     * @return   {[type]}                 [null]
+     */
     init(){
       console.info(this.$route.name);
       console.info(this.$route.params.type);
@@ -97,18 +107,50 @@ export default {
             //vm.config = vm.GLOBAL.config.noImage;
           }
         });
+        this.$nextTick(() => {
+          this.$refs[this.categoryCode][0].focus();
+        });
       }else{
 
       }
     },
+    /**
+     * [toggleCategroy 切换展示栏目]
+     * @Author   shanjing
+     * @DateTime 2019-07-19T10:49:23+0800
+     * @param    {[type]}                 value [栏目信息]
+     * @return   {[type]}                       [null]
+     */
     toggleCategroy(value){
       console.info(value);
       let vm = this;
       vm.$store.dispatch('setCategoryCode', value.catcode);
       vm.$store.dispatch('setBizCode', value.code);
     },
+    /**
+     * [keydown 按键监听]
+     * @Author   shanjing
+     * @DateTime 2019-07-19T10:48:15+0800
+     * @param    {[type]}                 e [事件]
+     * @return   {[type]}                   [null]
+     */
+    keydown(e){
+      console.info(e.keyCode)
+      if(e.keyCode == 4096){
+        e.preventDefault();
+        this.backMenu();
+      }
+    },
+    /**
+     * [backMenu 返回左侧菜单]
+     * @Author   shanjing
+     * @DateTime 2019-07-19T10:47:44+0800
+     * @return   {[type]}                 [null]
+     */
     backMenu(){
-      document.getElementById(this.categoryCode).focus();
+      console.info(this.categoryCode)
+      console.info(this.$refs[this.categoryCode][0])
+      this.$refs[this.categoryCode][0].focus();
     }
   },
   computed: {

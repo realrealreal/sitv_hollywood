@@ -46,7 +46,9 @@ export default {
   width 100%
   height 100%
   min-height 720px
-  overflow hidden
+  //overflow hidden
+  overflow-y: scroll;
+  overflow-x: hidden;
   position: relative
   background url($bgImg) no-repeat fixed 100% 100%
   background-size 100% 100%
