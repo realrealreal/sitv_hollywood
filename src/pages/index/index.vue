@@ -1,8 +1,10 @@
 <template>
     <div id="index">
+        <!-- 高配轮播图 -->
         <div id="carousel">
           <Carousel :items="middleItems.slice(0,2)"/>
         </div>
+        <!-- header(logo && 导航栏) -->
         <div id="header">
             <div id="logo">
               <img :src="copyright_logo" alt="">
@@ -14,27 +16,29 @@
               <li><a href="">退出</a></li>
             </ul>
         </div>
+        <!-- 腰封 -->
         <div id="YaoFeng">
           <YaoFeng :items='beltItems'/>
         </div>
-        <div id="recommand-1">
+        <!-- 推荐 4组 -->
+        <div class="recommand">
           <div v-for="(value, index) in bottomItems.slice(0,4)" @keydown='keydown($event,1,index)'>
             <Poster width='264' is-img-in :item='value' ref='recommand-1'/>
           </div>
         </div>
-        <div id="recommand-2">
+        <div class="recommand">
           <h3>{{little1}}</h3>
           <div v-for="(value, index) in waterfallItems.slice(0,6)" @keydown='keydown($event,2,index)'>
             <Poster width='168' :item='value' ref='recommand-2' />
           </div> 
         </div>
-        <div id="recommand-3">
+        <div class="recommand">
           <h3>{{little2}}</h3>
           <div v-for="(value, index) in waterfallItems.slice(0,6)" @keydown='keydown($event,3,index)'>
             <Poster width='168' :item='value' is-icon-show :index='index+1' ref='recommand-3'/>
-          </div> 3
+          </div>
         </div>
-        <div id="recommand-4">
+        <div class="recommand">
           <h3>{{little3}}</h3>
           <div v-for="(value, index) in albumItems.slice(0,6)" @keydown='keydown($event,4,index)'>
             <Poster width="168" :item='value' ref='recommand-4' />
@@ -43,6 +47,7 @@
     </div>
 </template>
 <script>
+const little = ['观看历史', '人气排行', '蜘蛛侠系列一次看爽'];
 import Carousel from '@/components/Carousel'
 import YaoFeng from '@/components/YaoFeng'
 import Poster from '@/components/Poster'
@@ -51,19 +56,17 @@ export default {
   data () {
     return {
       repo_href: this.GLOBAL.config.href.repo,
-      biz_logo: require('../../assets/images/hollywoodLogo.png'),
-      copyright_logo: require('../../assets/images/besTVLogo.png'),
-      little1: '观看历史',
-      little2: '人气排行',
-      little3: '蜘蛛侠系列一次看爽',
+      biz_logo: require('@/assets/images/hollywoodLogo.png'),
+      copyright_logo: require('@/assets/images/besTVLogo.png'),
+      little1: little[0],
+      little2: little[1],
+      little3: little[2],
       middleItems: [],
       beltItems: [],
       bottomItems: [],
       waterfallItems: [],
       albumItems: [],
-      test: 'test',
-      top: 0,
-      timer: undefined,
+      timer: undefined
     }
   },
   created() {
@@ -184,7 +187,7 @@ export default {
     margin-bottom 28px
   #YaoFeng
     margin-bottom 28px
-  #recommand-1
+  .recommand
     width 1128px
     margin 0 auto
     margin-bottom 28px
@@ -192,33 +195,6 @@ export default {
     & > div
       display inline-block
       margin-right 24px
-  #recommand-2
-    width 1128px
-    margin 0 auto
-    margin-bottom 28px
-    white-space nowrap
-    & > div
-      display inline-block
-      margin-right 24px
-
-  #recommand-3
-    width 1128px
-    margin 0 auto
-    margin-bottom 28px
-    white-space nowrap
-    & > div
-      display inline-block
-      margin-right 24px
-
-  #recommand-4
-    margin-bottom 28px
-    width 1128px
-    margin 0 auto
-    white-space nowrap
-    & > div
-      display inline-block
-      margin-right 24px
-
   ul
     display flex
     -webkit-align-items center

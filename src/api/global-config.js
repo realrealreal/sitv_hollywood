@@ -34,24 +34,6 @@ const config = {
 	}
 }
 
-/**
- * [store 会话存储]
- * @type {Object}
- */
-const store = {
-	page: 'index',
-	programCode: '',
-	//setPage(data){this.page = data},
-	//getPage(){return this.page},
-	getItem(key){
-		return this[key];
-	},
-	setItem(key,value){
-		this[key] = value;
-	}
-};
-
 export default {
-  config,
-  store
+  config
 }

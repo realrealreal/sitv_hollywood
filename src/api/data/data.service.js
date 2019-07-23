@@ -20,12 +20,12 @@ function getMovieIndex(cb){
  * @param    {Function}               cb [回调函数]
  * @return   {[type]}                    [null]
  */
-function queryHistory(cb){
-	console.info(url.queryHistoryApi);
+function queryHistory(cb,category){
+	console.info(url.queryHistoryApi,category);
 	http.getRequest(url.queryHistoryApi,{
 		'pageSize': 300,
 		'userId': user.uid(),
-		'category': '电影'
+		'category': category
 	},cb);
 }
 /**
@@ -35,12 +35,12 @@ function queryHistory(cb){
  * @param    {Function}               cb [回调函数]
  * @return   {[type]}                    [null]
  */
-function queryCollection(cb){
-	console.info(url.queryCollectionApi);
+function queryCollection(cb,category){
+	console.info(url.queryCollectionApi,category);
 	http.getRequest(url.queryCollectionApi,{
 		'pageSize': 300,
 		'userId': user.uid(),
-		'category': '电影'
+		'category': category
 	},cb);
 }
 

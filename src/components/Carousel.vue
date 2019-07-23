@@ -33,20 +33,7 @@ export default {
       msg: 'Welcome to Your Vue.js App',
       show: false,
       show2: false,
-      showIndex: -1,
-      imgData:[
-        {
-          key: 11121,
-          img1: require('../assets/images/test/15598114011743429154_1.png'),
-          img2: require('../assets/images/test/15598114011743429154_2.png'),
-          img3: require('../assets/images/test/15598114011743429154_3.png')
-        },{
-          key: 11122,
-          img1: require('../assets/images/test/15598112133213404680_1.png'),
-          img2: require('../assets/images/test/15598112133213404680_2.png'),
-          img3: require('../assets/images/test/15598112133213404680_3.png')
-        }
-      ]
+      showIndex: -1
     }
   },
   props: {

@@ -1,9 +1,10 @@
 <template>
-	<a href="javascript:void(0)" :style="{width: toRem(width)+'rem'}" @focus="onFocus(index,$event)" @keydown="keyListener($event)" @click="goToDetail">              
+	<a href="javascript:void(0)" :style="{width: toRem(width)+'rem'}" @focus="onFocus(index,$event)" @keydown="keyListener($event)" @click="clickPoster">              
 	  <img :src="`${GLOBAL.config.base + (item.image || item.contentPoster || item.contentposter
 || item.contenticon || '/epg/resource/picture' + item.icon)}`" alt="" :onerror="defaultImg">
 	  <div :class="{ shadow: isImgIn }"><span :class="marguee == 0 ? '':'marquee'+marguee">{{item.title || item.contentName}}</span></div>
-    <div v-show="isIconShow" style="color: white">{{index}}</div>
+    <div class='leftTopIcon' v-show="isIconShow" style="color: white">{{index}}</div>
+    <div class='delete' v-if="isEdited" style="color: white">删除</div>
 	</a>
 </template>
 
@@ -29,6 +30,7 @@ export default {
        * @type {[type]}
        */
       defaultImg: require('../assets/images/test/default1.jpg'),
+      focus: false
     }
   },
   mounted() {
@@ -100,6 +102,10 @@ export default {
       default: function () {
         return false
       }
+    },
+    isEdited: {//是否可以编辑
+      type: Boolean,
+      default: false
     }
   },
   methods: {
@@ -173,6 +179,16 @@ export default {
         console.info('dispatch****2'+vm.programType);
         vm.$router.push({path: `/hollywood/detail`});
      },
+     clickPoster(){
+        let vm = this; 
+        if(vm.isEdited){
+          let code = vm.item.code || vm.item.contentId || vm.item.itemcode;
+          console.info('删除'+code)
+          vm.$emit('deleteItem',{code:code})
+        }else{
+          vm.goToDetail()
+        }
+     },
      //在这里引入 action 里的方法，使用方法和 methods 里的其他方法一样
       ...mapActions([
           'setProgramCode',
@@ -221,7 +237,17 @@ a
       & > span
         position relative
         white-space nowrap
-    &:last-child
+    &.delete
+      position absolute
+      left 0
+      top 50%
+      transform translateY(-50%)
+      width 100%
+      background-color red
+      text-align center
+      padding 5px 0
+      display none
+    &.leftTopIcon
       position absolute
       left -2px
       top -6px
@@ -253,6 +279,8 @@ a
           animation marquee180 10s ease-in-out infinite
         & > span.marquee210
           animation marquee210 10s ease-in-out infinite
+      &.delete
+        display block
 .shadow
   position absolute
   background: linear-gradient(to top, rgba(0,0,0,1), rgba(0,0,0,0.3));

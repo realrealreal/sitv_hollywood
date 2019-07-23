@@ -29,7 +29,7 @@
               </li>
             </ul>
           </div>
-          <span class='prev' v-if='isSecond[index]'><</span>
+          <span class='prev' v-if='scrollLeft[index] > 0'><</span>
           <span class='next' v-if='list[index].length >= 6 && !isSecond[index]'>></span>
         </div>
       </div>
@@ -41,18 +41,18 @@ const config = {
   groups: [
     {
       name: '观看历史',
-      href: '#/repo/history',
-      src: require('../../assets/images/all_history.png')
+      href: '#/hollywood/repo/history',
+      src: require('@/assets/images/all_history.png')
     },
     {
       name: '我的收藏',
-      href: '#/repo/collection',
-      src: require('../../assets/images/all_coll.png')
+      href: '#/hollywood/repo/collection',
+      src: require('@/assets/images/all_coll.png')
     },
     {
       name: '我的订购',
       href: '#/hollywood/repo/orderlist',
-      src: require('../../assets/images/all_order.png')
+      src: require('@/assets/images/all_order.png')
     }
   ]
 }
@@ -66,9 +66,8 @@ export default {
       historyList: [],
       collectionList: [],
       scrollLeft: [0,0,0],
-      scrollTimes: [0,0,0],
       isSecond:[false,false,false],
-      orderDefaultImg: require('../../assets/images/order.png'),
+      orderDefaultImg: require('@/assets/images/order.png'),
       timer:[undefined,undefined,undefined,undefined]
     }
   },
@@ -85,6 +84,13 @@ export default {
     this.init()
   },
   filters: {
+    /**
+     * [formatDate 格式化时间]
+     * @Author   shanjing
+     * @DateTime 2019-07-23T12:18:42+0800
+     * @param    {[type]}                 value [time]
+     * @return   {[type]}                       [timeString]
+     */
     formatDate(value) {
       let time = value.substring(0,8);
       return time.substring(0,4)+'.'+time.substring(4,6)+'.'+time.substring(6,8)
@@ -103,11 +109,11 @@ export default {
       vm.dataService.queryHistory(function(res){
         console.info(res);
         vm.list.splice(0, 1,  res.data.historyList)
-      });
+      },'电影');
       vm.dataService.queryCollection(function(res){
         console.info(res);
         vm.list.splice(1, 1,  res.data.collectionList)
-      });
+      },'电影');
       vm.list.splice(2, 1, (function(){
         let array = [];
         var obj = {
@@ -140,10 +146,7 @@ export default {
         return array;
       })())
     },
-    test() {
-      console.info(this.$el)
-    },
-    clear(index) {  //清除當前行之外的left
+    /*clear(index) {  //清除當前行之外的left
       let vm = this;
       for (var i = 0; i < vm.scrollLeft.length; i++) {
         if(i != index){
@@ -151,10 +154,25 @@ export default {
           vm.scrollLeft.splice(i, 1, 0);
         }
       }
-    },
+    },*/
+    /**
+     * [check 接收emit的回调函数]
+     * @Author   shanjing
+     * @DateTime 2019-07-23T12:20:26+0800
+     * @param    {[type]}                 value [value]
+     * @return   {[type]}                       [null]
+     */
     check(value) {
       this. onfocus(value.index,value.column);
     },
+    /**
+     * [onfocus 获得焦点处理]
+     * @Author   shanjing
+     * @DateTime 2019-07-23T12:21:19+0800
+     * @param    {[type]}                 index  [第几个]
+     * @param    {[type]}                 column [第几行]
+     * @return   {[type]}                        [null]
+     */
     onfocus(index,column){
       if(column == 2){
         let el = this.$parent.$el;
@@ -165,28 +183,17 @@ export default {
         this.scrollTo(el, 500, 0, 'scrollTop', 3, this);
       }
       if(index >= 6){
-        console.info('check',index)
         let leftOnce = this.$refs.posterLi[0].offsetWidth; //单次移动距离
         this.$refs[`column-${column}`][0].scrollLeft = this.scrollLeft[column];
         this.scrollTo(this.$refs[`column-${column}`][0], 500, (index-5)*leftOnce, 'scrollLeft', column, this);
+        //this.scrollLeft.splice(column, 1, (index-5)*leftOnce);
         this.scrollLeft[column] = (index-5)*leftOnce;
       }else{
         this.scrollTo(this.$refs[`column-${column}`][0], 500, 0, 'scrollLeft', column, this);
+        //this.scrollLeft.splice(column, 1, 0 );
         this.scrollLeft[column] = 0;
       }
     },
-    // keydown(e, index) {
-    //   console.info(e.keyCode,index)
-    //   let el = this.$parent.$el;
-    //   if(e.keyCode == 40 && index == 1){
-    //     console.info(el);
-    //     this.scrollTo(el, 500, el.scrollHeight - el.offsetHeight, 'scrollTop');
-    //   }
-    //   if(e.keyCode == 38 && index == 2){
-    //     console.info(el);
-    //     this.scrollTo(el, 500, 0, 'scrollTop');
-    //   }    
-    // },
     /**
      * [scrollTo 滚动效果函数 (暂时无法全局 this作用域)]
      * @Author   shanjing

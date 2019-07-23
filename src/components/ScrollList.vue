@@ -1,7 +1,7 @@
 <template>
   <ul>
-    <li v-if="config.name != 'noImage'" v-for="(value, index) in loadedData"><Poster :width='config.width' :index='index' :item='value' :is-img-in="config.isImgIn" isCheck v-on:checkIndex='check' isKeyListener v-on:keyListener='keydown' :column='Math.floor(index/config.lineNumber)'v-on:back='back'/><!-- <a href="" @focus="check(key)"><img :src="rootImage+'P_'+value+'.jpg'" alt="" onerror="this.src='1.JPG'"></a> --></li>
-    <li v-if="config.name == 'noImage'" v-for="(value, index) in loadedData"><a :class='config.name' href="" @focus="check({index: index})">{{value.title}}</a></li>
+    <li v-if="config.name != 'noImage'" v-for="(value, index) in loadedData"><Poster :width='config.width' :index='index' :item='value' :is-img-in="config.isImgIn" isCheck v-on:checkIndex='check' v-on:deleteItem='deleteItem' :column='Math.floor(index/config.lineNumber)'v-on:back='back' :isEdited='isEdited'/></li>
+    <li v-if="config.name == 'noImage'" v-for="(value, index) in loadedData"><a :class='config.name' href="" @focus="check({index: index})">{{value.title || value.contentName}}</a></li>
   </ul>
 </template>
 
@@ -30,6 +30,10 @@ export default {
       default: function () {
         return []
       }
+    },
+    isEdited: {//是否可以编辑
+      type: Boolean,
+      default: false
     }
   },
   methods: {
@@ -64,37 +68,31 @@ export default {
         let el = document.getElementById('app');
         let scrollDistance = column-2 < 0 ? 0 : (column-2)*data.el.parentElement.offsetHeight
         //vm.utils.scrollTo(el, 500, scrollDistance, 'scrollTop', vm.timer)
-        this.scrollTo(el, 500, scrollDistance, 'scrollTop')
+        this.scrollTo(el, 500, scrollDistance, 'scrollTop',this)
         //document.getElementById('app').scrollTop = column-2 < 0 ? 0 : (column-2)*data.el.parentElement.offsetHeight; //无动画效果的
         //console.info(document.getElementById('app').scrollTop);
       });
     },
-    scrollTo(el,scrollDuration,distance,direction) {
+    scrollTo(el,scrollDuration,distance,direction,vm) {
         console.info('shanjing========='+this.timer);
         var scrollStep = (distance-el[direction]) / (scrollDuration / 15)
-        clearInterval(this.timer);
-        this.timer = setInterval(function(){
+        clearInterval(vm.timer);
+        vm.timer = setInterval(function(){
           if ( el[direction] != distance ) {
             el[direction] += scrollStep;
             if(scrollStep < 0 && el[direction] < distance || scrollStep > 0 && el[direction] > distance){
               el[direction] = distance
             }
           }else {
-              clearInterval(this.timer);
+              clearInterval(vm.timer);
             }
         },15);
     },
     back(){
       this.$emit("back",{})
     },
-    keydown(value){
-      console.info(value);
-      // if(value.keyCode == 40){
-      //     document.getElementById('app').scrollTop = value.column;
-      // }
-      // if(value.keyCode == 38 && value.column > 2){
-
-      // }
+    deleteItem(value){
+      this.$emit('deleteItem',{code:value.code})
     }
   },
   filters: {

@@ -52,6 +52,8 @@ export default {
   position: relative
   background url($bgImg) no-repeat fixed 100% 100%
   background-size 100% 100%
+  &::-webkit-scrollbar
+    display none
 a
   animation scale-down 0.1s ease-in-out 1 forwards  
   &:focus

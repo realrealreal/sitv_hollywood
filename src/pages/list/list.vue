@@ -10,7 +10,7 @@
         <a href="">编辑</a>
       </div>
       <ul>
-        <li v-for='(value, index) in leftColumn'><a :ref="value.catcode" :class="value.code == $store.state.bizCode ? 'current' : ''" href="javascript:void(0)" @click='toggleCategroy(value)' v-test='categoryCode'>{{value.title}}</a></li>
+        <li v-for='(value, index) in leftColumn'><a :ref="value.catcode" :class="value.code == $store.state.bizCode ? 'current' : ''" href="javascript:void(0)" @click='toggleCategroy(value)'>{{value.title}}</a></li>
       </ul>
     </div>
     <div v-if='config != null && data.length != 0' class='scroll' :class="config.lineNumber == 3 ? 'line-3' : ''" @keydown='keydown($event)'>
@@ -39,7 +39,16 @@ export default {
     }
   },
   created() {
+    console.info('-----------created')
     this.init()
+  },
+  mounted() {
+    console.info('-----------mounted')
+    //this.domInit()
+  },
+  updated() {
+    console.info('-----------updated')
+    this.$refs[this.categoryCode][0].focus();
   },
   watch: {
     'categoryCode': {
@@ -91,11 +100,6 @@ export default {
       console.info(this.$route.params.type);
       if(this.$route.name == 'Movielist'){
         let vm = this;
-        console.info('movie-------');
-        console.info(vm.$store.state.parentCode);
-        console.info(vm.$store.state.categoryCode);
-        console.info(vm.$store.state.bizCode);
-        console.info('-------');
         vm.dataService.getbizList(vm.$store.state.parentCode, function(res){
           console.info(res.data);
           if(res.data.status == 200){
@@ -106,9 +110,6 @@ export default {
             vm.config = vm.GLOBAL.config[key]
             //vm.config = vm.GLOBAL.config.noImage;
           }
-        });
-        this.$nextTick(() => {
-          this.$refs[this.categoryCode][0].focus();
         });
       }else{
 
@@ -159,14 +160,6 @@ export default {
     ])
   },
   directives: {
-    test:{
-      inserted:function(el,binding,){//绑定到节点
-            console.log('2 - inserted');
-            console.log(binding);
-            if(el.id == binding.value) el.focus();
-   
-      }
-    }
   },
   components: {
     ScrollList

@@ -167,76 +167,67 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang='stylus'>
-#index{
-  width: 100%;
-  margin: 0 auto;
-}
-#index > div:first-child {
-  position: relative;
-  height: 395px;
-  margin-left: 270px;   
-  margin-top: 50px;
-  width: 560px;
-}
-#index > div:first-child > div:nth-child(2) {
-  position: relative;
-  margin-bottom: 21px;
-}
-#index > div:first-child > div:nth-child(4) {
-  position: absolute;
-  left: 0;
-  bottom: 20px;
-}
-#index > div:first-child > div:nth-child(4) > ul > li {
-  margin-right: 24px;
-  display: inline-block;
-}
-#index > div:first-child > div:nth-child(4) > ul {
-  margin-bottom: 21px;
-}
-#index > div:first-child > div > div {
-    position: absolute;
-    left: -201px;
-    top: 0;
-    width: 151px;
-    text-align: right;
-    word-wrap: break-word
-}
-#index > div:first-child > img {
-  position: absolute;
-  top: 0;
-  right: -330px;
-  width: 264px;
-}
-#index > div:last-child{
-  padding: 20px 220px 0;
-  height: 255px;
-  background: url(../../assets/images/bottomBg.png) no-repeat;
-  background-size: cover;
-}
-#index > div:last-child > ul {
-  margin-top: 10px;
-  white-space: nowrap;
-}
-#index > div:last-child > ul > li {
-  margin-right: 23px;
-  display: inline-block;
-}
-.collect{
-  position: absolute;
-  left: 50%;
-  bottom: 15px;
-  transform: translate(-50%);
-  white-space: nowrap;
-}
-h1{
-  font-size: 36px;
-  font-weight: normal;
-}
-.blue{
-  color: $blueFontColor;
-}
-.white{
-  color: $whiteFontColor
-}
+#index
+  width 100%
+  margin 0 auto
+  & > div
+    &:first-child
+      position relative
+      height 395px
+      margin-left 270px
+      margin-top 50px
+      width 560px
+      & > div
+        &:nth-child(2)
+          position relative
+          margin-bottom 21px
+        &:nth-child(4)
+          position absolute
+          left 0
+          bottom 20px
+          & > ul
+            margin-bottom 21px
+            & > li
+              margin-right 24px
+              display inline-block
+        & > div
+          position absolute
+          left -201px
+          top 0
+          width 151px
+          text-align right
+          word-wrap break-word
+      & > img
+        position absolute
+        top 0
+        right -330px
+        width 264px
+    &:last-child
+      padding 20px 220px 0
+      height 255px
+      background url(../../assets/images/bottomBg.png) no-repeat
+      background-size cover
+      & > ul
+        margin-top 10px
+        white-space nowrap
+        & > li
+          margin-right 23px
+          display inline-block
+
+.collect
+  position absolute
+  left 50%
+  bottom 15px
+  transform translate(-50%)
+  white-space nowrap
+
+h1
+  font-size 36px
+  font-weight normal
+
+.blue
+  color $blueFontColor
+
+.white
+  color $whiteFontColor
 </style>
