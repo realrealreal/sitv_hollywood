@@ -97,4 +97,3 @@ For a detailed explanation on how things work, check out the [guide](http://vuej
 ## 注意事项
 
 1. 针对发布生产，有虚拟路径时，便出现js、css均报错404 在config的index.js文件中，将build assetsPublicPath修改为'./'
-![test.png](1)
