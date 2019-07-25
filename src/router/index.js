@@ -28,7 +28,7 @@ let routes = [
     {
       path: '/hollywood/repo/orderlist',
       name: 'OrderList',
-      component: () => import('@/pages/index/orderList') // 懒加载引入方式
+      component: () => import('@/pages/list/orderList') // 懒加载引入方式
     },
     {
       path: '/hollywood/repo/:name',

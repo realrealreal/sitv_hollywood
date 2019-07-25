@@ -17,13 +17,13 @@
                 <Poster :width='config.width' :item='item' :index='key+1' isCheck v-on:checkIndex='check' :column="index"/>
               </li>
               <li v-if="index == 2" v-for="(item, key) in list[index].slice(0,10)">
-                  <a class='text-center' href="javascript:void(0)" @focus="onfocus(key+1, index)" >
+                  <a class='text-center' href="javascript:void(0)" @focus="onfocus(key+1, index)" @click='goToDetail(item.contentId,item.contentType)'>
                     <img :src="orderDefaultImg" alt="">
                     <div><span>{{item.contentName}}</span><br><span>{{item.expireTime | formatDate}}有效</span></div>
                   </a>
               </li>
               <li>
-                <a href="javascript:void(0)" v-if='list[index].length>10' @focus="onfocus(11,index)">
+                <a href="value.href" v-if='list[index].length>10' @focus="onfocus(11,index)">
                   <img src="../../assets/images/more.png" alt="" />
                 </a>
               </li>
@@ -56,6 +56,7 @@ const config = {
     }
   ]
 }
+import {mapActions} from 'vuex' //注册 action 和 state
 import Poster from '@/components/Poster'
 export default {
   name: 'Personal',
@@ -82,6 +83,9 @@ export default {
   },
   mounted() {
     this.init()
+  },
+  destroyed(){
+    this.$parent.$el.scrollTop = 0;
   },
   filters: {
     /**
@@ -120,8 +124,8 @@ export default {
           "userId": "00264c50fb0f",
           "category": null,
           "categoryCode": "ccms_category_57032916",
-          "contentId": "program_ccms_843420",
-          "contentType": null,
+          "contentId": "program_ccms_859888",
+          "contentType": 'vod',
           "contentName": "惊奇队长",
           "contentPoster": "/content/201907/01/549529_poster.jpg",
           "bizCode": "ccms_biz_56470301",
@@ -146,15 +150,12 @@ export default {
         return array;
       })())
     },
-    /*clear(index) {  //清除當前行之外的left
-      let vm = this;
-      for (var i = 0; i < vm.scrollLeft.length; i++) {
-        if(i != index){
-          vm.scrollTimes.splice(i, 1, 0);
-          vm.scrollLeft.splice(i, 1, 0);
-        }
-      }
-    },*/
+    goToDetail(code, type) {
+        let vm = this;
+        vm.setProgramCode(code);
+        vm.setProgramType(type);
+        vm.$router.push({path: `/hollywood/detail`});
+    },
     /**
      * [check 接收emit的回调函数]
      * @Author   shanjing
@@ -220,6 +221,11 @@ export default {
             }
         },15);
     },
+    //在这里引入 action 里的方法，使用方法和 methods 里的其他方法一样
+    ...mapActions([
+        'setProgramCode',
+        'setProgramType'
+    ])
   },
   components: {
     Poster

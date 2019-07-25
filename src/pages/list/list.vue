@@ -42,10 +42,6 @@ export default {
     console.info('-----------created')
     this.init()
   },
-  mounted() {
-    console.info('-----------mounted')
-    //this.domInit()
-  },
   updated() {
     console.info('-----------updated')
     this.$refs[this.categoryCode][0].focus();

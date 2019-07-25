@@ -14,7 +14,16 @@ export default {
     return {
       loadedData: [], //加载的数据
       number: 0,
+      index: 0,
       timer: undefined
+    }
+  },
+  watch: {
+    'data': {
+      deep: true,
+      handler(newVal, oldVal) {
+        console.info('watch------',newVal)
+      }
     }
   },
   mounted() {
@@ -38,20 +47,22 @@ export default {
   },
   methods: {
     init(){ //初始化数据
-      console.info(this.data);
+      console.info('init-----------',this.data);
       let length = this.data.length < this.config.initNumber ? this.data.length : this.config.initNumber;
       for (var i = 0; i < length; i++) {
         this.loadedData.push(this.data[i]);
-        this.number++;
+        //this.number++;
+        this.index++;
       }
       console.info(this.loadedData);
     },
     add() { //刷新新条目
       //$scope.number += 6;
       for (var i = 0; i < this.config.lineNumber; i++) {
-        if(this.data[this.number]){
-          this.loadedData.push(this.data[this.number]);
-          this.number++;
+        if(this.data[this.index]){
+          this.loadedData.push(this.data[this.index]);
+          //this.number++;
+          this.index++;
         }else{
           return;
         }
@@ -59,7 +70,7 @@ export default {
     },
     check(data) {  //检查是否需要刷新
       console.info("check:---------"+ data.index);
-      if(data.index >= this.number-this.config.lineNumber){
+      if(data.index >= this.loadedData.length-this.config.lineNumber){
         this.add();
       }
       let vm = this;
@@ -92,7 +103,12 @@ export default {
       this.$emit("back",{})
     },
     deleteItem(value){
-      this.$emit('deleteItem',{code:value.code})
+      console.info(this.$refs.poster)
+      let loadedData = this.loadedData.filter(function(item){
+          return item.contentId != value.code
+      });
+      this.loadedData = loadedData;
+      //this.$emit('deleteItem',{code:value.code})
     }
   },
   filters: {

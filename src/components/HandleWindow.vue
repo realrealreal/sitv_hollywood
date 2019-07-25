@@ -3,7 +3,7 @@
     <div>
       <div>{{item.text}}</div>
       <div>
-        <a href="javascript:void(0)" v-for='(value, index) in item.btn' @click='click(value)'>{{value.text}}</a>
+        <a v-focus ref='windowBtn' href="javascript:void(0)" v-for='(value, index) in item.btn' @click='click(value)' @keydown='keydown($event,index)'>{{value.text}}</a>
       </div>
     </div>
   </div>
@@ -22,9 +22,17 @@ export default {
       required: true
     }
   },
-  methods: {
+  methods: {  
     click(value){
       this.$emit('popWindow',{handle: value.handle})
+    },
+    keydown(e,i){
+      if(e.keyCode == 38 || e.keyCode == 40){
+        e.preventDefault()
+      }
+      if(e.keyCode == 37 && i == 0 || e.keyCode == 39 && i == this.item.btn.length-1){
+        e.preventDefault()
+      }
     }
   }
 }

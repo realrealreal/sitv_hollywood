@@ -5,7 +5,10 @@
         <h2>{{title}}</h2>
       </div>
       <ul>
-        <li v-for='(value, index) in leftColumn'><a :class="index == current ? 'current' : ''" href="javascript:void(0)" @click="filterbyDate(index)">{{value.name}}</a></li>
+        <li v-for='(value, index) in leftColumn'>
+          <a v-if='index == 0' v-focus='false' :class="index == current ? 'current' : ''" href="javascript:void(0)" @click="filterbyDate(index)">{{value.name}}</a>
+          <a v-if='index != 0' :class="index == current ? 'current' : ''" href="javascript:void(0)" @click="filterbyDate(index)">{{value.name}}</a>
+        </li>
       </ul>
     </div>
     <div v-if='current == 0'>
@@ -125,9 +128,9 @@ export default {
   created() {
     this.init()
   },
-  // mounted() {
-  //   this.init()
-  // },
+  destroyed(){
+    this.$parent.$el.scrollTop = 0;
+  },
   props: {
     
   },

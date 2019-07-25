@@ -1,16 +1,20 @@
 <template>
 	<div id="index">
-    <div>
+    <div @keydown='keydownInLeft($event)'>
       <div v-if="$route.name == 'RepoList'">
         <h2>{{title[$route.params.name]}}</h2>
-        <a href="javascript:void(0)" @click='edit'>{{editText}}</a>
+        <div v-if='isEdited'>{{editText}}</div>
+        <a v-if='!isEdited' href="/#/hollywood/repo/history" @click='edit'>{{editText}}</a>
       </div>
       <ul>
-        <li v-for='(value, index) in leftColumn'><a :ref="value.title" :class="value.title == current ? 'current' : ''" href="javascript:void(0)" @click='toggleCategroy(value)'>{{value.title}}</a></li>
+        <li v-for='(value, index) in leftColumn'>
+          <a v-if='index == 0' v-focus='false' :ref="value.title" :class="value.title == current ? 'current' : ''" href="javascript:void(0)" @click='toggleCategroy(value)'>{{value.title}}</a>
+          <a v-if='index != 0' :ref="value.title" :class="value.title == current ? 'current' : ''" href="javascript:void(0)" @click='toggleCategroy(value)'>{{value.title}}</a>
+        </li>
       </ul>
     </div>
-    <div v-if='config != null && data.length != 0' class='scroll' :class="config.lineNumber == 3 ? 'line-3' : ''" @keydown='keydown($event)'>
-      <ScrollList :data='data' :config='config' :isEdited='isEdited' v-on:deleteItem='deleteItem' />
+    <div v-if='config != null && data.length != 0' class='scroll' :class="config.lineNumber == 3 ? 'line-3' : ''" @keydown='keydownInRight($event)'>
+      <ScrollList ref='list' :data='data' :config='config' :is-edited='isEdited' v-on:deleteItem='deleteItem' />
     </div>
     <div class='popupWindow' v-if='popWindow'>
       <HandleWindow :item='content' v-on:popWindow='popWindowHandle'/>
@@ -27,6 +31,13 @@ const content1 = {
       handle: function(vm){
         vm.isEdited = true;
         vm.popWindow = false;
+        console.info(vm)
+        vm.$nextTick(() => {
+          vm.$refs.list.$children[0].$el.focus()
+        });
+        // setTimeout(function(){
+        //   vm.$refs.list.$children[0].$el.focus()
+        // });
         console.info('删除单条');
       }
     },{
@@ -183,18 +194,27 @@ export default {
       //vm.$store.dispatch('setCategoryCode', value.catcode);
       //vm.$store.dispatch('setBizCode', value.code);
     },
+    keydownInLeft(e){
+      if(e.keyCode == 4096 && this.isEdited){
+        e.preventDefault();
+        this.isEdited = false;
+      }
+    },
     /**
-     * [keydown 按键监听]
+     * [keydownInRight 右侧按键监听]
      * @Author   shanjing
      * @DateTime 2019-07-19T10:48:15+0800
      * @param    {[type]}                 e [事件]
      * @return   {[type]}                   [null]
      */
-    keydown(e){
-      console.info(e.keyCode)
+    keydownInRight(e){
       if(e.keyCode == 4096){
         e.preventDefault();
-        this.backMenu();
+        if(this.isEdited){
+          this.isEdited = false;
+        }else{
+          this.backMenu();
+        } 
       }
     },
     /**
@@ -204,9 +224,7 @@ export default {
      * @return   {[type]}                 [null]
      */
     backMenu(){
-      console.info(this.categoryCode)
-      console.info(this.$refs[this.current][0])
-      this.$refs[this.current][0].focus();
+        this.$refs[this.current][0].focus();  
     },
     popWindowHandle(value){
       value.handle(this);
@@ -217,19 +235,17 @@ export default {
     },
     deleteItem(value){
       console.info('父级--------'+value.code)
-      /*let data = this.data.filter(function(item){
+      let data = this.data.filter(function(item){
           return item.contentId != value.code
-      });*/
+      });
       //this.data = [];
       //this.data = data;
-      for (var i = 0; i < this.data.length; i++) {
-        if(this.data[i].contentId == value.code){
-          this.data.splice(i,1);
-          //this.$forceUpdate()
-          break;
-        }
+      //let data = [];
+      for (var i = 0; i < data.length; i++) {
+        this.$set(this.data, i, data[i]);
       }
-      console.info(this.data)
+      //this.data = data;
+      //console.info(this.data)
       //console.info(this.data)
     }
   },
@@ -270,20 +286,23 @@ export default {
         height 92px
         margin-top 30px
         font-size 20px
-        & > img
-          width 100%
-          margin-top 20px
         & > a
           width 100%
           margin-top 20px
+          padding 7px 0
+        & > div
+          width 100%
+          margin-top 20px
+          color $whiteFontColor
       & > ul
         margin-top 46px
         & > li
           font-size 26px
           margin-bottom 7px
-#index > div:first-child > div > a, #index > div:first-child > ul > li > a
+          
+#index > div:first-child > ul > li > a
   width 100%
-  padding 7px 0
+  padding 7px 0 
 #index > div:first-child > div > a:focus, #index > div:first-child > ul > li > a:focus
   outline none
   background-color $linkColor
