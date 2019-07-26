@@ -2,7 +2,7 @@
 
 |Author|Project|
 |-|-|
-|shanjing|SITV EPG3.0 点播系统|
+|shanjing|SITV EPG3.0 点播系统(VUE)|
 
 ## Build Setup
 
