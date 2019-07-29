@@ -56,15 +56,18 @@ For a detailed explanation on how things work, check out the [guide](http://vuej
     		- index.styl #styl全局变量
     		- reset.css #样式重置
     	- images
-        - js
+      - js
         - logo.png
     - components #公共组件目录
         - Carousel.vue #轮播图组件
+        - DetailHead.vue #详情页头部组件
         - HandleWindow.vue #弹出层组件
         - Iframe.vue #iframe组件
         - Poster.vue #海报组件
         - ScrollList.vue #瀑布流组件
         - YaoFeng.vue #腰封组件
+        - YourLike.vue #猜你喜欢
+        - SeriesContainer.vue 多剧集底部
     - pages #页面
     	- detail
     		- vod.vue #详情页

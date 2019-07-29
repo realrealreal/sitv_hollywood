@@ -18,7 +18,7 @@ let routes = [
     {
       path: '/test',
       name: 'Test',
-      component: () => import('@/components/HandleWindow') // 懒加载引入方式
+      component: () => import('@/pages/test') // 懒加载引入方式
     },
     {
       path: '/hollywood/repo',
