@@ -40,7 +40,7 @@
 
 <script>
 const sj = getCurrentWeekTimestamp();//本周开始时间时间戳 
-const emptyTips = '没有更多的订购记录';
+const emptyTips = '没有更多的订购记录了';
 const config264 = {
   initNumber: 12, //初始值总数量
   lineNumber: 3, //每行数量
@@ -110,6 +110,7 @@ function getCurrentWeekTimestamp(){
   //let lastWeekBeginTime = weekBeginTime - 7 *24 *60 *60 *1000;
   return weekBeginTime;
 }
+import {mapActions, mapState, mapGetters} from 'vuex' //注册 action 和 state
 import ScrollList from '@/components/ScrollList'
 import Animations from '@/assets/css/animations.css'
 export default {
@@ -137,27 +138,15 @@ export default {
   methods: {
     init(){
       this.utils.dateToStr(new Date());
-      console.info(this.$route.name);
-      console.info(this.$route.params.type);
-      if(this.$route.name == 'VodList'){
-        
-      }else{
-
-      }
       this.config = configText;
-      /*if(this.$route.params.type == 8){
-        this.config = config264;
-      }else{
-        this.config = config168;
-      }*/
       this.data = (function(){
         let array = [];
         var obj = {
           "userId": "00264c50fb0f",
           "category": null,
           "categoryCode": "ccms_category_57032916",
-          "contentId": "program_ccms_843420",
-          "contentType": null,
+          "contentId": "program_ccms_859888",
+          "contentType": "vod",
           "contentName": "惊奇队长",
           "contentPoster": "/content/201907/01/549529_poster.jpg",
           "bizCode": "ccms_biz_56470301",
@@ -187,12 +176,19 @@ export default {
       vm.current = index;
     },
     goToDetail(item) {
+      console.info('content:----------------',item)
       let vm = this;
-      console.info('dispatch****1'+vm.$store.state.programCode);
-      vm.$store.dispatch('setProgramCode',item.contentId)
-      console.info('dispatch****2'+vm.$store.state.programCode);
-      vm.$router.push({path: '/hollywood/vod'});
-    }
+      //vm.$store.dispatch('setProgramCode',item.contentId)
+      vm.setProgramCode(item.code || item.contentId || item.itemcode)
+      vm.setProgramType(item.type || item.itemtype || item.contentType)
+      vm.$router.push({path: '/hollywood/detail'});
+    },
+       //在这里引入 action 里的方法，使用方法和 methods 里的其他方法一样
+    ...mapActions([
+        'setProgramCode',
+        'setProgramType',
+        'setMemoryFocusIndex'
+    ])
   },
   filters: {
     formatDate(value) {
@@ -218,10 +214,12 @@ export default {
       return this.data.filter(function(item){
           return item.expireTime < dateToStr(new Date(sj - 7 *24 *60 *60 *1000 ))
       })
-    }
-  },
-  components: {
-
+    },
+    ...mapState([
+      'programCode',
+      'programType',
+      'memoryFocusIndex'
+    ])
   }
 }
 </script>
@@ -258,30 +256,32 @@ export default {
           margin-bottom 7px
     &:last-child
       margin-left 264px
-      margin-top 100px
+      margin-top 80px
       width 960px
       text-align center
       & > span
         line-height 300px
-      & > ul > li
-        margin-bottom 5px
-        &:nth-child(2n) > a
-          background rgba(27, 33, 44, 0.5)
-        & > a
-          text-align left
-          width 932px
-          padding 14px
-          display flex
-          flex-direction row
-          & > span
-            display block
-            &:nth-child(1)
-            &:nth-child(2)
-              width 0
-              flex-grow 2
-            &:nth-child(3)
-              width 0 
-              flex-grow 1
+      & > ul
+        margin-bottom 0px  
+        & > li
+          margin-bottom 5px
+          &:nth-child(2n) > a
+            background rgba(27, 33, 44, 0.5)
+          & > a
+            text-align left
+            width 932px
+            padding 14px
+            display flex
+            flex-direction row
+            & > span
+              display block
+              &:nth-child(1)
+              &:nth-child(2)
+                width 0
+                flex-grow 2
+              &:nth-child(3)
+                width 0 
+                flex-grow 1
 #index > div:first-child > div > a, #index > div:first-child > ul > li > a
   width 100%
   padding 7px 0
@@ -291,9 +291,6 @@ export default {
   background-color $linkColor
   color $defaultFontColor
   border-radius 25px
-
-.line-3
-  margin-left 314px !important
 
 .current
   color $linkColor
@@ -306,9 +303,4 @@ export default {
     top 4px
     left 50%
     margin-left -12px
-
-.leftshadow
-  position fixed
-  left 0
-  top 0
 </style>
