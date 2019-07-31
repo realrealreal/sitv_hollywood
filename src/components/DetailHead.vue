@@ -1,4 +1,5 @@
 <template>
+    <!-- 详情页头部组件 -->
     <div class='head' v-if="data.title">
       <h1 class="white">{{data.title}}</h1>
       <div>{{programInfo}}
@@ -17,9 +18,9 @@
       <p>{{description}}</p>
       <div>
         <ul>
-          <li v-if="programType == 'mix'"><a id="play1" href="" v-focus><img src="@/assets/images/china_blur.jpg" alt=""></a></li>
+          <li v-if="programType == 'mix'"><a id="play1" href="" v-focus='true'><img src="@/assets/images/china_blur.jpg" alt=""></a></li>
           <li v-if="programType == 'mix'"><a href=""><img src="@/assets/images/english_blur.jpg" alt=""></a></li>
-          <li v-if="programType== 'vod'"><a id="play2" href="" v-focus><img src="@/assets/images/control_bf.png" alt=""><span class="collect">播放</span></a></li>
+          <li v-if="programType== 'vod'"><a id="play2" href="" v-focus='true'><img src="@/assets/images/control_bf.png" alt=""><span class="collect">播放</span></a></li>
           <li><a href=""><img src="@/assets/images/control.png" alt=""><span class="collect">收藏</span></a></li>
         </ul>
         <span class='blue'>*该节目付费后可观看</span>
