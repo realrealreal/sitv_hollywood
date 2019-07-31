@@ -4,7 +4,7 @@
         <h3>{{value.name}}</h3>
         <div>
           <div :ref='`column-${index}`'> 
-            <ul v-bind:data-index="index" :style="{left: scrollLeft[index]+'px'}">
+            <ul v-bind:data-index="index">
               <li>
                 <a v-if="index == 0" :href="value.href" v-focus @focus="onfocus(0,index)">    
                   <img :src="value.src" alt="" />
@@ -29,8 +29,8 @@
               </li>
             </ul>
           </div>
-          <span class='prev' v-if='scrollLeft[index] > 0'><</span>
-          <span class='next' v-if='list[index].length >= 6 && !isSecond[index]'>></span>
+          <span class='prev' v-if='list[index].length >5 && scrollLeft[index]>0'> < </span>
+          <span class='next' v-if='list[index].length >5 && !(focusIndex[index] == 11 || (focusIndex[index] == list[index].length && list[index].length <=10))'>></span>
         </div>
       </div>
     </div>
@@ -67,19 +67,21 @@ export default {
       historyList: [],
       collectionList: [],
       scrollLeft: [0,0,0],
-      isSecond:[false,false,false],
+      focusIndex: [0,0,0],
+      test: false,
+      //isSecond:[false,false,false],
       orderDefaultImg: require('@/assets/images/order.png'),
       timer:[undefined,undefined,undefined,undefined]
     }
   },
   watch: {
-    isSecond(oldValue, newValue) {
-      for (var i = 0; i < newValue.length; i++) {
-        if(oldValue[i] != newValue[i]){
-          break;
-        }
-      }
-    }
+    // isSecond(oldValue, newValue) {
+    //   for (var i = 0; i < newValue.length; i++) {
+    //     if(oldValue[i] != newValue[i]){
+    //       break;
+    //     }
+    //   }
+    // }
   },
   mounted() {
     this.init()
@@ -175,6 +177,7 @@ export default {
      * @return   {[type]}                        [null]
      */
     onfocus(index,column){
+      /* 上下滚动 */
       if(column == 2){
         let el = this.$parent.$el;
         this.scrollTo(el, 500, el.scrollHeight - el.offsetHeight, 'scrollTop', 3, this);
@@ -183,17 +186,18 @@ export default {
         let el = this.$parent.$el;
         this.scrollTo(el, 500, 0, 'scrollTop', 3, this);
       }
+      /* 左右滚动 */
       if(index >= 6){
         let leftOnce = this.$refs.posterLi[0].offsetWidth; //单次移动距离
         this.$refs[`column-${column}`][0].scrollLeft = this.scrollLeft[column];
         this.scrollTo(this.$refs[`column-${column}`][0], 500, (index-5)*leftOnce, 'scrollLeft', column, this);
-        //this.scrollLeft.splice(column, 1, (index-5)*leftOnce);
-        this.scrollLeft[column] = (index-5)*leftOnce;
+        this.scrollLeft.splice(column, 1, (index-5)*leftOnce);
       }else{
         this.scrollTo(this.$refs[`column-${column}`][0], 500, 0, 'scrollLeft', column, this);
-        //this.scrollLeft.splice(column, 1, 0 );
-        this.scrollLeft[column] = 0;
+        this.scrollLeft.splice(column, 1, 0 );
       }
+      this.focusIndex.splice(column, 1, index);
+      console.info(this.focusIndex)
     },
     /**
      * [scrollTo 滚动效果函数 (暂时无法全局 this作用域)]
@@ -218,7 +222,7 @@ export default {
             }
           }else {
               clearInterval(vm.timer[num]);
-            }
+          }
         },15);
     },
     //在这里引入 action 里的方法，使用方法和 methods 里的其他方法一样
