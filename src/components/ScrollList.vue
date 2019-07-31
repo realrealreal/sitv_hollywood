@@ -1,6 +1,7 @@
 <template>
+  <!-- 瀑布流组件 -->
   <ul>
-    <li v-if="config.name != 'noImage'" v-for="(value, index) in loadedData"><Poster :width='config.width' :index='index' :item='value' :is-img-in="config.isImgIn" isCheck v-on:checkIndex='check' v-on:deleteItem='deleteItem' :column='Math.floor(index/config.lineNumber)'v-on:back='back' :isEdited='isEdited'/></li>
+    <li v-if="config.name != 'noImage'" v-for="(value, index) in loadedData"><Poster :width='config.width' :index='index' :item='value' :is-img-in="config.isImgIn" isCheck v-on:checkIndex='check' v-on:deleteItem='deleteItem' :column='Math.floor(index/config.lineNumber)'      :isEdited='isEdited'/></li>
     <li v-if="config.name == 'noImage'" v-for="(value, index) in loadedData"><a :class='config.name' href="" @focus="check({index: index})">{{value.title || value.contentName}}</a></li>
   </ul>
 </template>
@@ -12,13 +13,24 @@ export default {
   name: 'ScrollList',
   data () {
     return {
-      loadedData: [], //加载的数据
-      number: 0,
+      /**
+       * [loadedData 加载的数据(不是所有数据)]
+       * @type {Array}
+       */
+      loadedData: [],
+      /**
+       * [index 已经加载的数据条目(未加载的第一条数据的下标)]
+       * @type {Number}
+       */
       index: 0,
+      /**
+       * [timer 滚动定时器]
+       * @type {[Object]}
+       */
       timer: undefined
     }
   },
-  watch: {
+  watch: { //监听
     'data': {
       deep: true,
       handler(newVal, oldVal) {
@@ -46,30 +58,44 @@ export default {
     }
   },
   methods: {
-    init(){ //初始化数据
+    /**
+     * [init 初始化数据]
+     * @Author   shanjing
+     * @DateTime 2019-07-31T17:42:53+0800
+     * @return   {[type]}                 [null]
+     */
+    init(){
       console.info('init-----------',this.data);
       let length = this.data.length < this.config.initNumber ? this.data.length : this.config.initNumber;
       for (var i = 0; i < length; i++) {
         this.loadedData.push(this.data[i]);
-        //this.number++;
         this.index++;
       }
       console.info(this.loadedData);
     },
-    add() { //刷新新条目
-      //$scope.number += 6;
+    /**
+     * [add 批量刷新]
+     * @Author   shanjing
+     * @DateTime 2019-07-31T17:43:19+0800
+     */
+    add() {
       for (var i = 0; i < this.config.lineNumber; i++) {
         if(this.data[this.index]){
           this.loadedData.push(this.data[this.index]);
-          //this.number++;
           this.index++;
         }else{
           return;
         }
       }
     },
-    check(data) {  //检查是否需要刷新
-      console.info("check:---------"+ data.index);
+    /**
+     * [check 检查是否需要刷新]
+     * @Author   shanjing
+     * @DateTime 2019-07-31T17:46:07+0800
+     * @param    {[type]}                 data [所有数据]
+     * @return   {[type]}                      [description]
+     */
+    check(data) {
       if(data.index >= this.loadedData.length-this.config.lineNumber){
         this.add();
       }
@@ -78,12 +104,14 @@ export default {
         let column = Math.ceil((data.index+1)/this.config.lineNumber);
         let el = document.getElementById('app');
         let scrollDistance = column-2 < 0 ? 0 : (column-2)*data.el.parentElement.offsetHeight
-        //vm.utils.scrollTo(el, 500, scrollDistance, 'scrollTop', vm.timer)
         this.scrollTo(el, 500, scrollDistance, 'scrollTop',this)
-        //document.getElementById('app').scrollTop = column-2 < 0 ? 0 : (column-2)*data.el.parentElement.offsetHeight; //无动画效果的
-        //console.info(document.getElementById('app').scrollTop);
       });
     },
+    /**
+     * [scrollTo 滚动实现]
+     * @Author   shanjing
+     * @DateTime 2019-07-31T17:47:39+0800
+     */
     scrollTo(el,scrollDuration,distance,direction,vm) {
         console.info('shanjing========='+this.timer);
         var scrollStep = (distance-el[direction]) / (scrollDuration / 15)
@@ -99,27 +127,23 @@ export default {
             }
         },15);
     },
-    back(){
-      this.$emit("back",{})
-    },
+    /**
+     * [deleteItem 删除单条处理(删除一条添加一条)]
+     * @Author   shanjing
+     * @DateTime 2019-07-31T18:02:29+0800
+     * @param    {[type]}                 value [description]
+     * @return   {[type]}                       [description]
+     */
     deleteItem(value){
-      console.info(this.$refs.poster)
       let loadedData = this.loadedData.filter(function(item){
           return item.contentId != value.code
       });
       this.loadedData = loadedData;
-      //this.$emit('deleteItem',{code:value.code})
+      if(this.data[this.index]!= undefined){
+        this.loadedData.push(this.data[this.index]);
+        this.index++;
+      }
     }
-  },
-  filters: {
-    computeColumn(value) {
-      console.info(this)
-      console.info('index------'+value);
-      console.info('lineNunber------'+this.config.lineNumber);
-      return Math.floor(value/this.config.lineNumber);
-    }
-  },
-  computed: {  
   },
   components: {
     Poster
@@ -146,7 +170,4 @@ ul
           background rgba(27, 33, 44, 0.5)
       &:nth-child(4n+4)
           background rgba(27, 33, 44, 0.5)
-.poster-li{
-  margin-bottom 30px
-}
 </style>
