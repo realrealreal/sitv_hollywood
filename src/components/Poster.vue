@@ -1,15 +1,16 @@
 <template>
+  <!-- 海报组件 -->
 	<a href="javascript:void(0)" :style="{width: toRem(width)+'rem'}" @focus="onFocus(index,$event)" @keydown="keyListener($event)" @click="clickPoster">              
 	  <img :src="`${GLOBAL.config.base + (item.image || item.contentPoster || item.contentposter
 || item.contenticon || '/epg/resource/picture' + item.icon)}`" alt="" :onerror="defaultImg">
 	  <div :class="{ shadow: isImgIn }"><span :class="marguee == 0 ? '':'marquee'+marguee">{{item.title || item.contentName}}</span></div>
     <div class='leftTopIcon' v-show="isIconShow" style="color: white">{{index}}</div>
-    <div class='delete' v-if="isEdited" style="color: white">删除</div>
+    <div class='delete iconfont iconjinzhi' v-if="isEdited" style="color: white">  删除</div>
 	</a>
 </template>
 
 <script>
-import Animations from '@/assets/css/animations.css'
+import '@/assets/css/iconfont/iconfont.css'
 import {mapActions, mapState, mapGetters} from 'vuex' //注册 action 和 state
 export default {
   name: 'Poster',
@@ -29,8 +30,7 @@ export default {
        * [default 默认图（暂时未用到）]
        * @type {[type]}
        */
-      defaultImg: require('../assets/images/test/default1.jpg'),
-      focus: false
+      defaultImg: require('../assets/images/test/default1.jpg')
     }
   },
   mounted() {
@@ -164,21 +164,30 @@ export default {
         return a/21
      },
      /**
-      * [goToDetail description]
+      * [goToDetail 跳转详情页]
       * @Author   shanjing
       * @DateTime 2019-07-03T17:04:20+0800
-      * @return   {[type]}                 [description]
+      * @return   {[type]}                 [null]
       */
      goToDetail() {
         let vm = this;
-        console.info('dispatch****1'+vm.programCode);
-        console.info('dispatch****1'+vm.programType);
+        console.info(this.index)
         vm.setProgramCode(vm.item.code || vm.item.contentId || vm.item.itemcode)
         vm.setProgramType(vm.item.type || vm.item.itemtype || vm.item.contentType)
-        console.info('dispatch****2'+vm.programCode);
-        console.info('dispatch****2'+vm.programType);
-        vm.$router.push({path: `/hollywood/detail`});
+        vm.setProgramType(vm.item.type || vm.item.itemtype || vm.item.contentType)
+        if(vm.$route.name == 'Movielist'){ // 列表页跳转到详情页记忆焦点
+          vm.setMemoryFocusIndex(vm.index);
+        }
+        if(vm.$route.name != 'Details'){ //当前页 就不push跳转啦 实际路由一样也不会跳转(ps:如果加了query 则页面)
+          vm.$router.push({path: '/hollywood/detail'});
+        }
      },
+     /**
+      * [clickPoster 点击海报处理]
+      * @Author   shanjing
+      * @DateTime 2019-07-31T14:55:06+0800
+      * @return   {[type]}                 [null]
+      */
      clickPoster(){
         let vm = this; 
         if(vm.isEdited){
@@ -192,13 +201,15 @@ export default {
      //在这里引入 action 里的方法，使用方法和 methods 里的其他方法一样
       ...mapActions([
           'setProgramCode',
-          'setProgramType'
+          'setProgramType',
+          'setMemoryFocusIndex'
       ])
   },
   computed: {
       ...mapState([
         'programCode',
-        'programType'
+        'programType',
+        'memoryFocusIndex'
       ])
   },
   directives: {
@@ -284,5 +295,5 @@ a
 .shadow
   position absolute
   background: linear-gradient(to top, rgba(0,0,0,1), rgba(0,0,0,0.3));
-  // background-color rgba(0,0,0,0.3)
+
 </style>
