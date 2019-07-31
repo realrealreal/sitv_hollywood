@@ -1,4 +1,4 @@
-let base = 'http://192.169.0.96:8999/'
+let base = 'http://192.169.2.186:8999/'
 
 export default {
   dataApi: `${base}epg/api`,
