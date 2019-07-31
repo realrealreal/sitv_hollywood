@@ -1,4 +1,5 @@
-<template>	
+<template>
+	<!-- iframe组件 -->
 	<iframe name="myframe" :src="src" frameborder="0" width="100%" height="100%"></iframe>
 </template>
 
