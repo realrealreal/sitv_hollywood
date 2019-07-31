@@ -62,9 +62,9 @@ For a detailed explanation on how things work, check out the [guide](http://vuej
         - Carousel.vue #轮播图组件
         - DetailHead.vue #详情页头部组件
         - HandleWindow.vue #弹出层组件
-        - Iframe.vue #iframe组件
-        - Poster.vue #海报组件
-        - ScrollList.vue #瀑布流组件
+        - Iframe.vue #iframe组件(暂时未用 有需求跳转外链或者epg其他系统使用)
+        - Poster.vue #海报组件(集成获得焦点滚动、删除、左上角角标 按需求使用 页面上海报链接均使用此组件) 
+        - ScrollList.vue #瀑布流组件(用于数据量较大 图片较多时 分批次刷新数据 控制滚动距离)
         - YaoFeng.vue #腰封组件
         - YourLike.vue #猜你喜欢
         - SeriesContainer.vue 多剧集底部
