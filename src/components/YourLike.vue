@@ -1,25 +1,29 @@
 <template>
-    <div class='yourlike'>
-      <div class='blue'>猜你喜欢</div>
-      <ul>
-        <li v-for="(value, index) in items">
-          <Poster width='120' :item='value'/>
-        </li> 
-      </ul>
-    </div>
+  <!-- 猜你喜欢(单剧集底部内容) -->
+  <div class='yourlike'>
+    <div class='blue'>{{title}}</div>
+    <ul>
+      <li v-for="(value, index) in items">
+        <Poster width='120' :item='value'/>
+      </li> 
+    </ul>
+  </div>
 </template>
 
 <script>
 import Poster from '@/components/Poster'
 export default {
   name: 'YourLike',
+  data () {
+    return {
+      title:'猜你喜欢'
+    }
+  },
   props: {
     items: {
       type: Array,
       required: true
     }
-  },
-  computed: {
   },
   components: {
     Poster
