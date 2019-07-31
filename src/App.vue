@@ -1,8 +1,14 @@
 <template>
   <div id="app">
-    <!-- <img src="./assets/logo.png"> -->
-    <transition mode="out-in" enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
-        <router-view/>
+    <!-- 分成两个路由 页面会有轻微闪烁 之后看看是否可以优化-->
+    <transition mode="out-in" enter-active-class="animated fadeIn" leave-active-class="animated fadeOut" :duration="{ enter: 2000, leave: 50 }">
+      <keep-alive>
+        <router-view v-if="this.$route.meta.keepAlive"></router-view>
+        <!-- 这里是会被缓存的组件 -->
+      </keep-alive>
+    </transition>
+    <transition mode="out-in" enter-active-class="animated fadeIn" leave-active-class="animated fadeOut" :duration="{ enter: 2000, leave: 50 }">
+      <router-view  v-if="!this.$route.meta.keepAlive"></router-view>
     </transition>
   </div>
 </template>
@@ -25,9 +31,6 @@ export default {
      */
     init(){ //初始化数据
       let vm = this;
-      // console.info('old'+vm.GLOBAL.store.getItem('page'))
-      // console.info('set'+vm.GLOBAL.store.setItem('page','test'))
-      // console.info('new'+vm.GLOBAL.store.getItem('page'))
       vm.authService.login(function(res){
         console.info(res.data);
       });
