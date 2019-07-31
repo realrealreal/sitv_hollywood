@@ -56,7 +56,12 @@ const content2 = {
     {
       text: '清空历史',
       handle: function(vm){
+        vm.popWindow = false;
+        vm.data = [];
         console.info('清空历史');
+        vm.$nextTick(() => {
+          vm.$refs[vm.current][0].focus()
+        });
       }
     },{
       text: '再考虑下',
@@ -64,6 +69,9 @@ const content2 = {
         vm.popWindow = false;
         vm.content = content1;
         console.info('再考虑下');
+        vm.$nextTick(() => {
+          vm.$refs[vm.current][0].focus()
+        });
       }
     }
   ]
@@ -114,12 +122,9 @@ export default {
     }
   },
   created() {
-    console.info('-----------created')
     this.init()
   },
   mounted() {
-    console.info('-----------mounted')
-    //this.domInit()
   },
   /*updated() {
     console.info('-----------updated')
@@ -154,9 +159,6 @@ export default {
         }
     },
 
-  },
-  props: {
-    
   },
   methods: {
     /**
@@ -253,8 +255,6 @@ export default {
     editText(){
       return this.isEdited? '按返回完成':'编辑'
     }
-  },
-  directives: {
   },
   components: {
     ScrollList,
