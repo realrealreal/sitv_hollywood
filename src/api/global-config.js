@@ -3,7 +3,7 @@
  * @type {Object}
  */
 const config = {
-	base: 'http://192.169.0.96:8999',
+	base: 'http://192.169.2.186:8999',
 	href: {
 		repo:'repo'
 	},
