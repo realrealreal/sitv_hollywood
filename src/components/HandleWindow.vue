@@ -1,4 +1,5 @@
-<template>	
+<template>
+	<!-- 处理弹窗组件 -->
 	<div class='window'>
     <div>
       <div>{{item.text}}</div>
