@@ -1,0 +1,29 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" >
+<!--
+2013-9-30: Created.
+-->
+<svg>
+<metadata>
+Created by iconfont
+</metadata>
+<defs>
+
+<font id="iconfont" horiz-adv-x="1024" >
+  <font-face
+    font-family="iconfont"
+    font-weight="500"
+    font-stretch="normal"
+    units-per-em="1024"
+    ascent="896"
+    descent="-128"
+  />
+    <missing-glyph />
+    
+    <glyph glyph-name="jinzhi" unicode="&#58896;" d="M512 849.709c-256.933 0-465.208-208.276-465.208-465.209 0-256.932 208.276-465.209 465.208-465.209S977.209 127.568 977.209 384.5c0 256.933-208.277 465.209-465.209 465.209z m0-860.636c-218.384 0-395.428 177.042-395.428 395.427 0 218.385 177.044 395.428 395.428 395.428 218.385 0 395.428-177.043 395.428-395.428S730.385-10.927 512-10.927zM732.973 419.392H291.025c-19.262 0-34.89-15.617-34.89-34.891 0-19.285 15.628-34.902 34.89-34.902h441.948c19.264 0 34.893 15.617 34.893 34.902-0.001 19.273-15.63 34.891-34.893 34.891z"  horiz-adv-x="1024" />
+
+    
+
+
+  </font>
+</defs></svg>
