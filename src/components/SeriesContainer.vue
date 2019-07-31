@@ -1,28 +1,37 @@
 <template>
-    <div class='series'>
-      <ul class='tab'>
-        <li v-for='(item, index) in list' :class="currentIndex == index?'current':''" @click='tab(index)'>{{item | showTab}}</li>
-      </ul>
-      <div class='container' @keydown=''>
-        <transition v-for="(item, index) in list" name="right" enter-active-class="animated fadeInRight"
-     leave-active-class="animated fadeOut"
-     :duration="{ enter: 2000, leave: 800 }" v-on:before-leave="beforeLeave" v-on:after-enter="afterEnter" :key="'key-'+index">
-          <div v-show='currentIndex == index'>
-            <ul>
-              <li v-for='value in item'><a ref='episodes' href="" @keydown='keydown($event, value.index, item.length)'>{{value.title}}</a></li>
-            </ul>
-          </div>
-        </transition> 
-      </div>
+  <!-- 多剧集底部 -->
+  <div class='series'>
+    <ul class='tab'>
+      <li v-for='(item, index) in list' :class="currentIndex == index?'current':''" @click='tab(index)'>{{item | showTab}}</li>
+    </ul>
+    <div class='container' @keydown=''>
+      <transition v-for="(item, index) in list" name="right" enter-active-class="animated fadeInRight"
+   leave-active-class="animated fadeOut"
+   :duration="{ enter: 1500, leave: 800 }" v-on:before-leave="beforeLeave" v-on:after-enter="afterEnter" :key="'key-'+index">
+        <div v-show='currentIndex == index'>
+          <ul>
+            <li v-for='(value, index) in item'><a ref='episodes' href="" @keydown='keydown($event, index+1, item.length)'>{{value.title}}</a></li>
+          </ul>
+        </div>
+      </transition> 
     </div>
+  </div>
 </template>
 
 <script>
+/**
+ * [number 单页数量]
+ * @type {Number}
+ */
 const number = 9; 
 export default {
   name: 'SeriesContainer',
   data () {
     return {
+      /**
+       * [currentIndex 当前的页码 从0开始记数]
+       * @type {Number}
+       */
       currentIndex: 0
     }
   },
@@ -33,20 +42,33 @@ export default {
     }
   },
   mounted(){
+    //初始化获得焦点
     let vm = this;
     setTimeout(function(){
       console.info(vm.$refs)
       vm.$refs.episodes[0].focus()
     },500)
-    // this.$nextTick(() => {
-    //   console.info(this.$refs)
-    //   this.$refs.episodes[0].focus()
-    // })
   },
   methods: {
+    /**
+     * [tab 切换page]
+     * @Author   shanjing
+     * @DateTime 2019-07-31T17:31:37+0800
+     * @param    {[type]}                 index [页码]
+     * @return   {[type]}                       [null]
+     */
     tab(index) {
       this.currentIndex = index
     },
+    /**
+     * [keydown 控制选集最左最右切换页码]
+     * @Author   shanjing
+     * @DateTime 2019-07-31T17:32:16+0800
+     * @param    {[type]}                 e     [event]
+     * @param    {[type]}                 index [集数下标]
+     * @param    {[type]}                 len   [该页数量]
+     * @return   {[type]}                       [null]
+     */
     keydown(e, index, len) {
       console.info(e.keyCode, index, len)
       if(e.keyCode == 39 && index%3 == 0 && len == number){
@@ -63,11 +85,16 @@ export default {
     },
     // 设置过渡进入完成之后的组件状态
     afterEnter: function (el) {
-      // ...
-      console.info(el.children[0].children[0].children[0].focus())
+      el.children[0].children[0].children[0].focus()
     }
   },
   computed: {
+    /**
+     * [list 分页处理]
+     * @Author   shanjing
+     * @DateTime 2019-07-31T17:35:00+0800
+     * @return   {[type]}                 [null]
+     */
     list: function () {
       let length = Math.ceil(this.items.length/number)
       let list = [];
@@ -78,6 +105,13 @@ export default {
     }
   },
   filters: {
+    /**
+     * [showTab tab显示处理]
+     * @Author   shanjing
+     * @DateTime 2019-07-31T17:35:19+0800
+     * @param    {[type]}                 value [description]
+     * @return   {[type]}                       [null]
+     */
     showTab(value) {
       let begin = value[0].index;
       let end = value[value.length-1].index;
