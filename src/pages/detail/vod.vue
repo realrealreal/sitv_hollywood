@@ -14,7 +14,7 @@
 import SeriesContainer from '@/components/SeriesContainer'
 import DetailHead from '@/components/DetailHead'
 import YourLike from '@/components/YourLike'
-import {mapState} from 'vuex'
+import {mapActions, mapState} from 'vuex'
 export default {
   name: 'Vod',
   data () {
@@ -22,16 +22,18 @@ export default {
       config:{},
       data: {},
       like: [],
-      episodes: [],//多剧集
-      //isFocus:true
+      episodes: []//多剧集
     }
   },
   watch: {
     programCode(newValue, oldValue) {
-      console.info('newValue*********'+ newValue);
-      console.info('oldValue*********'+ oldValue);
-      this.getDetails(newValue);
+      this.getDetails(newValue, this.programType);
     }
+    // '$route' (to, from) {
+    //   console.info('watch-------') 
+    //   console.info(to)
+    //   console.info(from)
+    // }
   },
   created() {
     this.init()
@@ -43,18 +45,37 @@ export default {
     
   },
   methods: {
+    /**
+     * [init 初始化]
+     * @Author   shanjing
+     * @DateTime 2019-07-30T16:12:56+0800
+     * @return   {[type]}                 [null]
+     */
     init(){
-      this.getDetails(this.programCode)
+      // console.info(this.$route.query)
+      if(this.$route.query.programcode && this.$route.query.programtype){
+        this.setProgramType(this.$route.query.programtype);
+        this.setProgramCode(this.$route.query.programcode);
+        //this.getDetails(this.$route.query.programcode, this.$route.query.programtype)
+      }else{
+        this.getDetails(this.programCode, this.programType)
+      }
     },
-    getDetails(code){
+    /**
+     * [getDetails 获取节目信息]
+     * @Author   shanjing
+     * @DateTime 2019-07-30T16:13:32+0800
+     * @param    {[type]}                 code [节目code]
+     * @param    {[type]}                 type [节目类型]
+     * @return   {[type]}                      [null]
+     */
+    getDetails(code, type){
       let vm = this;
-      console.info(code);
-      console.info(vm.programType);
-      vm.dataService.queryDetails(vm.programType, code, function(res){
+      vm.dataService.queryDetails(type, code, function(res){
         console.info(res.data);
-        vm.data = res.data[vm.programType];
+        vm.data = res.data[type];
         if(!vm.utils.empty(vm.data)){
-          if(vm.programType == 'series'){
+          if(type == 'series'){
             vm.episodes = res.data.episodes;
           }else{
             vm.getYourLike(code);
@@ -62,6 +83,13 @@ export default {
         }
       });
     },
+    /**
+     * [getYourLike 获取猜你喜欢信息]
+     * @Author   shanjing
+     * @DateTime 2019-07-30T16:14:13+0800
+     * @param    {[type]}                 code [节目code]
+     * @return   {[type]}                      [null]
+     */
     getYourLike(code){
       console.info('your like***********************'+code);
       let vm = this;
@@ -97,7 +125,12 @@ export default {
         }
         console.info(vm.like);
       })
-    }
+    },
+       //在这里引入 action 里的方法，使用方法和 methods 里的其他方法一样
+    ...mapActions([
+        'setProgramCode',
+        'setProgramType'
+    ])
   },
   computed: {
     ...mapState([
