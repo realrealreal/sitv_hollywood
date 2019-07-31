@@ -5,25 +5,17 @@
         <div><a href="">搜索</a></div>
         <img :src="biz_logo" alt="">  
       </div>
-      <div v-if="$route.name == 'RepoList'">
-        <h2>{{title[$route.params.name]}}</h2>
-        <a href="">编辑</a>
-      </div>
       <ul>
         <li v-for='(value, index) in leftColumn'><a :ref="value.catcode" :class="value.code == $store.state.bizCode ? 'current' : ''" href="javascript:void(0)" @click='toggleCategroy(value)'>{{value.title}}</a></li>
       </ul>
     </div>
     <div v-if='config != null && data.length != 0' class='scroll' :class="config.lineNumber == 3 ? 'line-3' : ''" @keydown='keydown($event)'>
-      <ScrollList :data='data' :config='config'/>
+      <ScrollList :data='data' :config='config' ref='poster'/>
     </div>
   </div> 
 </template>
 
 <script>
-const title = {
-  'history': '观看历史',
-  'collection': '我的收藏'
-}
 import ScrollList from '@/components/ScrollList'
 import Animations from '@/assets/css/animations.css'
 import {mapState} from 'vuex'
@@ -35,7 +27,6 @@ export default {
       data: [],
       config: null,
       leftColumn: [],
-      title:title
     }
   },
   created() {
@@ -44,7 +35,23 @@ export default {
   },
   updated() {
     console.info('-----------updated')
-    this.$refs[this.categoryCode][0].focus();
+    if(this.$route.meta.isBack){
+      console.info('-----------updated------isBack')
+      console.info(this.$refs);
+      console.info(this.memoryFocusIndex);
+    }else{
+      this.$refs[this.categoryCode][0].focus();
+    } 
+  },
+  activated() { //keepalive时 该生命周期/钩子函数 才有效
+    console.info('-----------activated')
+    console.info(this.$route.meta.isBack)
+    if(this.$route.meta.isBack){
+      console.info('-----------isBack')
+      this.$refs.poster.$children[this.memoryFocusIndex].$el.focus()
+    }else{
+      this.init()
+    }
   },
   watch: {
     'categoryCode': {
@@ -58,7 +65,6 @@ export default {
          * @return   {[type]}                        [null]
          */
         handler(newVal, oldVal) {
-            console.log(this.leftColumn);
             console.info('watch----');
             console.log(newVal, oldVal);
             let vm = this;
@@ -78,11 +84,7 @@ export default {
               vm.config = vm.GLOBAL.config[key]
             }
         }
-    },
-
-  },
-  props: {
-    
+    }
   },
   methods: {
     /**
@@ -92,24 +94,22 @@ export default {
      * @return   {[type]}                 [null]
      */
     init(){
-      console.info(this.$route.name);
-      console.info(this.$route.params.type);
-      if(this.$route.name == 'Movielist'){
-        let vm = this;
-        vm.dataService.getbizList(vm.$store.state.parentCode, function(res){
-          console.info(res.data);
-          if(res.data.status == 200){
-            vm.leftColumn = res.data.bizlist;
-            let key = vm.leftColumn.filter(function(item){
-                return item.code == vm.$store.state.bizCode
-            })[0].subTitle;
-            vm.config = vm.GLOBAL.config[key]
-            //vm.config = vm.GLOBAL.config.noImage;
-          }
-        });
-      }else{
+      // console.info(this.$route.name);
+      // console.info(this.$route.params.type);
+      // if(this.$route.name == 'Movielist'){
+      let vm = this;
+      vm.dataService.getbizList(vm.$store.state.parentCode, function(res){
+        if(res.data.status == 200){
+          vm.leftColumn = res.data.bizlist;
+          let key = vm.leftColumn.filter(function(item){
+              return item.code == vm.$store.state.bizCode
+          })[0].subTitle;
+          vm.config = vm.GLOBAL.config[key]
+        }
+      });
+      // }else{
 
-      }
+      // }
     },
     /**
      * [toggleCategroy 切换展示栏目]
@@ -152,10 +152,9 @@ export default {
   },
   computed: {
     ...mapState([
-      'categoryCode'
+      'categoryCode',
+      'memoryFocusIndex'
     ])
-  },
-  directives: {
   },
   components: {
     ScrollList
