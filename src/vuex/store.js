@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import createPersistedState from "vuex-persistedstate" //持久化插件
 
 Vue.use(Vuex)  //使用 vuex
 
@@ -9,6 +10,7 @@ const state = {
     parentCode: '',
     categoryCode: '',
     bizCode: '',
+    memoryFocusIndex: -1
 }
 
 const getters = {   
@@ -26,6 +28,9 @@ const getters = {
     },
     bizCode(state) {  
        return state.bizCode
+    },
+    memoryFocusIndex(state) {  
+       return state.memoryFocusIndex
     }
 };
 
@@ -44,6 +49,9 @@ const mutations = {
     },
     setBizCode(state,value){
         state.bizCode = value
+    },
+    setMemoryFocusIndex(state,value){
+        state.memoryFocusIndex = value
     }
 };
 
@@ -62,6 +70,9 @@ const actions = {
     },
     setBizCode(context,value){
         context.commit('setBizCode', value);
+    },
+    setMemoryFocusIndex(context,value){
+        context.commit('setMemoryFocusIndex', value);
     }
 };
 
@@ -69,5 +80,8 @@ export default new Vuex.Store({
     state,//注册state
     mutations,//注册mutations
     actions,//注册actions
-    getters//注册getters
+    getters,//注册getters
+    plugins: [createPersistedState({
+        storage: window.sessionStorage
+    })]//https://segmentfault.com/a/1190000015860217持久化处理
 })
