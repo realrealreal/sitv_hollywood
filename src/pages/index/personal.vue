@@ -29,8 +29,8 @@
               </li>
             </ul>
           </div>
-          <span class='prev' v-if='list[index].length >5 && scrollLeft[index]>0'> < </span>
-          <span class='next' v-if='list[index].length >5 && !(focusIndex[index] == 11 || (focusIndex[index] == list[index].length && list[index].length <=10))'>></span>
+          <img class='prev' src="@/assets/images/prev_icon.png" alt="" v-show='list[index].length >5 && scrollLeft[index]>0'> 
+          <img class='next' src="@/assets/images/next_icon.png" alt="" v-show='list[index].length >5 && !(focusIndex[index] == 11 || (focusIndex[index] == list[index].length && list[index].length <=10))'>
         </div>
       </div>
     </div>
@@ -275,9 +275,9 @@ export default {
     top 50%
     transform translateY(-50%)
   .prev
-    left -10px
+    left -30px
   .next
-    right -10px
+    right -30px
   .text-center
     position relative
     & > div
