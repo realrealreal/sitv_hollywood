@@ -36,8 +36,6 @@ export default {
 div.yourlike
   padding 20px 220px 0
   height 255px
-  background url(../assets/images/bottomBg.png) no-repeat
-  background-size cover
   & > ul
     margin-top 10px
     white-space nowrap
