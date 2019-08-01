@@ -1,8 +1,10 @@
 <template>
   <!-- 多剧集底部 -->
   <div class='series'>
+    <img src="@/assets/images/prev_icon.png" alt="" v-show='currentIndex > 0'> 
+    <img src="@/assets/images/next_icon.png" alt="" v-show='list.length > 0 && currentIndex != list.length-1'>
     <ul class='tab'>
-      <li v-for='(item, index) in list' :class="currentIndex == index?'current':''" @click='tab(index)'>{{item | showTab}}</li>
+      <li v-for='(item, index) in list'><a href="javascript:void(0)" @click='tab(index)' :class="currentIndex == index?'current':''">{{item,index | showTab(index)}}</a></li>
     </ul>
     <div class='container' @keydown=''>
       <transition v-for="(item, index) in list" name="right" enter-active-class="animated fadeInRight"
@@ -10,10 +12,10 @@
    :duration="{ enter: 1500, leave: 800 }" v-on:before-leave="beforeLeave" v-on:after-enter="afterEnter" :key="'key-'+index">
         <div v-show='currentIndex == index'>
           <ul>
-            <li v-for='(value, index) in item'><a ref='episodes' href="" @keydown='keydown($event, index+1, item.length)'>{{value.title}}</a></li>
+            <li v-for='(value, index) in item'><a ref='episodes' href="javascript:void(0)" @keydown='keydown($event, index+1, item.length)' @click='goPlay(value.programcode)'>{{value.title | showTitle}}</a></li>
           </ul>
         </div>
-      </transition> 
+      </transition>
     </div>
   </div>
 </template>
@@ -78,6 +80,17 @@ export default {
         --this.currentIndex;
       }
     },
+    /**
+     * [goPlay 播放请求]
+     * @Author   shanjing
+     * @DateTime 2019-08-01T12:12:08+0800
+     * @param    {[type]}                 code [节目code]
+     * @return   {[type]}                      [description]
+     */
+    goPlay(code) {
+      console.info(code)
+      this.$emit('play-request', {code: code});
+    },
     // 过渡离开
     // 设置过渡离开之前的组件状态
     beforeLeave: function (el) {
@@ -109,13 +122,17 @@ export default {
      * [showTab tab显示处理]
      * @Author   shanjing
      * @DateTime 2019-07-31T17:35:19+0800
-     * @param    {[type]}                 value [description]
+     * @param    {[type]}                 a [description]
+     * @param    {[type]}                 b [description]
      * @return   {[type]}                       [null]
      */
-    showTab(value) {
-      let begin = value[0].index;
-      let end = value[value.length-1].index;
+    showTab(a,b) {
+      let begin = a[0].index || b*number+1;
+      let end = a[a.length-1].index || b*number+a.length;
       return begin+'-'+end;
+    },
+    showTitle(value){
+      return value.length > 16 ? value.substring(0,16)+'...' : value
     }
   }
 }
@@ -124,10 +141,17 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang='stylus'>
 div.series
+  position relative
   padding-top 20px
   height 255px
-  background url(../assets/images/bottomBg.png) no-repeat
-  background-size cover
+  & > img
+    position absolute
+    top 50%
+    transform translateY(-50%)
+    &:nth-child(1)
+      left 40px
+    &:nth-child(2)
+      right 40px
   & > div.container   
     width 1100px
     margin 0 auto
@@ -154,6 +178,8 @@ ul.tab
   margin 0 auto 20px
   & > li
     margin-right 20px
+    & > a
+      padding 5px
     
 .current
   color $linkColor
