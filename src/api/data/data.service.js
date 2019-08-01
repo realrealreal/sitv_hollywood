@@ -32,16 +32,58 @@ function queryHistory(cb,category){
  * [queryCollection 获取收藏信息]
  * @Author   shanjing
  * @DateTime 2019-07-02T17:41:32+0800
- * @param    {Function}               cb [回调函数]
- * @return   {[type]}                    [null]
+ * @param    {Function}               cb       [回调函数]
+ * @param    {String}                 category [编排code]
+ * @return   {[type]}                          [null]
  */
 function queryCollection(cb,category){
 	console.info(url.queryCollectionApi,category);
 	http.getRequest(url.queryCollectionApi,{
-		'pageSize': 300,
+		'pageSize': 1000,
 		'userId': user.uid(),
 		'category': category
 	},cb);
+}
+
+/**
+ * [queryIsCollected 获取单个节目收藏情况]
+ * @Author   shanjing
+ * @DateTime 2019-07-02T17:41:32+0800
+ * @param    {Function}               cb          [回调函数]
+ * @param    {String}                 programCode [节目code]
+ * @return   {[type]}                             [null]
+ */
+function queryIsCollected(cb,programCode){
+	console.info(url.queryCollectionApi,programCode);
+	http.getRequest(url.queryCollectionApi,{
+		'userId': user.uid(),
+		'contentId': programCode
+	},cb);
+}
+
+/**
+ * [deleteCollection 取消收藏]
+ * @Author   shanjing
+ * @DateTime 2019-08-01T16:59:28+0800
+ * @param    {Function}               cb    [description]
+ * @param    {[type]}                 query [description]
+ * @return   {[type]}                       [description]
+ */
+function deleteCollection(cb,query){
+	query.userId = user.uid();
+	http.getRequest(url.deleteCollectionApi,query,cb);
+}
+
+/**
+ * [addCollection 添加收藏]
+ * @Author   shanjing
+ * @DateTime 2019-08-01T16:59:33+0800
+ * @param    {Function}               cb    [description]
+ * @param    {[type]}                 query [description]
+ */
+function addCollection(cb,query){
+	query.userId = user.uid();
+	http.getRequest(url.addCollectionApi,query,cb);
 }
 
 /**
@@ -54,8 +96,8 @@ function queryCollection(cb,category){
  * @return   {[type]}                             [null]
  */
 function queryDetails(type, programCode, cb){
-	console.info(`${url.dataApi}/${type}/${programCode}.json`);
-	http.getRequest(`${url.dataApi}/${type}/${programCode}.json`,null,cb);
+	console.info(`${url.dataApi}/${type}/${programCode}.json?size=1000`);
+	http.getRequest(`${url.dataApi}/${type}/${programCode}.json?size=1000`,null,cb);
 }
 
 /**
@@ -101,5 +143,6 @@ export default{
 	queryDetails,
 	search,
 	getbizList,
-	getCategroyList
+	getCategroyList,
+	queryIsCollected
 }
