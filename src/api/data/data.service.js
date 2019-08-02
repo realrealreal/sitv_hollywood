@@ -122,6 +122,7 @@ function search(params,cb){
  * @return   {[type]}                      [description]
  */
 function getbizList(code,cb){
+	console.info(`${url.bizListApi}${code}.json`)
 	http.getRequest(`${url.bizListApi}${code}.json`,null,cb);
 }
 
