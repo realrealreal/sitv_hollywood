@@ -37,7 +37,6 @@ export default {
     console.info('-----------updated')
     if(this.$route.meta.isBack){
       console.info('-----------updated------isBack')
-      console.info(this.$refs);
       console.info(this.memoryFocusIndex);
     }else{
       this.$refs[this.categoryCode][0].focus();
@@ -45,7 +44,6 @@ export default {
   },
   activated() { //keepalive时 该生命周期/钩子函数 才有效
     console.info('-----------activated')
-    console.info(this.$route.meta.isBack)
     if(this.$route.meta.isBack){
       console.info('-----------isBack')
       this.$refs.poster.$children[this.memoryFocusIndex].$el.focus()
