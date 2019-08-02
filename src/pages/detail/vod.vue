@@ -22,6 +22,7 @@
 </template>
 
 <script>
+import {empty} from '@/api/utils.js'
 import Iframe from '@/components/Iframe'
 import SeriesContainer from '@/components/SeriesContainer'
 import DetailHead from '@/components/DetailHead'
@@ -94,7 +95,7 @@ export default {
           vm.data['mixPrograms'] = res.data['mixPrograms'];
         }
         console.info(vm.data)
-        if(!vm.utils.empty(vm.data)){
+        if(!empty(vm.data)){
           if(type == 'series'){
             vm.episodes = res.data.episodes;
           }else if(type == 'album'){
@@ -198,6 +199,7 @@ export default {
      */
     play(data){
       if(this.auth(data.code)){//鉴权成功
+        this.openFrame = true
         console.info('play-----------------');  
       }else{
         console.info('order----------------');
