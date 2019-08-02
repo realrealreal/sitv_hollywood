@@ -9,9 +9,11 @@ import './assets/css/app.css'
 import globalVariable from '@/api/global-config.js'
 import authService from '@/api/auth/auth.service.js'
 import dataService from '@/api/data/data.service.js'
-import utils from '@/api/utils.js'
+//import utils from '@/api/utils.js'
+import toast from '@/components/Toast.js'
 import store from './vuex/store' // 引入store
 
+Vue.use(toast)
 /**
  * [GLOBAL]
  * @type {[type]}
@@ -19,7 +21,7 @@ import store from './vuex/store' // 引入store
 Vue.prototype.GLOBAL = globalVariable
 Vue.prototype.authService = authService
 Vue.prototype.dataService = dataService
-Vue.prototype.utils = utils
+//Vue.prototype.utils = utils
 
 /**
  * [directive 全局指令]
