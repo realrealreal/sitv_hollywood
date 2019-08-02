@@ -48,7 +48,6 @@ export default {
   -moz-osx-font-smoothing grayscale
   width 100%
   height 100%
-  min-height 720px
   //overflow hidden
   overflow-y: scroll;
   overflow-x: hidden;
