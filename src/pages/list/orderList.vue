@@ -77,28 +77,28 @@ const column = [
     name:'更早',
   }
 ];
-function dateToStr(now){
-  var yy = now.getFullYear();      //年
-  var mm = now.getMonth() + 1;     //月
-  var dd = now.getDate();          //日
-  var hh = now.getHours();         //时
-  var ii = now.getMinutes();       //分
-  var ss = now.getSeconds();       //秒
-  //var clock = yy + "-";
-  var clock = yy;
-  if(mm < 10) clock += "0";
-  clock += mm; //+ "-";
-  if(dd < 10) clock += "0";
-  clock += dd; //+ " ";
-  if(hh < 10) clock += "0";
-  clock += hh; //+ ":";
-  if (ii < 10) clock += '0'; 
-  clock += ii; //+ ":";
-  if (ss < 10) clock += '0'; 
-  clock += ss;
-  console.info(clock); 
-  return clock;
-}
+// function dateToStr(now){
+//   var yy = now.getFullYear();      //年
+//   var mm = now.getMonth() + 1;     //月
+//   var dd = now.getDate();          //日
+//   var hh = now.getHours();         //时
+//   var ii = now.getMinutes();       //分
+//   var ss = now.getSeconds();       //秒
+//   //var clock = yy + "-";
+//   var clock = yy;
+//   if(mm < 10) clock += "0";
+//   clock += mm; //+ "-";
+//   if(dd < 10) clock += "0";
+//   clock += dd; //+ " ";
+//   if(hh < 10) clock += "0";
+//   clock += hh; //+ ":";
+//   if (ii < 10) clock += '0'; 
+//   clock += ii; //+ ":";
+//   if (ss < 10) clock += '0'; 
+//   clock += ss;
+//   console.info(clock); 
+//   return clock;
+// }
 function getCurrentWeekTimestamp(){
   let current = new Date();
   let week = current.getDay() == 0 ? 6 : current.getDay()-1;
@@ -111,8 +111,8 @@ function getCurrentWeekTimestamp(){
   return weekBeginTime;
 }
 import {mapActions, mapState, mapGetters} from 'vuex' //注册 action 和 state
-import ScrollList from '@/components/ScrollList'
 import Animations from '@/assets/css/animations.css'
+import {dateToStr} from '@/api/utils.js'
 export default {
   name: 'orderList',
   data () {
@@ -137,7 +137,6 @@ export default {
   },
   methods: {
     init(){
-      this.utils.dateToStr(new Date());
       this.config = configText;
       this.data = (function(){
         let array = [];
