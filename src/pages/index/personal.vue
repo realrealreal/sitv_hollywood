@@ -56,6 +56,7 @@ const config = {
     }
   ]
 }
+import {scrollTo} from '@/api/utils.js'
 import {mapActions} from 'vuex' //注册 action 和 state
 import Poster from '@/components/Poster'
 export default {
@@ -180,50 +181,24 @@ export default {
       /* 上下滚动 */
       if(column == 2){
         let el = this.$parent.$el;
-        this.scrollTo(el, 500, el.scrollHeight - el.offsetHeight, 'scrollTop', 3, this);
+        scrollTo(el, 500, el.scrollHeight - el.offsetHeight, 'scrollTop', 3, this);
       }
       if(column == 1 || column == 0){
         let el = this.$parent.$el;
-        this.scrollTo(el, 500, 0, 'scrollTop', 3, this);
+        scrollTo(el, 500, 0, 'scrollTop', 3, this);
       }
       /* 左右滚动 */
       if(index >= 6){
         let leftOnce = this.$refs.posterLi[0].offsetWidth; //单次移动距离
         this.$refs[`column-${column}`][0].scrollLeft = this.scrollLeft[column];
-        this.scrollTo(this.$refs[`column-${column}`][0], 500, (index-5)*leftOnce, 'scrollLeft', column, this);
+        scrollTo(this.$refs[`column-${column}`][0], 500, (index-5)*leftOnce, 'scrollLeft', column, this);
         this.scrollLeft.splice(column, 1, (index-5)*leftOnce);
       }else{
-        this.scrollTo(this.$refs[`column-${column}`][0], 500, 0, 'scrollLeft', column, this);
+        scrollTo(this.$refs[`column-${column}`][0], 500, 0, 'scrollLeft', column, this);
         this.scrollLeft.splice(column, 1, 0 );
       }
       this.focusIndex.splice(column, 1, index);
       console.info(this.focusIndex)
-    },
-    /**
-     * [scrollTo 滚动效果函数 (暂时无法全局 this作用域)]
-     * @Author   shanjing
-     * @DateTime 2019-07-19T16:18:56+0800
-     * @param    {[type]}                 el             [滚动元素]
-     * @param    {[type]}                 scrollDuration [滚动时长]
-     * @param    {[type]}                 distance       [滚动距离]
-     * @param    {[type]}                 direction      [滚动方向 'scrollTop' 'scrollLeft']
-     * @param    {[type]}                 num            [timer]
-     * @param    {[type]}                 vm             [this]
-     * @return   {[type]}                                [description]
-     */
-    scrollTo(el,scrollDuration,distance,direction,num,vm) {
-        var scrollStep = (distance-el[direction]) / (scrollDuration / 15)
-        clearInterval(vm.timer[num]);
-        vm.timer[num] = setInterval(function(){
-          if ( el[direction] != distance ) {
-            el[direction] += scrollStep;
-            if(scrollStep < 0 && el[direction] < distance || scrollStep > 0 && el[direction] > distance){
-              el[direction] = distance
-            }
-          }else {
-              clearInterval(vm.timer[num]);
-          }
-        },15);
     },
     //在这里引入 action 里的方法，使用方法和 methods 里的其他方法一样
     ...mapActions([
