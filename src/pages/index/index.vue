@@ -11,9 +11,9 @@
               <img :src="biz_logo" alt="">
             </div>
             <ul>
-              <li><router-link to='list/1'>搜索</router-link></li>
-              <li><router-link :to="repo_href">我的</router-link></li>
-              <li><a href="">退出</a></li>
+              <li><router-link to='list/1' class='iconfont iconsousuo'>&nbsp搜索</router-link></li>
+              <li><router-link :to="repo_href" class='iconfont iconicon-user'>&nbsp我的</router-link></li>
+              <li><a href="" class='iconfont iconh'>&nbsp退出</a></li>
             </ul>
         </div>
         <!-- 腰封 -->
@@ -48,6 +48,7 @@
 </template>
 <script>
 const little = ['观看历史', '人气排行', '蜘蛛侠系列一次看爽'];
+import {scrollTo} from '@/api/utils.js'
 import Carousel from '@/components/Carousel'
 import YaoFeng from '@/components/YaoFeng'
 import Poster from '@/components/Poster'
@@ -66,10 +67,11 @@ export default {
       bottomItems: [],
       waterfallItems: [],
       albumItems: [],
-      timer: undefined
+      timer: [undefined]
     }
   },
   created() {
+    console.info('init------------index')
     this.init()
   },
   /*destroyed(){
@@ -107,12 +109,12 @@ export default {
         if(column == 1){
           //value.event.preventDefault();
           let el = this.$parent.$el;//document.getElementById('app');
-          this.scrollTo(el, 500, el.clientHeight, 'scrollTop',this);
+          scrollTo(el, 500, el.clientHeight, 'scrollTop', 0, this);
         }
         if(column == 3){
           //value.event.preventDefault();
           let el = this.$parent.$el;
-          this.scrollTo(el, 500, el.scrollHeight - el.offsetHeight,'scrollTop',this);
+          scrollTo(el, 500, el.scrollHeight - el.offsetHeight,'scrollTop', 0, this);
         }
         setTimeout(function(el){
           el.focus();
@@ -121,44 +123,17 @@ export default {
       if(e.keyCode == 38){
         if(column == 2){
           let el = this.$parent.$el;
-          //el.scrollTop = 0;
-          this.scrollTo(el, 500, 0,'scrollTop',this);
+          scrollTo(el, 500, 0,'scrollTop', 0, this);
         }
         if(column == 4){
           let el = this.$parent.$el;
-          //el.scrollTop = el.clientHeight;
-          this.scrollTo(el, 500, el.clientHeight,'scrollTop',this);
+          scrollTo(el, 500, el.clientHeight,'scrollTop', 0, this);
         }
         setTimeout(function(el){
           el.focus();
         },0,this.$refs[`recommand-${column-1}`][index].$el)
       }
-    },
-    /**
-     * [scrollTo 滚动效果函数 (暂时无法全局 this作用域)]
-     * @Author   shanjing
-     * @DateTime 2019-07-19T12:43:06+0800
-     * @param    {[type]}                 el             [滚动元素]
-     * @param    {[type]}                 scrollDuration [滚动时长]
-     * @param    {[type]}                 distance       [滚动距离]
-     * @param    {[type]}                 direction      [滚动方向 'scrollTop' 'scrollLeft']
-     * @return   {[type]}                                [null]
-     */
-    scrollTo(el,scrollDuration,distance,direction,vm) {
-        //console.info(this);
-        var scrollStep = (distance-el[direction]) / (scrollDuration / 15)
-        clearInterval(vm.timer);
-        vm.timer = setInterval(function(){
-          if ( el[direction] != distance ) {
-            el[direction] += scrollStep;
-            if(scrollStep < 0 && el[direction] < distance || scrollStep > 0 && el[direction] > distance){
-              el[direction] = distance
-            }
-          }else {
-              clearInterval(vm.timer);
-            }
-        },15);
-    },
+    }
   },
   components: {
     YaoFeng,
@@ -182,6 +157,10 @@ export default {
     position absolute
     left 70px
     top 40px
+    & > img:nth-child(1)
+      width 73px
+    & > img:nth-child(2)
+      width 187px
   #carousel
     height 440px
     margin-bottom 28px
@@ -207,20 +186,12 @@ export default {
       & > a
         padding 5px
         color $greyColor
-        &:before
-          content ''
-          display inline-block
-          width 21px
-          height 28px
-          line-height 28px
-          vertical-align top
-          margin-right 15px
-      &:nth-child(1) > a:before
-        background url($searchIcon) no-repeat 0 50%
-      &:nth-child(2) > a:before
-        background url($personalIcon) no-repeat 0 50%
-      &:nth-child(3) > a:before
-        background url($exitIcon) no-repeat 0 50%
+      // &:nth-child(1) > a:before
+      //   background url($searchIcon) no-repeat 0 50%
+      // &:nth-child(2) > a:before
+      //   background url($personalIcon) no-repeat 0 50%
+      // &:nth-child(3) > a:before
+      //   background url($exitIcon) no-repeat 0 50%
   h3
     margin-bottom 14px  
 </style>
