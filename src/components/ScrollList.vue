@@ -7,6 +7,7 @@
 </template>
 
 <script>
+import {scrollTo} from '@/api/utils.js'
 import Poster from '@/components/Poster'
 import Animations from '@/assets/css/animations.css'
 export default {
@@ -25,9 +26,9 @@ export default {
       index: 0,
       /**
        * [timer 滚动定时器]
-       * @type {[Object]}
+       * @type {[Array]}
        */
-      timer: undefined
+      timer: [undefined]
     }
   },
   watch: { //监听
@@ -104,28 +105,8 @@ export default {
         let column = Math.ceil((data.index+1)/this.config.lineNumber);
         let el = document.getElementById('app');
         let scrollDistance = column-2 < 0 ? 0 : (column-2)*data.el.parentElement.offsetHeight
-        this.scrollTo(el, 500, scrollDistance, 'scrollTop',this)
+        scrollTo(el, 500, scrollDistance, 'scrollTop', 0, this)
       });
-    },
-    /**
-     * [scrollTo 滚动实现]
-     * @Author   shanjing
-     * @DateTime 2019-07-31T17:47:39+0800
-     */
-    scrollTo(el,scrollDuration,distance,direction,vm) {
-        console.info('shanjing========='+this.timer);
-        var scrollStep = (distance-el[direction]) / (scrollDuration / 15)
-        clearInterval(vm.timer);
-        vm.timer = setInterval(function(){
-          if ( el[direction] != distance ) {
-            el[direction] += scrollStep;
-            if(scrollStep < 0 && el[direction] < distance || scrollStep > 0 && el[direction] > distance){
-              el[direction] = distance
-            }
-          }else {
-              clearInterval(vm.timer);
-            }
-        },15);
     },
     /**
      * [deleteItem 删除单条处理(删除一条添加一条)]
