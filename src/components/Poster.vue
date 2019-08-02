@@ -131,7 +131,6 @@ export default {
       */
      onFocus(index,e) {
         //e.preventDefault(); 會抖動
-        console.info(window.getComputedStyle(e.target.parentElement, null).getPropertyValue("padding-bottom"));
         if(this.isCheck){
           let data = {
             index: index,
