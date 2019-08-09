@@ -22,10 +22,10 @@
 
 <script>
 /**
- * [number 单页数量]
+ * [PAGE_NUM 单页数量]
  * @type {Number}
  */
-const number = 9; 
+const PAGE_NUM = 9; 
 export default {
   name: 'SeriesContainer',
   data () {
@@ -73,7 +73,7 @@ export default {
      */
     keydown(e, index, len) {
       console.info(e.keyCode, index, len)
-      if(e.keyCode == 39 && index%3 == 0 && len == number){
+      if(e.keyCode == 39 && index%3 == 0 && len == PAGE_NUM){
         ++this.currentIndex;
       }
       if(e.keyCode == 37 && (index-1)%3 == 0 && this.currentIndex > 0){
@@ -109,10 +109,10 @@ export default {
      * @return   {[type]}                 [null]
      */
     list: function () {
-      let length = Math.ceil(this.items.length/number)
+      let length = Math.ceil(this.items.length/PAGE_NUM)
       let list = [];
       for (var i = 0; i < length; i++) {
-        list.push(this.items.splice(0,number))
+        list.push(this.items.splice(0,PAGE_NUM))
       }
       return list;
     }
@@ -127,8 +127,8 @@ export default {
      * @return   {[type]}                       [null]
      */
     showTab(a,b) {
-      let begin = a[0].index || b*number+1;
-      let end = a[a.length-1].index || b*number+a.length;
+      let begin = a[0].index || b*PAGE_NUM+1;
+      let end = a[a.length-1].index || b*PAGE_NUM+a.length;
       return begin+'-'+end;
     },
     showTitle(value){
