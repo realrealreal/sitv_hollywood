@@ -11,7 +11,15 @@
 export default {
   data() {
     return {
+      /**
+       * [visible 是否显示]
+       * @type {Boolean}
+       */
       visible: false,
+      /**
+       * [message 显示信息]
+       * @type {String}
+       */
       message: ''
     }
   }
