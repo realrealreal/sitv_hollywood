@@ -32,11 +32,31 @@ export default {
   name: 'Vod',
   data () {
     return {
+      /**
+       * [config 配置]
+       * @type {Object}
+       */
       config:{},
+      /**
+       * [data 影片信息]
+       * @type {Object}
+       */
       data: {},
       like: [],
-      episodes: [],//多剧集
+      /**
+       * [episodes 多剧集]
+       * @type {Array}
+       */
+      episodes: [],
+      /**
+       * [openFrame 是否打开iframe]
+       * @type {Boolean}
+       */
       openFrame: false,
+      /**
+       * [collected 是否收藏]
+       * @type {Boolean}
+       */
       collected: false
     }
   },
