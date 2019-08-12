@@ -4,10 +4,10 @@
     <div v-if="!openFrame">
       <DetailHead v-if="programType == 'vod' || programType == 'mix' || programType == 'series' " :data='data' :program-type='programType' :collected='collected' v-on:play-request='play' v-on:collect-request='toggleCollect'/>
       <div v-if="programType == 'album'" :class='programType' :style="{background: `url(${GLOBAL.config.base + data.background}) no-repeat`}">
-        <SeriesContainer :items='episodes' v-on:play-request='play'/>
+        <SeriesContainer :items='episodes' v-on:play-request='play' :page-num='9'/>
       </div>
       <div v-if="programType == 'series'" :class='programType'>
-        <SeriesContainer :items='episodes' v-on:play-request='play'/>
+        <SeriesContainer :items='episodes' v-on:play-request='play' :page-num='30'/>
       </div>
       <div v-if="programType == 'vod' || programType == 'mix'" :class='programType'>
         <YourLike :items='like'/>
