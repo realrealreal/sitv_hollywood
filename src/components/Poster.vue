@@ -173,7 +173,6 @@ export default {
         console.info(this.index)
         vm.setProgramCode(vm.item.code || vm.item.contentId || vm.item.itemcode)
         vm.setProgramType(vm.item.type || vm.item.itemtype || vm.item.contentType)
-        vm.setProgramType(vm.item.type || vm.item.itemtype || vm.item.contentType)
         if(vm.$route.name == 'Movielist'){ // 列表页跳转到详情页记忆焦点
           vm.setMemoryFocusIndex(vm.index);
         }
