@@ -26,7 +26,7 @@ const config = {
 	},
 	noImage: {
 		name: 'noImage',
-		initNumber: 28,
+		initNumber: 26,
 		lineNumber: 2,
 		width: '168', //未用到
 		scrollTop: '288', //单次滚动高度
