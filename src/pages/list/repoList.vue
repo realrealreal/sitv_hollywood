@@ -8,8 +8,8 @@
       </div>
       <ul>
         <li v-for='(value, index) in leftColumn'>
-          <a v-if='index == 0' v-focus='false' :ref="value.title" :class="value.title == current ? 'current' : ''" href="javascript:void(0)" @click='toggleCategroy(value)'>{{value.title}}</a>
-          <a v-if='index != 0' :ref="value.title" :class="value.title == current ? 'current' : ''" href="javascript:void(0)" @click='toggleCategroy(value)'>{{value.title}}</a>
+          <a v-if='index == 0' v-focus='false' :ref="value.index" :class="value.index == current ? 'current' : ''" href="javascript:void(0)" @click='toggleCategroy(value)'>{{value.title}}</a>
+          <a v-if='index != 0' :ref="value.index" :class="value.index == current ? 'current' : ''" href="javascript:void(0)" @click='toggleCategroy(value)'>{{value.title}}</a>
         </li>
       </ul>
     </div>
@@ -23,6 +23,18 @@
 </template>
 
 <script>
+// 获取本周的时间戳
+function getCurrentWeekTimestamp(){
+  let current = new Date();
+  let week = current.getDay() == 0 ? 6 : current.getDay()-1;
+  //let times = current.getTime();
+  let hour = current.getHours();
+  let minute = current.getMinutes();
+  let second = current.getSeconds();
+  let weekBeginTime = Math.floor(current / 1000)*1000 - week *24 *60 *60 *1000 - hour * 3600 * 1000 - minute * 60 * 1000 - second * 1000;
+  //let lastWeekBeginTime = weekBeginTime - 7 *24 *60 *60 *1000;
+  return weekBeginTime;
+}
 const content1 = {
   text: '您将执行如下操作',
   btn: [
@@ -33,7 +45,10 @@ const content1 = {
         vm.popWindow = false;
         console.info(vm)
         vm.$nextTick(() => {
-          vm.$refs.list.$children[0].$el.focus()
+          
+          let _a = vm.$refs.list.$el.children[0].children[0]  //vm.$refs.list.$children[0].$el
+          _a.focus()
+
         });
         // setTimeout(function(){
         //   vm.$refs.list.$children[0].$el.focus()
@@ -82,38 +97,34 @@ const title = {
 }
 const leftColumn = [
   {
-    title: '全部',
+    index:0,
+    title:'全部',
   },
   {
-    title: '电影',
+    index:1,
+    title:'本周',
+  },
+    {
+    index:2,
+    title:'上周',
   },
   {
-    title: '电视剧',
-  },
-  {
-    title: '纪实',
-  },
-  {
-    title: '少儿',
-  },
-  {
-    title: '综艺',
-  },
-  {
-    title: '其他',
+    index:3,
+    title:'更早',
   }
 ];
 import HandleWindow from '@/components/HandleWindow'
 import ScrollList from '@/components/ScrollList'
 import Animations from '@/assets/css/animations.css'
 import {mapState} from 'vuex'
+import {dateToStr} from '@/api/utils.js'
 export default {
   name: 'List',
   data () {
     return {
       data: [],
-      current: leftColumn[0].title,
-      config: this.GLOBAL.config.poster,
+      current: leftColumn[0].index,
+      config: this.GLOBAL.config.noImage,//this.GLOBAL.config.poster
       leftColumn: leftColumn,
       title:title,
       isEdited:false,
@@ -148,13 +159,45 @@ export default {
             if(this.$route.params.name == 'history'){
               vm.dataService.queryHistory(function(res){
                 console.info(res);
-                vm.data = res.data.historyList;
-              },newVal == '全部' ? '':newVal);
+                if(newVal == 0){
+                  vm.data = res.data.historyList;
+                }else if(newVal == 1){
+                  vm.data = res.data.historyList.filter(function(item){
+                      console.info(item.updateTime);
+                      return item.updateTime >= dateToStr(new Date(getCurrentWeekTimestamp()))
+                  })
+                }else if(newVal == 2){
+                  vm.data = res.data.historyList.filter(function(item){
+                      return item.updateTime < dateToStr(new Date(getCurrentWeekTimestamp())) && item.updateTime >= dateToStr(new Date(sj - 7 *24 *60 *60 *1000 ))
+                  })
+                }else{
+                  vm.data = res.data.historyList.filter(function(item){
+                      return item.updateTime < dateToStr(new Date(sj - 7 *24 *60 *60 *1000 ))
+                  })
+                }
+                //vm.data = res.data.historyList;
+              },'');
             }else{
               vm.dataService.queryCollection(function(res){
                 console.info(res);
-                vm.data = res.data.collectionList;
-              },newVal == '全部' ? '':newVal);
+                //vm.data = res.data.collectionList;
+                if(newVal == 0){
+                  vm.data = res.data.collectionList;
+                }else if(newVal == 1){
+                  vm.data = res.data.collectionList.filter(function(item){
+                      console.info(item.updateTime);
+                      return item.updateTime >= dateToStr(new Date(getCurrentWeekTimestamp()))
+                  })
+                }else if(newVal == 2){
+                  vm.data = res.data.collectionList.filter(function(item){
+                      return item.updateTime < dateToStr(new Date(getCurrentWeekTimestamp())) && item.updateTime >= dateToStr(new Date(sj - 7 *24 *60 *60 *1000 ))
+                  })
+                }else{
+                  vm.data = res.data.collectionList.filter(function(item){
+                      return item.updateTime < dateToStr(new Date(getCurrentWeekTimestamp() - 7 *24 *60 *60 *1000 ))
+                  })
+                }
+              },'');
             }
         }
     },
@@ -192,9 +235,7 @@ export default {
     toggleCategroy(value){
       console.info(value);
       let vm = this;
-      vm.current = value.title;
-      //vm.$store.dispatch('setCategoryCode', value.catcode);
-      //vm.$store.dispatch('setBizCode', value.code);
+      vm.current = value.index;
     },
     keydownInLeft(e){
       if(e.keyCode == 4096 && this.isEdited){
