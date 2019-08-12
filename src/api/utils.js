@@ -39,7 +39,7 @@ function dateToStr(now){
 	clock += ii; //+ ":";
 	if (ss < 10) clock += '0'; 
 	clock += ss;
-	console.info(clock); 
+	//console.info(clock); 
 	return clock;
 }
 
