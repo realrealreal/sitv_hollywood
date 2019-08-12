@@ -1,18 +1,29 @@
 <template>
   <!-- 多剧集底部 -->
-  <div class='series'>
+  <div class='bottom'>
     <img src="@/assets/images/prev_icon.png" alt="" v-show='currentIndex > 0'> 
     <img src="@/assets/images/next_icon.png" alt="" v-show='list.length > 0 && currentIndex != list.length-1'>
     <ul class='tab'>
       <li v-for='(item, index) in list'><a href="javascript:void(0)" @click='tab(index)' :class="currentIndex == index?'current':''">{{item,index | showTab(index)}}</a></li>
     </ul>
-    <div class='container' @keydown=''>
+    <div v-if='pageNum == 9' class='container album'>
       <transition v-for="(item, index) in list" name="right" enter-active-class="animated fadeInRight"
    leave-active-class="animated fadeOut"
    :duration="{ enter: 1500, leave: 800 }" v-on:before-leave="beforeLeave" v-on:after-enter="afterEnter" :key="'key-'+index">
         <div v-show='currentIndex == index'>
           <ul>
-            <li v-for='(value, index) in item'><a ref='episodes' href="javascript:void(0)" @keydown='keydown($event, index+1, item.length)' @click='goPlay(value.programcode)'>{{value.title | showTitle}}</a></li>
+            <li v-for='(value, index) in item'><a class='album' ref='episodes' href="javascript:void(0)" @keydown='keydown($event, index+1, item.length)' @click='goPlay(value.programcode)'>{{value.title | showTitle}}</a></li>
+          </ul>
+        </div>
+      </transition>
+    </div>
+    <div v-if='pageNum == 30' class='container series'>
+      <transition v-for="(item, index) in list" name="right" enter-active-class="animated fadeInRight"
+   leave-active-class="animated fadeOut"
+   :duration="{ enter: 1500, leave: 800 }" v-on:before-leave="beforeLeave" v-on:after-enter="afterEnter" :key="'key-'+index">
+        <div v-show='currentIndex == index'>
+          <ul>
+            <li v-for='(value, index) in item'><a ref='episodes' href="javascript:void(0)" @keydown='keydown($event, index+1, item.length)' @click='goPlay(value.programcode)'>{{value.index}}</a></li>
           </ul>
         </div>
       </transition>
@@ -25,7 +36,7 @@
  * [PAGE_NUM 单页数量]
  * @type {Number}
  */
-const PAGE_NUM = 9; 
+//const PAGE_NUM = 9; 
 export default {
   name: 'SeriesContainer',
   data () {
@@ -40,6 +51,10 @@ export default {
   props: {
     items: {
       type: Array,
+      required: true
+    },
+    pageNum: {
+      type: Number,
       required: true
     }
   },
@@ -73,7 +88,7 @@ export default {
      */
     keydown(e, index, len) {
       console.info(e.keyCode, index, len)
-      if(e.keyCode == 39 && index%3 == 0 && len == PAGE_NUM){
+      if(e.keyCode == 39 && index%3 == 0 && len == this.pageNum){
         ++this.currentIndex;
       }
       if(e.keyCode == 37 && (index-1)%3 == 0 && this.currentIndex > 0){
@@ -109,10 +124,10 @@ export default {
      * @return   {[type]}                 [null]
      */
     list: function () {
-      let length = Math.ceil(this.items.length/PAGE_NUM)
+      let length = Math.ceil(this.items.length/this.pageNum)
       let list = [];
       for (var i = 0; i < length; i++) {
-        list.push(this.items.splice(0,PAGE_NUM))
+        list.push(this.items.splice(0,this.pageNum))
       }
       return list;
     }
@@ -127,8 +142,8 @@ export default {
      * @return   {[type]}                       [null]
      */
     showTab(a,b) {
-      let begin = a[0].index || b*PAGE_NUM+1;
-      let end = a[a.length-1].index || b*PAGE_NUM+a.length;
+      let begin = a[0].index || b*this.pageNum+1;
+      let end = a[a.length-1].index || b*this.pageNum+a.length;
       return begin+'-'+end;
     },
     showTitle(value){
@@ -140,7 +155,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang='stylus'>
-div.series
+div.bottom
   position relative
   padding-top 20px
   height 255px
@@ -152,8 +167,7 @@ div.series
       left 40px
     &:nth-child(2)
       right 40px
-  & > div.container   
-    width 1100px
+  & > div.container
     margin 0 auto
     position relative
     & > div 
@@ -162,19 +176,28 @@ div.series
       top 0
       & > ul > li > a
         position: relative;
-        width 360px
         height 48px
         line-height 48px
-        padding-left 2px
-        margin 2px
         background-color: #181b22
         &:focus
           z-index:10000;
+  & > div.album
+    width 1100px
+    & > div > ul > li > a
+      padding-left 2px
+      width 360px
+      margin 2px
+  & > div.series
+    width 1051px
+    & > div > ul > li > a 
+      width 95px
+      text-align center
+      margin 5px
       
 ul > li
   display inline-block
 ul.tab
-  width 1100px
+  width 1050px //width 1100px
   margin 0 auto 20px
   & > li
     margin-right 20px
